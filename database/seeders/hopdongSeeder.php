@@ -44,7 +44,8 @@ class hopdongSeeder extends Seeder
                 'ngay_ky' => Carbon::now()->subMonths(3)->startOfMonth(),
                 'noi_dung' => 'Hợp đồng nhân viên thời vụ',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
+                'NPT' => 1
             ]);
 
             // Tạo hợp đồng cho nhân viên chính thức còn lại
@@ -58,7 +59,8 @@ class hopdongSeeder extends Seeder
                     'ngay_ky' => Carbon::now()->subMonths(6)->startOfMonth(),
                     'noi_dung' => 'Hợp đồng nhân viên chính thức',
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
+                    'NPT' => 1
                 ]);
             }
         }

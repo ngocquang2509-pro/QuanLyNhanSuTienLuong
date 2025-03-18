@@ -14,11 +14,46 @@ class CaLamViecSeeder extends Seeder
     public function run(): void
     {
         DB::table('calamviec')->insert([
-            ['TenLoaiCa' => 'Ca sáng', 'Giobatdau' => '08:00:00', 'Gioketthuc' => '17:00:00', 'type' => 'regular'],
-            ['TenLoaiCa' => 'Ca chiều', 'Giobatdau' => '18:00:00', 'Gioketthuc' => '02:00:00', 'type' => 'special'],
-            ['TenLoaiCa' => 'Làm thêm giờ', 'Giobatdau' => '18:00:00', 'Gioketthuc' => '00:00:00', 'type' => 'overtime'],
-            ['TenLoaiCa' => 'Công tác', 'Giobatdau' => '00:00:00', 'Gioketthuc' => '00:00:00', 'type' => 'business_trip'],
-            ['TenLoaiCa' => 'Nghỉ phép', 'Giobatdau' => null, 'Gioketthuc' => null, 'type' => 'leave'],
+            [
+                'id' => 1,
+                'TenLoaiCa' => 'Fulltime',
+                'Giobatdau' => '08:00:00',
+                'Gioketthuc' => '17:00:00',
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            [
+                'id' => 2,
+                'TenLoaiCa' => 'Tăng ca',
+                'Giobatdau' => '17:00:00',
+                'Gioketthuc' => '20:00:00',
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            [
+                'id' => 3,
+                'TenLoaiCa' => 'Nghỉ phép',
+                'Giobatdau' => null,
+                'Gioketthuc' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            [
+                'id' => 4,
+                'TenLoaiCa' => 'Công tác',
+                'Giobatdau' => '08:00:00',
+                'Gioketthuc' => '17:00:00',
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            [
+                'id' => 5,
+                'TenLoaiCa' => 'Làm việc đặc biệt',
+                'Giobatdau' => '08:00:00',
+                'Gioketthuc' => '17:00:00',
+                'created_at' => null,
+                'updated_at' => null,
+            ],
         ]);
     }
 }
