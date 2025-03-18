@@ -25,7 +25,9 @@ Route::get('/dashboardHM', [App\Http\Controllers\HumanController::class, 'index'
 Route::get('/ManagerHM', [App\Http\Controllers\HumanController::class, 'ManagerHM'])->name('Human.Manager');
 Route::post('/ManagerHM', [App\Http\Controllers\HumanController::class, 'ManagerAdd'])->name('Human.ManagerAdd');
 Route::put('/ManagerHM/{id}', [App\Http\Controllers\HumanController::class, 'ManagerUpdate'])->name('Human.ManagerUpdate');
-Route::delete('/ManagerHM/{id}', [App\Http\Controllers\HumanController::class, 'FileDelete'])->name('Human.FileDelete');
+Route::delete('/ManagerHM/{id}', [App\Http\Controllers\HumanController::class, 'ManagerDelete'])->name('Human.ManagerDelete');
+Route::post('/ManagerHMContract', [App\Http\Controllers\HumanController::class, 'FileAdd'])->name('Human.FileAdd');
+Route::delete('/ManagerHMContract/{id}', [App\Http\Controllers\HumanController::class, 'FileDelete'])->name('Human.FileDelete');
 Route::get('/ManagerHMFind', [App\Http\Controllers\HumanController::class, 'ManagerHMFindDeparment'])->name('Human.ManagerFind');
 Route::get('/ManagerDP', [App\Http\Controllers\HumanController::class, 'ManagerDP'])->name('Human.ManagerDP');
 Route::post('/ManagerDP', [App\Http\Controllers\HumanController::class, 'DepartmentAdd'])->name('Human.departmentAdd');
@@ -35,4 +37,12 @@ Route::get('/ManagerPS', [App\Http\Controllers\HumanController::class, 'ManagerP
 Route::post('/ManagerPS', [App\Http\Controllers\HumanController::class, 'ManagerPSAdd'])->name('Human.positionAdd');
 Route::put('/ManagerPS/{id}', [App\Http\Controllers\HumanController::class, 'ManagerPSEdit'])->name('Human.positionEdit');
 Route::delete('/ManagerPS/{id}', [App\Http\Controllers\HumanController::class, 'ManagerPSDelete'])->name('Human.positionDelete');
-Route::get('/Timekeepin', [App\Http\Controllers\HumanController::class, 'Timekeeping'])->name('Human.Timekeeping');
+Route::get('/Timekeeping', [App\Http\Controllers\HumanController::class, 'Timekeeping'])->name('Human.Timekeeping');
+Route::get('/WorkSchedule', [App\Http\Controllers\HumanController::class, 'WorkSchedule'])->name('Human.WorkSchedule');
+Route::post('/WorkSchedule', [App\Http\Controllers\HumanController::class, 'WorkScheduleAdd'])->name('Human.WorkScheduleAdd');
+Route::put('/WorkSchedule/{id}', [App\Http\Controllers\HumanController::class, 'WorkScheduleUpdate'])->name('Human.WorkScheduleUpdate');
+Route::delete('/WorkSchedule/{id}', [App\Http\Controllers\HumanController::class, 'WorkScheduleDelete'])->name('Human.WorkScheduleDelete');
+Route::get('/ShiftManager', [App\Http\Controllers\HumanController::class, 'ShiftManager'])->name('Human.ShiftManager');
+Route::post('/ShiftManager', [App\Http\Controllers\HumanController::class, 'ShiftManagerAdd'])->name('Human.ShiftManagerAdd');
+Route::put('/ShiftManager/{id}', [App\Http\Controllers\HumanController::class, 'ShiftManagerUpdate'])->name('Human.ShiftManagerUpdate');
+Route::delete('/ShiftManager/{id}', [App\Http\Controllers\HumanController::class, 'ShiftManagerDelete'])->name('Human.ShiftManagerDelete');

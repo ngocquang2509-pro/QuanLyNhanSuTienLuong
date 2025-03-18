@@ -10,7 +10,7 @@ class ChucVu extends Model
     use HasFactory;
 
     protected $table = 'chucvu';
-    protected $fillable = ['TenChucVu', 'LuongCoBan'];
+    protected $fillable = ['TenChucVu', 'LuongCoBan', 'PC_Chuc_vu', 'PC_Trach_nhiem'];
 
     public function nhanViens()
     {

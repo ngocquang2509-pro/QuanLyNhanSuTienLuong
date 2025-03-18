@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chucvu', function (Blueprint $table) {
+        Schema::create('_khen_thuong_ki_luat', function (Blueprint $table) {
             $table->id();
-            $table->string('TenChucVu');
-            $table->bigInteger('LuongCoBan');
+            $table->foreignId('nhanVien_id')->constrained('nhanvien')->onDelete('cascade');
+            $table->enum('Loai', ['Khen thưởng', 'Kỷ luật']);
+            $table->text('NoiDung');
+            $table->date('NgayTao');
             $table->timestamps();
-            $table->bigInteger('PC_Chuc_vu');
-            $table->bigInteger('PC_Trach_nhiem');
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chucvu');
+        Schema::dropIfExists('_khen_thuong_ki_luat');
     }
 };

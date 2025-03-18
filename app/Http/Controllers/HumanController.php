@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\calamviec;
+use App\Models\ChamCong;
 use App\Models\ChucVu;
 use App\Models\HopDong;
+use App\Models\lichlamviec;
 use App\Models\NhanVien;
 use App\Models\PhongBan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HumanController extends Controller
 {
@@ -50,51 +54,38 @@ class HumanController extends Controller
     public function ManagerUpdate(Request $request, $id)
     {
         $nhanvien = NhanVien::find($id);
-        if (isset($nhanvien->HopDong)) {
-            $nhanvien->update([
-                'HoTen' => $request->HoTen,
-                'GioiTinh' => $request->GioiTinh,
-                'NgaySinh' => $request->NgaySinh,
-                'CCCD' => $request->CCCD,
-                'DienThoai' => $request->DienThoai,
-                'Email' => $request->Email,
-                'DiaChi' => $request->DiaChi,
-                'MaPhongBan' => $request->MaPhongBan,
-                'MaChucVu' => $request->MaChucVu,
-            ]);
-            $hopdong = HopDong::where('nhanvien_id', $id)->first();
-            $hopdong->update([
-                'LoaiHopDong' => $request->LoaiHopDong,
-                'ngay_bat_dau' => $request->ngay_bat_dau,
-                'ngay_ket_thuc' => $request->ngay_ket_thuc,
-                'ngay_ky' => $request->ngay_ky,
-                'noi_dung' => $request->noi_dung,
-                'TaiKhoan' => $request->TaiKhoan,
+        $nhanvien->update([
+            'HoTen' => $request->HoTen,
+            'GioiTinh' => $request->GioiTinh,
+            'NgaySinh' => $request->NgaySinh,
+            'CCCD' => $request->CCCD,
+            'DienThoai' => $request->DienThoai,
+            'Email' => $request->Email,
+            'DiaChi' => $request->DiaChi,
+            'MaPhongBan' => $request->MaPhongBan,
+            'MaChucVu' => $request->MaChucVu,
+        ]);
+        return redirect()->route('Human.Manager')->with('success', 'Cập nhật nhân viên thành công');
+    }
+    public function ManagerDelete(Request $request, $id)
+    {
+        $nhanvien = NhanVien::find($id);
+        $nhanvien->delete();
+        return redirect()->route('Human.Manager')->with('success', 'Xóa nhân viên thành công');
+    }
+    public function FileAdd(Request $request)
+    {
 
-            ]);
-        } else {
-            $nhanvien->update([
-                'HoTen' => $request->HoTen,
-                'GioiTinh' => $request->GioiTinh,
-                'NgaySinh' => $request->NgaySinh,
-                'CCCD' => $request->CCCD,
-                'DienThoai' => $request->DienThoai,
-                'Email' => $request->Email,
-                'DiaChi' => $request->DiaChi,
-                'MaPhongBan' => $request->MaPhongBan,
-                'MaChucVu' => $request->MaChucVu,
-            ]);
-            HopDong::create([
-                'nhanvien_id' => $id,
-                'LoaiHopDong' => $request->LoaiHopDong,
-                'ngay_bat_dau' => $request->ngay_bat_dau,
-                'ngay_ket_thuc' => $request->ngay_ket_thuc,
-                'ngay_ky' => $request->ngay_ky,
-                'noi_dung' => $request->noi_dung,
-                'TaiKhoan' => $request->TaiKhoan,
-            ]);
-        }
-        return redirect()->route('Human.Manager')->with('success', 'Cập nhật hợp đồng thành công');
+        HopDong::create([
+            'nhanvien_id' => $request->nhanvien_id,
+            'LoaiHopDong' => $request->LoaiHopDong,
+            'ngay_bat_dau' => $request->ngay_bat_dau,
+            'ngay_ket_thuc' => $request->ngay_ket_thuc,
+            'ngay_ky' => $request->ngay_ky,
+            'TaiKhoan' => $request->TaiKhoan,
+            'NPT' => $request->NPT,
+        ]);
+        return redirect()->route('Human.Manager')->with('success', 'Thêm hợp đồng thành công');
     }
     public function FileDelete(Request $request, $id)
     {
@@ -138,6 +129,8 @@ class HumanController extends Controller
         ChucVu::create([
             'TenChucVu' => $request->TenChucVu,
             'LuongCoBan' => $request->LuongCoBan,
+            'PC_Chuc_vu' => $request->PC_Chuc_vu,
+            'PC_Trach_nhiem' => $request->PC_Trach_nhiem,
         ]);
         return redirect()->route('Human.ManagerPS')->with('success', 'Thêm chức vụ thành công');
     }
@@ -147,6 +140,8 @@ class HumanController extends Controller
         $position->update([
             'TenChucVu' => $request->TenChucVu,
             'LuongCoBan' => $request->LuongCoBan,
+            'PC_Chuc_vu' => $request->PC_Chuc_vu,
+            'PC_Trach_nhiem' => $request->PC_Trach_nhiem,
         ]);
         return redirect()->route('Human.ManagerPS')->with('success', 'Cập nhật chức vụ thành công');
     }
@@ -156,8 +151,87 @@ class HumanController extends Controller
         $position->delete();
         return redirect()->route('Human.ManagerPS')->with('success', 'Xóa chức vụ thành công');
     }
-    public function Timekeeping()
+
+    public function ShiftManager()
     {
-        return view('Human.Timekeeping');
+        $shifts = calamviec::all();
+        return view('Human.ShiftManager', compact('shifts'));
+    }
+    public function ShiftManagerAdd(Request $request)
+    {
+        calamviec::create([
+            'TenLoaiCa' => $request->TenLoaiCa,
+            'Giobatdau' => $request->Giobatdau,
+            'Gioketthuc' => $request->Gioketthuc,
+        ]);
+        return redirect()->route('Human.ShiftManager')->with('success', 'Thêm ca làm việc thành công');
+    }
+    public function ShiftManagerUpdate(Request $request, $id)
+    {
+        $shift = calamviec::find($id);
+        $shift->update([
+            'TenLoaiCa' => $request->TenLoaiCa,
+            'Giobatdau' => $request->Giobatdau,
+            'Gioketthuc' => $request->Gioketthuc,
+        ]);
+        return redirect()->route('Human.ShiftManager')->with('success', 'Cập nhật ca làm việc thành công');
+    }
+    public function ShiftManagerDelete(Request $request, $id)
+    {
+        $shift = calamviec::find($id);
+        $shift->delete();
+        return redirect()->route('Human.ShiftManager')->with('success', 'Xóa ca làm việc thành công');
+    }
+    public function WorkSchedule()
+    {
+        $employees = NhanVien::all();
+        $shifts = calamviec::all();
+        $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->whereDate('NgayLamViec', '2025-03-03')->get();
+        return view('Human.WorkSchedule', compact('schedules', 'employees', 'shifts'));
+    }
+    public function WorkScheduleAdd(Request $request)
+    {
+        lichlamviec::create([
+            'NgayLamViec' => $request->NgayLamViec,
+            'nhanvien_id' => $request->nhanvien_id,
+            'ca_id' => $request->ca_id,
+            'MoTa' => $request->MoTa,
+        ]);
+        return redirect()->route('Human.WorkSchedule')->with('success', 'Thêm lịch làm việc thành công');
+    }
+    public function WorkScheduleUpdate(Request $request, $id)
+    {
+        $schedule = lichlamviec::find($id);
+        $schedule->update([
+            'NgayLamViec' => $request->NgayLamViec,
+            'nhanvien_id' => $request->nhanvien_id,
+            'ca_id' => $request->ca_id,
+            'MoTa' => $request->MoTa,
+        ]);
+        return redirect()->route('Human.WorkSchedule')->with('success', 'Cập nhật lịch làm việc thành công');
+    }
+    public function WorkScheduleDelete(Request $request, $id)
+    {
+        $schedule = lichlamviec::find($id);
+        $schedule->delete();
+        return redirect()->route('Human.WorkSchedule')->with('success', 'Xóa lịch làm việc thành công');
+    }
+    public function Timekeeping(Request $request)
+    {
+
+        $employees = NhanVien::all();
+        $ngayLamViec = '2025-03-03';
+
+        $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
+            ->where('nhanvien_id', 1)
+            ->get();
+        $nhanvien = NhanVien::find(1);
+        if ($request->employee) {
+            $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
+                ->where('nhanvien_id', $request->employee)
+                ->get();
+            $nhanvien = NhanVien::find($request->employee);
+        }
+        return view('Human.Timekeeping', compact('timekeepings', 'employees', 'nhanvien'));
     }
 }

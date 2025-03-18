@@ -27,6 +27,8 @@
                         data-id="{{$position->id}}"
                         data-namePosition="{{$position->TenChucVu}}"
                         data-nameSalaryBase="{{$position->LuongCoBan}}"
+                        data-PC-Chuc-vu="{{$position->PC_Chuc_vu}}"
+                        data-PC-Trach-nhiem="{{$position->PC_Trach_nhiem}}"
                         data-bs-toggle="modal" data-bs-target="#editPositionModal"><i class="fa-solid fa-pen"></i></button>
                     <button class="btn btn-danger mx-2 DeletePosition"
                         data-id="{{$position->id}}"
@@ -55,7 +57,14 @@
                         <label for="positionName" class="form-label">Lương cơ bản</label>
                         <input type="text" class="form-control" placeholder="Nhập lương cơ bản" required name="LuongCoBan">
                     </div>
-
+                    <div class="mb-3">
+                        <label for="positionName" class="form-label">Phụ cấp chức vụ</label>
+                        <input type="text" class="form-control" placeholder="Nhập tên chức vụ" required name="PC_Chuc_vu">
+                    </div>
+                    <div class="mb-3">
+                        <label for="positionName" class="form-label">Phụ cấp trách nhiệm</label>
+                        <input type="text" class="form-control" placeholder="Nhập lương cơ bản" required name="PC_Trach_nhiem">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -83,7 +92,14 @@
                         <label for="positionName" class="form-label">Lương cơ bản</label>
                         <input type="text" id="LuongCoBan" class="form-control" placeholder="Nhập lương cơ bản" required name="LuongCoBan">
                     </div>
-
+                    <div class="mb-3">
+                        <label for="positionName" class="form-label">Phụ cấp chức vụ</label>
+                        <input type="text" id="PC_Chuc_vu" class="form-control" placeholder="Nhập tên chức vụ" required name="PC_Chuc_vu">
+                    </div>
+                    <div class="mb-3">
+                        <label for="positionName" class="form-label">Phụ cấp trách nhiệm</label>
+                        <input type="text" id="PC_Trach_nhiem" class="form-control" placeholder="Nhập lương cơ bản" required name="PC_Trach_nhiem">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -117,9 +133,13 @@
                     const id = button.getAttribute("data-id");
                     const namePosition = button.getAttribute("data-namePosition");
                     const salaryBase = button.getAttribute("data-nameSalaryBase");
+                    const PC_Chuc_vu = button.getAttribute("data-PC-Chuc-vu");
+                    const PC_Trach_nhiem = button.getAttribute("data-PC-Trach-nhiem");
                     const form = document.getElementById("EditForm");
                     document.querySelector("#TenChucVu").value = namePosition;
                     document.querySelector("#LuongCoBan").value = salaryBase;
+                    document.querySelector("#PC_Chuc_vu").value = PC_Chuc_vu;
+                    document.querySelector("#PC_Trach_nhiem").value = PC_Trach_nhiem;
                     form.action = `/ManagerPS/${id}`;
                 });
             });

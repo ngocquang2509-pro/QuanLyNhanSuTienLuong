@@ -21,6 +21,8 @@ return new class extends Migration
             $table->text('noi_dung')->nullable();
             $table->foreign('nhanvien_id')->references('id')->on('nhanvien')->onDelete('cascade');
             $table->timestamps();
+            $table->string('TaiKhoan');
+            $table->integer('NPT');
         });
     }
 

@@ -35,4 +35,16 @@ class NhanVien extends Model
     {
         return $this->hasOne(HopDong::class, 'nhanvien_id');
     }
+    public function chamCongs()
+    {
+        return $this->hasMany(ChamCong::class, 'nhanvien_id');
+    }
+    public function getTongSoCongAttribute()
+    {
+        return $this->chamCongs()->sum('SoCong');
+    }
+    public function lichLamViec()
+    {
+        return $this->hasMany(LichLamViec::class, 'nhanvien_id');
+    }
 }

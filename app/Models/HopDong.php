@@ -17,7 +17,8 @@ class HopDong extends Model
         'ngay_ket_thuc',
         'ngay_ky',
         'noi_dung',
-        'TaiKhoan'
+        'TaiKhoan',
+        'NPT'
     ];
 
     public function nhanVien()

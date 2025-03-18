@@ -22,8 +22,13 @@
         </li>
 
         <li class="nav-item">
+            <a class="nav-link" href="{{route('Human.WorkSchedule')}}"><i class="fas fa-tasks me-2"></i> Quản lý lịch làm việc</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('Human.ShiftManager')}}"><i class="fas fa-tasks me-2"></i> Quản lý ca làm việc</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{route('Human.Timekeeping')}}"><i class="fas fa-tasks me-2"></i> Quản lý chấm công</a>
         </li>
-
     </ul>
 </div>

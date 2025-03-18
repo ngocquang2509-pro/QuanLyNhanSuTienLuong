@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chucvu', function (Blueprint $table) {
+        Schema::create('_phieu_luong', function (Blueprint $table) {
             $table->id();
-            $table->string('TenChucVu');
-            $table->bigInteger('LuongCoBan');
+            $table->foreignId('Luong_id')->constrained('_luong')->onDelete('cascade');
+            $table->string('TrangThai');
             $table->timestamps();
-            $table->bigInteger('PC_Chuc_vu');
-            $table->bigInteger('PC_Trach_nhiem');
         });
     }
 
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chucvu');
+        Schema::dropIfExists('_phieu_luong');
     }
 };

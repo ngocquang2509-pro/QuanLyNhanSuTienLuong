@@ -225,35 +225,25 @@
             <table class="table table-bordered table-hover salary-table">
                 <thead>
                     <tr class="table-header text-center">
-                        <th rowspan="2">STT</th>
                         <th rowspan="2">Mã số NV</th>
                         <th rowspan="2">Họ tên</th>
                         <th rowspan="2">Chức vụ</th>
                         <th rowspan="2">Bộ phận</th>
-                        <th colspan="6">LƯƠNG CB + PHỤ CẤP THEO HĐLĐ</th>
-                        <th rowspan="2">Lương công (ngày công)</th>
-                        <th rowspan="2">Làm thêm</th>
-                        <th rowspan="2">Thu nhập khác</th>
+                        <th colspan="3">LƯƠNG CB + PHỤ CẤP THEO HĐLĐ</th>
+                        <th rowspan="2">Số ngày công</th>
+
                         <th rowspan="2">Tổng thu nhập</th>
-                        <th colspan="3">BẢO HIỂM CÔNG TY ĐÓNG</th>
                         <th colspan="3">BẢO HIỂM NHÂN VIÊN ĐÓNG</th>
                         <th rowspan="2">Thuế TNCN phải nộp</th>
                         <th rowspan="2">Lương thực lãnh</th>
                         <th rowspan="2">Tạm ứng</th>
                         <th rowspan="2">Còn lãnh</th>
-                        <th rowspan="2">Ghi chú</th>
                         <th rowspan="2">Hành động</th>
                     </tr>
                     <tr class="table-header text-center">
                         <th>Lương CB</th>
                         <th>PC Chức vụ</th>
                         <th>PC Trách nhiệm</th>
-                        <th>PC Ăn ca</th>
-                        <th>PC Xăng xe</th>
-                        <th>PC khác</th>
-                        <th>BHXH (17.5%)</th>
-                        <th>BHYT (3%)</th>
-                        <th>BHTN (1%)</th>
                         <th>BHXH (8%)</th>
                         <th>BHYT (1.5%)</th>
                         <th>BHTN (1%)</th>
@@ -261,83 +251,210 @@
                 </thead>
                 <tbody>
                     <tr class="department">
-                        <td colspan="26">Phòng Hành Chính</td>
+                        <td colspan="19">Nhân viên chính thức</td>
                     </tr>
+                    @foreach($nhanvienchinhthucs as $nhanvienchinhthuc)
                     <tr class="text-center">
-                        <td>1</td>
-                        <td>NV-001</td>
-                        <td class="text-start">Nguyễn Văn A</td>
-                        <td>Trưởng phòng</td>
-                        <td>Hành chính</td>
-                        <td>10,000,000</td>
-                        <td>2,000,000</td>
-                        <td>1,000,000</td>
-                        <td>500,000</td>
-                        <td>300,000</td>
-                        <td>0</td>
-                        <td>26</td>
-                        <td>10</td>
-                        <td>1,500,000</td>
-                        <td>15,300,000</td>
-                        <td>1,750,000</td>
-                        <td>300,000</td>
-                        <td>150,000</td>
-                        <td>800,000</td>
-                        <td>150,000</td>
-                        <td>100,000</td>
-                        <td>
+                        <td>{{ $nhanvienchinhthuc->id }}</td>
+                        <td class="text-start">{{ $nhanvienchinhthuc->HoTen }}</td>
+                        <td>{{ $nhanvienchinhthuc->chucVu->TenChucVu }}</td>
+                        <td>{{ $nhanvienchinhthuc->phongBan->TenPhongBan }}</td>
+                        <td>{{ number_format($nhanvienchinhthuc->chucVu->LuongCoBan) }}</td>
+                        <td>{{ number_format($nhanvienchinhthuc->chucVu->PC_Chuc_vu) }}</td>
+                        <td>{{ number_format($nhanvienchinhthuc->chucVu->PC_Trach_nhiem) }}</td>
+                        <td>{{ $nhanvienchinhthuc->TongSoCong }}</td>
 
-                            <button class="btn btn-primary btn-sm tax-button ms-2" data-bs-toggle="modal" data-bs-target="#taxCalculationModal">
-                                <i class="fas fa-calculator"></i> Tính thuế
-                            </button>
-                        </td>
-                        <td>13,500,000</td>
-                        <td>2,000,000</td>
-                        <td>11,500,000</td>
-                        <td>Không có</td>
-                        <td data-bs-toggle="modal" data-bs-target="#salaryModal">
-                            <i class="fa-solid fa-eye action-btn"></i>
-                        </td>
+
+                        @php
+                        $Tongthunhap = ($nhanvienchinhthuc->chucVu->LuongCoBan / 26) * $nhanvienchinhthuc->TongSoCong
+                        + $nhanvienchinhthuc->chucVu->PC_Chuc_vu
+                        + $nhanvienchinhthuc->chucVu->PC_Trach_nhiem;
+                        $bhxh =( $nhanvienchinhthuc->chucVu->LuongCoBan + $nhanvienchinhthuc->chucVu->PC_Chuc_vu+ $nhanvienchinhthuc->chucVu->PC_Trach_nhiem)*0.08;
+                        $bhyt = ($nhanvienchinhthuc->chucVu->LuongCoBan + $nhanvienchinhthuc->chucVu->PC_Chuc_vu+ $nhanvienchinhthuc->chucVu->PC_Trach_nhiem)*0.015;
+                        $bhtn = ($nhanvienchinhthuc->chucVu->LuongCoBan + $nhanvienchinhthuc->chucVu->PC_Chuc_vu+ $nhanvienchinhthuc->chucVu->PC_Trach_nhiem)*0.01;
+                        $tongBH = $bhxh + $bhyt + $bhtn;
+                        if($nhanvienchinhthuc->hopDong){
+                        $TNTT = $Tongthunhap - 11000000 - $nhanvienchinhthuc->hopDong->NPT*4400000- $tongBH;
+                        switch (true) {
+                        case ($TNTT <= 5000000):
+                            $thue=$TNTT * 0.05;
+                            break;
+                            case ($TNTT <=10000000):
+                            $thue=$TNTT * 0.1 - 250000;
+                            break;
+                            case ($TNTT <=18000000):
+                            $thue=$TNTT * 0.15 - 750000;
+                            break;
+                            case ($TNTT <=32000000):
+                            $thue=$TNTT * 0.2 - 1650000;
+                            break;
+                            case ($TNTT <=52000000):
+                            $thue=$TNTT * 0.25 - 3250000;
+                            break;
+                            case ($TNTT <=80000000):
+                            $thue=$TNTT * 0.3 - 5850000;
+                            break;
+                            default:
+                            $thue=$TNTT * 0.35 - 9850000;
+                            break;
+                            }
+                            }
+                            else
+                            $thue=0;
+
+                            $luongThucLanh=($Tongthunhap - $bhxh - $bhyt - $bhtn-$thue);
+                            if($thue < 0)
+                            $thue=0;
+                            @endphp
+
+                            <td>{{ number_format(($Tongthunhap)) }}</td>
+                            <td>{{ number_format($bhxh) }}</td>
+                            <td>{{ number_format($bhyt) }}</td>
+                            <td>{{ number_format($bhtn) }}</td>
+
+                            <td>
+
+                                <span>{{number_format($thue)}}</span>
+                                @if($nhanvienchinhthuc->hopDong)
+                                <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation" data-bs-toggle="modal" data-bs-target="#taxCalculationModal"
+                                    data-id="{{$nhanvienchinhthuc->id}}"
+                                    data-hoten="{{$nhanvienchinhthuc->HoTen}}"
+                                    data-position="{{$nhanvienchinhthuc->chucVu->TenChucVu}}"
+                                    data-department="{{$nhanvienchinhthuc->phongBan->TenPhongBan}}"
+                                    data-luongcoban="{{number_format($nhanvienchinhthuc->chucVu->LuongCoBan)}}"
+                                    data-ngaycong="{{$nhanvienchinhthuc->TongSoCong}}"
+                                    data-phucap="{{number_format($nhanvienchinhthuc->chucVu->PC_Chuc_vu + $nhanvienchinhthuc->chucVu->PC_Trach_nhiem)}}"
+                                    data-TongThuNhap="{{number_format($Tongthunhap)}}"
+                                    data-bhxh="{{number_format($bhxh)}}"
+                                    data-bhyt="{{number_format($bhyt)}}"
+                                    data-bhtn="{{number_format($bhtn)}}"
+                                    data-NPT=" {{number_format($nhanvienchinhthuc->hopDong->NPT*4400000)}}"
+                                    data-TongGiamTru="{{number_format($bhxh + $bhyt + $bhtn+11000000+$nhanvienchinhthuc->hopDong->NPT*4400000)}}"
+                                    data-TNTT="{{number_format($TNTT)}}"
+                                    data-TNTTtypeNumber={{$TNTT}}
+                                    data-TNCN="{{number_format($thue)}}">
+                                    <i class="fas fa-calculator"></i> Tính thuế
+                                </button>
+
+                                @else
+                                <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation" data-bs-toggle="modal" data-bs-target="#taxCalculationModal">
+                                    <i class="fas fa-calculator"></i> Tính thuế
+                                </button>
+
+                                @endif
+                            </td>
+                            <td>{{number_format($luongThucLanh)}}</td>
+                            <td>{{number_format(2000000)}}</td>
+                            <td>{{number_format($luongThucLanh-2000000)}}</td>
+
+                            <td data-bs-toggle="modal" data-bs-target="#salaryModal">
+                                <i class="fa-solid fa-eye action-btn"></i>
+                            </td>
                     </tr>
+
+                    @endforeach
                     <tr class="department">
-                        <td colspan="26">Phòng Kinh Doanh</td>
+                        <td colspan="19">Nhân viên thời vụ</td>
                     </tr>
+                    @foreach($nhanvienthoivus as $nhanvienthoivu)
                     <tr class="text-center">
-                        <td>2</td>
-                        <td>NV-002</td>
-                        <td class="text-start">Trần Thị B</td>
-                        <td>Nhân viên</td>
-                        <td>Kinh doanh</td>
-                        <td>8,000,000</td>
-                        <td>1,000,000</td>
-                        <td>500,000</td>
-                        <td>400,000</td>
-                        <td>200,000</td>
-                        <td>0</td>
-                        <td>24</td>
-                        <td>5</td>
-                        <td>1,000,000</td>
-                        <td>11,100,000</td>
-                        <td>1,400,000</td>
-                        <td>240,000</td>
-                        <td>80,000</td>
-                        <td>640,000</td>
-                        <td>120,000</td>
-                        <td>80,000</td>
-                        <td>
+                        <td>{{ $nhanvienthoivu->id }}</td>
+                        <td class="text-start">{{ $nhanvienthoivu->HoTen }}</td>
+                        <td>{{ $nhanvienthoivu->chucVu->TenChucVu }}</td>
+                        <td>{{ $nhanvienthoivu->phongBan->TenPhongBan }}</td>
+                        <td>{{ number_format($nhanvienthoivu->chucVu->LuongCoBan) }}</td>
+                        <td>{{ number_format($nhanvienthoivu->chucVu->PC_Chuc_vu) }}</td>
+                        <td>{{ number_format($nhanvienthoivu->chucVu->PC_Trach_nhiem) }}</td>
+                        <td>{{ $nhanvienthoivu->TongSoCong }}</td>
 
-                            <button class="btn btn-primary btn-sm tax-button ms-2" data-bs-toggle="modal" data-bs-target="#taxCalculationModal">
-                                <i class="fas fa-calculator"></i> Tính thuế
-                            </button>
-                        </td>
-                        <td>9,700,000</td>
-                        <td>1,000,000</td>
-                        <td>8,700,000</td>
-                        <td>Không có</td>
-                        <td data-bs-toggle="modal" data-bs-target="#salaryModal">
-                            <i class="fa-solid fa-eye action-btn"></i>
-                        </td>
+
+                        @php
+                        $Tongthunhap = ($nhanvienthoivu->chucVu->LuongCoBan / 26) * $nhanvienthoivu->TongSoCong
+                        + $nhanvienthoivu->chucVu->PC_Chuc_vu
+                        + $nhanvienthoivu->chucVu->PC_Trach_nhiem;
+                        $bhxh =( $nhanvienthoivu->chucVu->LuongCoBan + $nhanvienthoivu->chucVu->PC_Chuc_vu+ $nhanvienthoivu->chucVu->PC_Trach_nhiem)*0.08;
+                        $bhyt = ($nhanvienthoivu->chucVu->LuongCoBan + $nhanvienthoivu->chucVu->PC_Chuc_vu+ $nhanvienthoivu->chucVu->PC_Trach_nhiem)*0.015;
+                        $bhtn = ($nhanvienthoivu->chucVu->LuongCoBan + $nhanvienthoivu->chucVu->PC_Chuc_vu+ $nhanvienthoivu->chucVu->PC_Trach_nhiem)*0.01;
+                        $tongBH = $bhxh + $bhyt + $bhtn;
+                        if($nhanvienthoivu->hopDong){
+                        $TNTT = $Tongthunhap - 11000000 - $nhanvienthoivu->hopDong->NPT*4400000- $tongBH;
+                        switch (true) {
+                        case ($TNTT <= 5000000):
+                            $thue=$TNTT * 0.05;
+                            break;
+                            case ($TNTT <=10000000):
+                            $thue=$TNTT * 0.1 - 250000;
+                            break;
+                            case ($TNTT <=18000000):
+                            $thue=$TNTT * 0.15 - 750000;
+                            break;
+                            case ($TNTT <=32000000):
+                            $thue=$TNTT * 0.2 - 1650000;
+                            break;
+                            case ($TNTT <=52000000):
+                            $thue=$TNTT * 0.25 - 3250000;
+                            break;
+                            case ($TNTT <=80000000):
+                            $thue=$TNTT * 0.3 - 5850000;
+                            break;
+                            default:
+                            $thue=$TNTT * 0.35 - 9850000;
+                            break;
+                            }
+                            }
+                            else
+                            $thue=0;
+
+                            $luongThucLanh=($Tongthunhap - $bhxh - $bhyt - $bhtn-$thue);
+                            if($thue < 0)
+                            $thue=0;
+                            @endphp
+
+                            <td>{{ number_format(($Tongthunhap)) }}</td>
+                            <td>{{ number_format($bhxh) }}</td>
+                            <td>{{ number_format($bhyt) }}</td>
+                            <td>{{ number_format($bhtn) }}</td>
+
+                            <td>
+
+                                <span>{{number_format($thue)}}</span>
+                                @if($nhanvienthoivu->hopDong)
+                                <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation" data-bs-toggle="modal" data-bs-target="#taxCalculationModal"
+                                    data-id="{{$nhanvienthoivu->id}}"
+                                    data-hoten="{{$nhanvienthoivu->HoTen}}"
+                                    data-position="{{$nhanvienthoivu->chucVu->TenChucVu}}"
+                                    data-department="{{$nhanvienthoivu->phongBan->TenPhongBan}}"
+                                    data-luongcoban="{{number_format($nhanvienthoivu->chucVu->LuongCoBan)}}"
+                                    data-ngaycong="{{$nhanvienthoivu->TongSoCong}}"
+                                    data-phucap="{{number_format($nhanvienthoivu->chucVu->PC_Chuc_vu + $nhanvienthoivu->chucVu->PC_Trach_nhiem)}}"
+                                    data-TongThuNhap="{{number_format($Tongthunhap)}}"
+                                    data-bhxh="{{number_format($bhxh)}}"
+                                    data-bhyt="{{number_format($bhyt)}}"
+                                    data-bhtn="{{number_format($bhtn)}}"
+                                    data-NPT=" {{number_format($nhanvienthoivu->hopDong->NPT*4400000)}}"
+                                    data-TongGiamTru="{{number_format($bhxh + $bhyt + $bhtn+11000000+$nhanvienthoivu->hopDong->NPT*4400000)}}"
+                                    data-TNTT="{{number_format($TNTT)}}"
+                                    data-TNTTtypeNumber={{$TNTT}}
+                                    data-TNCN="{{number_format($thue)}}">
+                                    <i class="fas fa-calculator"></i> Tính thuế
+                                </button>
+
+                                @else
+                                <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation" data-bs-toggle="modal" data-bs-target="#taxCalculationModal">
+                                    <i class="fas fa-calculator"></i> Tính thuế
+                                </button>
+
+                                @endif
+                            </td>
+                            <td>{{number_format($luongThucLanh)}}</td>
+                            <td>{{number_format(2000000)}}</td>
+                            <td>{{number_format($luongThucLanh-2000000)}}</td>
+
+                            <td data-bs-toggle="modal" data-bs-target="#salaryModal">
+                                <i class="fa-solid fa-eye action-btn"></i>
+                            </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -348,7 +465,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="salaryModalLabel">
                         <i class="fas fa-file-invoice-dollar me-2"></i>
-                        CÔNG TY ABC - PHIẾU CHI LƯƠNG
+                        CÔNG TY TNHH DƯỢC PHẨM SÂM NGỌC LINH - PHIẾU CHI LƯƠNG
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -357,94 +474,26 @@
 
                     <div class="detail-row">
                         <div class="detail-label">Họ và tên:</div>
-                        <div class="detail-value">Nguyễn Văn A</div>
+                        <div class="detail-value" id="salaryName">Nguyễn Văn A</div>
                     </div>
 
                     <div class="detail-row">
                         <div class="detail-label">Mã số NV:</div>
-                        <div class="detail-value">NV-001</div>
+                        <div class="detail-value" id="salaryID">NV-001</div>
                     </div>
 
                     <div class="detail-row">
                         <div class="detail-label">Chức vụ:</div>
-                        <div class="detail-value">Trưởng phòng</div>
+                        <div class="detail-value" id="salaryPosition">Trưởng phòng</div>
                     </div>
 
                     <div class="detail-row">
-                        <div class="detail-label">Bộ phận:</div>
-                        <div class="detail-value">Hành chính</div>
+                        <div class="detail-label">Phòng ban:</div>
+                        <div class="detail-value" id="salaryDeparment">Hành chính</div>
                     </div>
-
-                    <div class="highlight-section">
-                        <div class="detail-row">
-                            <div class="detail-label">Lương cơ bản:</div>
-                            <div class="detail-value">10,000,000</div>
-                        </div>
-
-                        <div class="detail-row">
-                            <div class="detail-label">Phụ cấp:</div>
-                            <div class="detail-value">
-                                2,000,000 (Chức vụ), 1,000,000 (Trách nhiệm),<br>
-                                500,000 (Ăn ca), 300,000 (Xăng xe)
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="detail-row">
-                        <div class="detail-label">Ngày công:</div>
-                        <div class="detail-value">26</div>
-                    </div>
-
-                    <div class="detail-row">
-                        <div class="detail-label">Làm thêm:</div>
-                        <div class="detail-value">10 giờ</div>
-                    </div>
-
-                    <div class="detail-row">
-                        <div class="detail-label">Thu nhập khác:</div>
-                        <div class="detail-value">1,500,000</div>
-                    </div>
-
-                    <div class="highlight-section">
-                        <div class="detail-row">
-                            <div class="detail-label">TN miễn thuế:</div>
-                            <div class="detail-value">500,000</div>
-                        </div>
-
-                        <div class="detail-row">
-                            <div class="detail-label">Giảm trừ:</div>
-                            <div class="detail-value">1,000,000</div>
-                        </div>
-
-                        <div class="detail-row">
-                            <div class="detail-label">TN tính thuế:</div>
-                            <div class="detail-value">13,800,000</div>
-                        </div>
-
-                        <div class="detail-row">
-                            <div class="detail-label">Bậc thuế:</div>
-                            <div class="detail-value">3</div>
-                        </div>
-
-                        <div class="detail-row">
-                            <div class="detail-label">Thuế TNCN phải nộp:</div>
-                            <div class="detail-value">600,000</div>
-                        </div>
-                    </div>
-
-                    <div class="detail-row">
-                        <div class="detail-label">Tạm ứng lương:</div>
-                        <div class="detail-value">2,000,000</div>
-                    </div>
-
-                    <div class="detail-row">
-                        <div class="detail-label">Lương thực lãnh:</div>
-                        <div class="detail-value fw-bold">13,500,000</div>
-                    </div>
-
-                    <div class="detail-row">
-                        <div class="detail-label">Còn lãnh:</div>
-                        <div class="detail-value fw-bold text-primary">11,500,000</div>
+                        <div class="detail-label">Tiền lương:</div>
+                        <div class="detail-value" id="salary"></div>
                     </div>
 
                     <div class="detail-row">
@@ -472,16 +521,16 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="employee-info mb-4">
+                    <div class="nhanvienthoivu-info mb-4">
                         <h6 class="text-muted mb-3">Thông tin nhân viên</h6>
                         <div class="row">
                             <div class="col-md-6">
-                                <p><strong>Họ và tên:</strong> Nguyễn Văn A</p>
-                                <p><strong>Mã số NV:</strong> NV-001</p>
+                                <p><strong>Họ và tên:</strong> <span id="HoTen">Nguyễn Văn A</span></p>
+                                <p><strong>Mã số NV:</strong> <span id="MaNV">NV-001</span></p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>Chức vụ:</strong> Trưởng phòng</p>
-                                <p><strong>Bộ phận:</strong> Hành chính</p>
+                                <p><strong>Chức vụ:</strong> <span id="ChucVu">Trưởng phòng</span></p>
+                                <p><strong>Phòng ban:</strong> <span id="PhongBan">Hành chính</span></p>
                             </div>
                         </div>
                     </div>
@@ -500,19 +549,20 @@
                                 <tbody>
                                     <tr>
                                         <td>Lương cơ bản</td>
-                                        <td class="text-end">10,000,000</td>
+                                        <td class="text-end" id="LuongCoBan">10,000,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Số ngày công</td>
+                                        <td class="text-end" id="NgayCong">1,500,000</td>
                                     </tr>
                                     <tr>
                                         <td>Phụ cấp</td>
-                                        <td class="text-end">3,800,000</td>
+                                        <td class="text-end" id="PhuCap">3,800,000</td>
                                     </tr>
-                                    <tr>
-                                        <td>Thu nhập khác</td>
-                                        <td class="text-end">1,500,000</td>
-                                    </tr>
+
                                     <tr class="table-info">
                                         <td><strong>Tổng thu nhập</strong></td>
-                                        <td class="text-end"><strong>15,300,000</strong></td>
+                                        <td class="text-end" id="TongThuNhap"><strong>15,300,000</strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -525,23 +575,27 @@
                                 <tbody>
                                     <tr>
                                         <td>Bảo hiểm xã hội (8%)</td>
-                                        <td class="text-end">800,000</td>
+                                        <td class="text-end"><span id="BHXH">800,000</span></td>
                                     </tr>
                                     <tr>
                                         <td>Bảo hiểm y tế (1.5%)</td>
-                                        <td class="text-end">150,000</td>
+                                        <td class="text-end" id="BHYT">150,000</td>
                                     </tr>
                                     <tr>
                                         <td>Bảo hiểm thất nghiệp (1%)</td>
-                                        <td class="text-end">100,000</td>
+                                        <td class="text-end" id="BHTT">100,000</td>
                                     </tr>
                                     <tr>
                                         <td>Giảm trừ gia cảnh</td>
-                                        <td class="text-end">1,000,000</td>
+                                        <td class="text-end">11,000,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Người phụ thuộc</td>
+                                        <td class="text-end" id="NPT">4,400,000</td>
                                     </tr>
                                     <tr class="table-info">
                                         <td><strong>Tổng giảm trừ</strong></td>
-                                        <td class="text-end"><strong>2,050,000</strong></td>
+                                        <td class="text-end" id="TongGiamTru"><strong>2,050,000</strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -553,12 +607,12 @@
                             <table class="table tax-calculation-table">
                                 <tbody>
                                     <tr>
-                                        <td>Thu nhập chịu thuế</td>
-                                        <td class="text-end">13,800,000</td>
+                                        <td>Thu nhập tính thuế</td>
+                                        <td class="text-end" id="TNTT">13,800,000</td>
                                     </tr>
                                     <tr>
                                         <td>Bậc thuế áp dụng</td>
-                                        <td class="text-end">3 (15%)</td>
+                                        <td class="text-end" id="BacThue">3 (15%)</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -571,7 +625,7 @@
                                     <small class="text-muted">Đã tính theo biểu thuế lũy tiến từng phần</small>
                                 </div>
                                 <div class="col-auto">
-                                    <span class="tax-value">600,000 VNĐ</span>
+                                    <span class="tax-value"><span id="TNCN">600,000</span> VNĐ</span>
                                 </div>
                             </div>
                         </div>
@@ -588,3 +642,71 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const viewButtons = document.querySelectorAll(".taxCalculation");
+            viewButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const MaNV = button.getAttribute("data-id");
+                    const HoTen = button.getAttribute("data-hoten");
+                    const ChucVu = button.getAttribute("data-position");
+                    const PhongBan = button.getAttribute("data-department");
+                    const LuongCoBan = button.getAttribute("data-luongcoban");
+                    const NgayCong = button.getAttribute("data-ngaycong");
+                    const PhuCap = button.getAttribute("data-phucap");
+                    const TongThuNhap = button.getAttribute("data-TongThuNhap");
+                    const BHXH = button.getAttribute("data-bhxh");
+
+                    const BHYT = button.getAttribute("data-bhyt");
+                    const BHTN = button.getAttribute("data-bhtn");
+                    const NPT = button.getAttribute("data-NPT");
+
+                    const TongGiamTru = button.getAttribute("data-TongGiamTru");
+                    const TNTT = button.getAttribute("data-TNTT");
+                    const TNCN = button.getAttribute("data-TNCN");
+                    document.getElementById("MaNV").innerText = MaNV;
+                    document.getElementById("HoTen").innerText = HoTen;
+                    document.getElementById("ChucVu").innerText = ChucVu;
+                    document.getElementById("PhongBan").innerText = PhongBan;
+                    document.getElementById("LuongCoBan").innerText = LuongCoBan;
+                    document.getElementById("NgayCong").innerText = NgayCong;
+                    document.getElementById("PhuCap").innerText = PhuCap;
+                    document.getElementById("TongThuNhap").innerText = TongThuNhap;
+                    document.getElementById("BHXH").innerText = BHXH;
+                    document.getElementById("BHYT").innerText = BHYT;
+                    document.getElementById("BHTT").innerText = BHTN;
+                    document.getElementById("NPT").innerText = NPT;
+                    document.getElementById("TongGiamTru").innerText = TongGiamTru;
+                    document.getElementById("TNTT").innerText = TNTT;
+                    document.getElementById("TNCN").innerText = TNCN;
+                    const TNTTtypeNumber = (button.getAttribute("data-TNTTtypeNumber"));
+
+                    let bac;
+                    switch (true) {
+                        case (TNTTtypeNumber <= 5000000):
+                            bac = "1 (5% x TNTT)";
+                            break;
+                        case (TNTTtypeNumber <= 10000000):
+                            bac = "2 (10% x TNTT - 250,000)";
+                            break;
+                        case (TNTTtypeNumber <= 18000000):
+                            bac = "3 (15% x TNTT - 750,000)";
+                            break;
+                        case (TNTTtypeNumber <= 32000000):
+                            bac = "4 (20% x TNTT - 1,650,000)";
+                            break;
+                        case (TNTTtypeNumber <= 52000000):
+                            bac = "5 (25% x TNTT - 3,250,000)";
+                            break;
+                        case (TNTTtypeNumber <= 80000000):
+                            bac = "6 (30% x TNTT - 5,850,000)";
+                            break;
+                        default:
+                            bac = "7 (35% x TNTT - 9,850,000)";
+                            break;
+                    }
+                    document.getElementById("BacThue").innerText = bac;
+                });
+            });
+        });
+    </script>
