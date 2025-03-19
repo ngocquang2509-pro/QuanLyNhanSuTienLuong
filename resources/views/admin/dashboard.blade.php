@@ -10,8 +10,11 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
+            @if(Auth::user()->type == 'CTO')
+            @include('CTO.layouts.navigation')
+            @else
             @include('admin.layouts.navigation')
-
+            @endif
             <!-- Main Content -->
             @include('admin.contents.dashboard')
         </div>

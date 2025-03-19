@@ -20,6 +20,7 @@ Route::put('/dashboardAD/{id}', [App\Http\Controllers\AdminController::class, 'u
 Route::delete('/dashboardAD/{id}', [App\Http\Controllers\AdminController::class, 'destroy'])->name('admin.delete');
 Route::get('/dashboardAC', [App\Http\Controllers\AccountingController::class, 'index'])->name('Accounting.dashboard');
 Route::get('/salaryAC', [App\Http\Controllers\AccountingController::class, 'salary'])->name('Accounting.salary');
+Route::post('/salaryAC', [App\Http\Controllers\AccountingController::class, 'salaryAdd'])->name('Accounting.salaryAdd');
 Route::get('/paymentAC', [App\Http\Controllers\AccountingController::class, 'payment'])->name('Accounting.payment');
 Route::get('/dashboardHM', [App\Http\Controllers\HumanController::class, 'index'])->name('Human.dashboard');
 Route::get('/ManagerHM', [App\Http\Controllers\HumanController::class, 'ManagerHM'])->name('Human.Manager');
@@ -46,3 +47,5 @@ Route::get('/ShiftManager', [App\Http\Controllers\HumanController::class, 'Shift
 Route::post('/ShiftManager', [App\Http\Controllers\HumanController::class, 'ShiftManagerAdd'])->name('Human.ShiftManagerAdd');
 Route::put('/ShiftManager/{id}', [App\Http\Controllers\HumanController::class, 'ShiftManagerUpdate'])->name('Human.ShiftManagerUpdate');
 Route::delete('/ShiftManager/{id}', [App\Http\Controllers\HumanController::class, 'ShiftManagerDelete'])->name('Human.ShiftManagerDelete');
+Route::get('/ManagerCTO', [App\Http\Controllers\CTOController::class, 'dashboard'])->name('CTO.dashboard');
+Route::get('/ManagerCTOadmin', [App\Http\Controllers\CTOController::class, 'Admin'])->name('CTO.Admin');

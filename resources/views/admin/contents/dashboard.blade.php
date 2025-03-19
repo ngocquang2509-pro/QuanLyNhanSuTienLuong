@@ -372,6 +372,7 @@
                         <option value="ADM">Quản trị viên</option>
                         <option value="HMN">Quản lý nhân sự </option>
                         <option value="ACC">Quản lý kế toán</option>
+                        <option value="CTO">Giám đốc</option>
                     </select>
                 </div>
 
@@ -408,6 +409,7 @@
                         <option value="ADM">Quản trị viên</option>
                         <option value="HMN">Quản lý nhân sự</option>
                         <option value="ACC">Quản lý Kế toán</option>
+                        <option value="CTO">Giám đốc</option>
                     </select>
                 </div>
                 <button type="submit" class="submit-btn">Cập nhật thông tin</button>
@@ -455,6 +457,8 @@
                 <td>Quản lý nhân sự</td>
                 @elseif($user->type == 'ACC')
                 <td>Quản lý Kế toán</td>
+                @elseif($user->type == 'CTO')
+                <td>Giám đốc</td>
                 @endif
                 <td>
                     <div class="action-buttons ">

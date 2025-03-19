@@ -1,3 +1,5 @@
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <style>
     .table-header {
         background-color: #f8f9fa;
@@ -222,7 +224,7 @@
     <div class="container-fluid py-4 col-md-10 ">
         <h4 class="text-center mb-4">BẢNG LƯƠNG THÁNG 02/2025</h4>
         <div class="table-responsive">
-            <table class="table table-bordered table-hover salary-table">
+            <table class="table table-bordered table-hover salary-table" id="salaryTable">
                 <thead>
                     <tr class="table-header text-center">
                         <th rowspan="2">Mã số NV</th>
@@ -250,9 +252,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="department">
-                        <td colspan="19">Nhân viên chính thức</td>
-                    </tr>
+
                     @foreach($nhanvienchinhthucs as $nhanvienchinhthuc)
                     <tr class="text-center">
                         <td>{{ $nhanvienchinhthuc->id }}</td>
@@ -353,9 +353,7 @@
                     </tr>
 
                     @endforeach
-                    <tr class="department">
-                        <td colspan="19">Nhân viên thời vụ</td>
-                    </tr>
+
                     @foreach($nhanvienthoivus as $nhanvienthoivu)
                     <tr class="text-center">
                         <td>{{ $nhanvienthoivu->id }}</td>
@@ -458,6 +456,7 @@
                 </tbody>
             </table>
         </div>
+        <button class="btn btn-primary my-2 " id="createSalary">Tạo lương</button>
     </div>
     <div class="modal fade" id="salaryModal" tabindex="-1" aria-labelledby="salaryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -708,5 +707,56 @@
                     document.getElementById("BacThue").innerText = bac;
                 });
             });
+        });
+        document.getElementById("createSalary").addEventListener("click", function() {
+
+            let table = document.getElementById("salaryTable");
+            let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+            let luongData = [];
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                let cells = row.getElementsByTagName("td");
+                let luong = {
+                    HoTen: cells[1].innerText,
+                    ChucVu: cells[2].innerText,
+                    PhongBan: cells[3].innerText,
+                    LuongCB: cells[4].innerText,
+                    pc_chuc_vu: cells[5].innerText,
+                    pc_trach_nhiem: cells[6].innerText,
+                    SoNgayCong: cells[7].innerText,
+                    TongThuNhap: cells[8].innerText,
+                    bhxh: cells[9].innerText,
+                    bhyt: cells[10].innerText,
+                    bhtn: cells[11].innerText,
+                    thue_tncn: cells[12].innerText,
+                    luong_thuc_lanh: cells[13].innerText,
+                    tam_ung: cells[14].innerText,
+                    con_lanh: cells[15].innerText
+                };
+                luongData.push(luong);
+
+            }
+
+            console.log("Creating salary...");
+            console.log(luongData);
+            fetch("{{ route('Accounting.salaryAdd') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content") // Laravel CSRF Token
+                    },
+                    body: JSON.stringify({
+                        salaries: luongData
+                    }) // Đóng gói mảng vào một object
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Dữ liệu lương đã được gửi thành công!");
+                    } else {
+                        alert("Có lỗi xảy ra!");
+                    }
+                })
+                .catch(error => console.error("Lỗi:", error));
         });
     </script>

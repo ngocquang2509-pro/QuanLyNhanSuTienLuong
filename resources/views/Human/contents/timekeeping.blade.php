@@ -70,12 +70,18 @@
             <div class="card shadow-sm">
                 <div class="dashboard">
                     <div class="card">
+                        @if(isset($nhanvien))
                         <div class="card-title">
                             <span>{{$nhanvien->HoTen}}</span>
                             <i>📅</i>
                         </div>
                         <div class="stat">Số công: {{$nhanvien->TongSoCong}}</div>
-
+                        @else
+                        <div class="card-title">
+                            <span>Số công ngày</span>
+                            <span>{{ request('dateWork') }}</span>
+                        </div>
+                        @endif
                     </div>
 
                     <div class="card">
@@ -98,10 +104,30 @@
 
                             </div>
                         </div>
-                        <div class="col-md-3">
-
+                        <div class="col-md-2">
+                            <div class="input-group custom-filter mb-2 mb-md-0">
+                                <span class="input-group-text bg-white">
+                                    <i class="fas fa-sitemap me-1"></i> Phòng ban
+                                </span>
+                                <select class="form-select" name="department">
+                                    <option value="">Tất cả phòng ban</option>
+                                    @foreach ($departments as $department)
+                                    <option value="{{$department->id}}">{{$department->TenPhongBan}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                            <div class="input-group custom-filter mb-2 mb-md-0">
+                                <span class="input-group-text bg-white">
+                                    Ngày làm việc
+                                </span>
+
+                                <input type="date" name="dateWork" class="form-control">
+
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <div class="search-bar">
 
                                 <select name="employee" id="" class="form-control">
@@ -132,6 +158,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if($timekeepings->count() != 0)
                             @foreach ($timekeepings as $timekeeping)<tr>
 
                                 <td class="">{{$timekeeping->nhanVien->id}}-{{$timekeeping->nhanVien->HoTen}}</td>
@@ -162,6 +189,7 @@
                                 </td>
                             </tr>
                             @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

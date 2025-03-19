@@ -44,6 +44,8 @@ class HomeController extends Controller
                 return redirect()->route('admin.dashboard');
             } else if (Auth::user()->type == 'HMN') {
                 return redirect()->route('Human.dashboard');
+            } else if (Auth::user()->type == 'CTO') {
+                return redirect()->route('CTO.dashboard');
             } else {
                 return redirect()->route('Accounting.dashboard');
             }

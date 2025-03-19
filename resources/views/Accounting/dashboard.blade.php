@@ -10,10 +10,15 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
+            @if(Auth::user()->type == 'CTO')
+            @include('CTO.layouts.navigation')
+            @else
             @include('Accounting.layouts.navigation')
-
+            @endif
             <!-- Main Content -->
             @include('Accounting.contents.dashboard')
+
+
         </div>
     </div>
 

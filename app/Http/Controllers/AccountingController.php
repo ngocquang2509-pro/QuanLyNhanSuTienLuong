@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NhanVien;
+use App\Models\salary;
 use Illuminate\Http\Request;
 
 class AccountingController extends Controller
@@ -28,6 +29,25 @@ class AccountingController extends Controller
             ->get();
 
         return view('Accounting.salary', compact('nhanvienchinhthucs', 'nhanvienthoivus'));
+    }
+    public function salaryAdd(Request $request)
+    {
+        $salaries = $request->input('salaries');
+
+        if (!$salaries) {
+            return response()->json(['success' => false, 'message' => 'Không có dữ liệu lương!'], 400);
+        }
+        $savedSalaries = [];
+        foreach ($salaries as $salary) {
+            salary::create($salary); // Lưu vào database
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Lương đã được lưu!',
+            'data' => $savedSalaries
+        ]);
     }
 
 

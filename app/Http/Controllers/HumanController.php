@@ -9,14 +9,151 @@ use App\Models\HopDong;
 use App\Models\lichlamviec;
 use App\Models\NhanVien;
 use App\Models\PhongBan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class HumanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('Human.dashboard');
+        $departments = PhongBan::all();
+        $dateWork = '2025-03-03'; // Hoặc lấy từ request: $request->dateWork
+        $department = PhongBan::find(1); // Hoặc lấy từ request nếu cần
+        $departmentName = $department->TenPhongBan;
+        if ($request->dateWork) {
+            $dateWork = $request->dateWork;
+        }
+        if ($request->department) {
+            $department = PhongBan::find($request->department);
+            $departmentName = $department->TenPhongBan;
+        }
+        $nhanviendunggio = NhanVien::whereHas('chamCongs', function ($query) use ($dateWork) {
+            $query->where('TrangThai', 'Đúng giờ')
+                ->whereHas('lichLamViec', function ($subQuery) use ($dateWork) {
+                    $subQuery->where('NgayLamViec', $dateWork);
+                });
+        })->whereHas('phongBan', function ($query) use ($departmentName) {
+            $query->where('TenPhongBan', $departmentName);
+        })->count();
+        $nhanviendimuon = NhanVien::whereHas('chamCongs', function ($query) use ($dateWork) {
+            $query->where('TrangThai', 'Muộn 6 đến 30 phút')
+                ->whereHas('lichLamViec', function ($subQuery) use ($dateWork) {
+                    $subQuery->where('NgayLamViec', $dateWork);
+                });
+        })->whereHas('phongBan', function ($query) use ($departmentName) {
+            $query->where('TenPhongBan', $departmentName);
+        })->count() + NhanVien::whereHas('chamCongs', function ($query) use ($dateWork) {
+            $query->where('TrangThai', 'Muộn 30 đến 60 phút')
+                ->whereHas('lichLamViec', function ($subQuery) use ($dateWork) {
+                    $subQuery->where('NgayLamViec', $dateWork);
+                });
+        })->whereHas('phongBan', function ($query) use ($departmentName) {
+            $query->where('TenPhongBan', $departmentName);
+        })->count();
+        $nhanvienvangmat = NhanVien::whereHas('chamCongs', function ($query) use ($dateWork) {
+            $query->where('TrangThai', 'Vắng mặt')
+                ->whereHas('lichLamViec', function ($subQuery) use ($dateWork) {
+                    $subQuery->where('NgayLamViec', $dateWork);
+                });
+        })->whereHas('phongBan', function ($query) use ($departmentName) {
+            $query->where('TenPhongBan', $departmentName);
+        })->count();
+        $date = Carbon::parse($dateWork);
+        $startOfWeek = $date->copy()->startOfWeek(); // Lấy thứ 2 của tuần
+        $endOfWeek = $date->copy()->endOfWeek(); // Lấy chủ nhật của tuần
+
+        $days = [];
+        $dataset1 = [];
+        $dataset2 = [];
+        $dataset3 = [];
+
+        for ($day = $startOfWeek; $day->lte($endOfWeek); $day->addDay()) {
+            $days[] = $day->toDateString(); // Lưu lại các ngày trong tuần
+        }
+        foreach ($days as $day) {
+            $part1 = NhanVien::whereHas('chamCongs', function ($query) use ($day) {
+                $query->where('TrangThai', 'Đúng giờ')
+                    ->whereHas('lichLamViec', function ($subQuery) use ($day) {
+                        $subQuery->where('NgayLamViec', $day);
+                    });
+            })->whereHas('phongBan', function ($query) use ($departmentName) {
+                $query->where('TenPhongBan', $departmentName);
+            })->count();
+            $part2 = NhanVien::whereHas('chamCongs', function ($query) use ($day) {
+                $query->where('TrangThai', 'Muộn 6 đến 30 phút')
+                    ->whereHas('lichLamViec', function ($subQuery) use ($day) {
+                        $subQuery->where('NgayLamViec', $day);
+                    });
+            })->whereHas('phongBan', function ($query) use ($departmentName) {
+                $query->where('TenPhongBan', $departmentName);
+            })->count() + NhanVien::whereHas('chamCongs', function ($query) use ($day) {
+                $query->where('TrangThai', 'Muộn 30 đến 60 phút')
+                    ->whereHas('lichLamViec', function ($subQuery) use ($day) {
+                        $subQuery->where('NgayLamViec', $day);
+                    });
+            })->whereHas('phongBan', function ($query) use ($departmentName) {
+                $query->where('TenPhongBan', $departmentName);
+            })->count();
+            $part3 = NhanVien::whereHas('chamCongs', function ($query) use ($day) {
+                $query->where('TrangThai', 'Vắng mặt')
+                    ->whereHas('lichLamViec', function ($subQuery) use ($day) {
+                        $subQuery->where('NgayLamViec', $day);
+                    });
+            })->whereHas('phongBan', function ($query) use ($departmentName) {
+                $query->where('TenPhongBan', $departmentName);
+            })->count();
+            $dataset1[] = $part1;
+            $dataset2[] = $part2;
+            $dataset3[] = $part3;
+        }
+        $TongNV = 0;
+        $datasetDeparment1 = [];
+        $datasetDeparment2 = [];
+        $datasetDeparment3 = [];
+        foreach ($departments as $department) {
+            $TenPB = $department->TenPhongBan;
+            $part1 = NhanVien::whereHas('chamCongs', function ($query) use ($dateWork) {
+                $query->where('TrangThai', 'Đúng giờ')
+                    ->whereHas('lichLamViec', function ($subQuery) use ($dateWork) {
+                        $subQuery->where('NgayLamViec', $dateWork);
+                    });
+            })->whereHas('phongBan', function ($query) use ($TenPB) {
+                $query->where('TenPhongBan', $TenPB);
+            })->count();
+            $part2 = NhanVien::whereHas('chamCongs', function ($query) use ($dateWork) {
+                $query->where('TrangThai', 'Muộn 6 đến 30 phút')
+                    ->whereHas('lichLamViec', function ($subQuery) use ($dateWork) {
+                        $subQuery->where('NgayLamViec', $dateWork);
+                    });
+            })->whereHas('phongBan', function ($query) use ($TenPB) {
+                $query->where('TenPhongBan', $TenPB);
+            })->count() + NhanVien::whereHas('chamCongs', function ($query) use ($dateWork) {
+                $query->where('TrangThai', 'Muộn 30 đến 60 phút')
+                    ->whereHas('lichLamViec', function ($subQuery) use ($dateWork) {
+                        $subQuery->where('NgayLamViec', $dateWork);
+                    });
+            })->whereHas('phongBan', function ($query) use ($TenPB) {
+                $query->where('TenPhongBan', $TenPB);
+            })->count();
+            $part3 = NhanVien::whereHas('chamCongs', function ($query) use ($dateWork) {
+                $query->where('TrangThai', 'Vắng mặt')
+                    ->whereHas('lichLamViec', function ($subQuery) use ($dateWork) {
+                        $subQuery->where('NgayLamViec', $dateWork);
+                    });
+            })->whereHas('phongBan', function ($query) use ($TenPB) {
+                $query->where('TenPhongBan', $TenPB);
+            })->count();
+
+            $TongNV =  NhanVien::where('MaPhongBan', $department->id)->count();
+
+            $datasetDeparment1[] = (($part1 / $TongNV) * 100);
+            $datasetDeparment2[] = (($part2 / $TongNV) * 100);
+            $datasetDeparment3[] = (($part3 / $TongNV) * 100);
+        }
+
+
+        return view('Human.dashboard', compact('nhanviendunggio', 'nhanviendimuon', 'nhanvienvangmat', 'departments', 'days', 'dateWork', 'department', 'dataset1', 'dataset2', 'dataset3', 'datasetDeparment1', 'datasetDeparment2', 'datasetDeparment3'));
     }
     public function ManagerHM()
     {
@@ -218,20 +355,76 @@ class HumanController extends Controller
     }
     public function Timekeeping(Request $request)
     {
-
+        $departments = PhongBan::all();
         $employees = NhanVien::all();
-        $ngayLamViec = '2025-03-03';
+        $nhanvien = null;
 
+        // Lấy ngày làm việc từ request, nếu không có thì mặc định là hôm nay
+        $ngayLamViec = $request->dateWork ?? '2025-03-03';
+
+        // Mặc định lấy công của nhân viên có id = 1 theo ngày làm việc
         $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
-            ->where('nhanvien_id', 1)
+            ->whereHas('lichLamViec', function ($query) use ($ngayLamViec) {
+                $query->where('NgayLamViec', $ngayLamViec);
+            })
             ->get();
-        $nhanvien = NhanVien::find(1);
+        if ($timekeepings->isEmpty()) {
+            $timekeepings = collect(); // Trả về một collection rỗng thay vì null
+        }
+        // Nếu có lọc theo nhân viên
         if ($request->employee) {
+            $nhanvien = NhanVien::find($request->employee);
+        }
+
+        // Nếu có lọc theo phòng ban
+        if ($request->department) {
+            $employeesInDepartment = NhanVien::where('MaPhongBan', $request->department)->pluck('id');
+        }
+
+        // Nếu cả employee và department cùng tồn tại
+        if ($request->employee && $request->department) {
+            if ($nhanvien && in_array($request->employee, $employeesInDepartment->toArray())) {
+                $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
+                    ->where('nhanvien_id', $request->employee)
+                    ->get();
+            } else {
+                $timekeepings = collect(); // Nếu nhân viên không thuộc phòng ban, trả về danh sách rỗng
+            }
+        } elseif ($request->department && $request->dateWork) {
+            $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
+                ->whereIn('nhanvien_id', $employeesInDepartment)
+                ->whereHas('lichLamViec', function ($query) use ($ngayLamViec) {
+                    $query->where('NgayLamViec', $ngayLamViec);
+                })
+                ->get();
+        } elseif ($request->employee && $request->dateWork) {
+            $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
+                ->where('nhanvien_id', $request->employee)
+                ->whereHas('lichLamViec', function ($query) use ($ngayLamViec) {
+                    $query->where('NgayLamViec', $ngayLamViec);
+                })
+                ->get();
+        }
+        // Nếu chỉ có phòng ban
+        elseif ($request->department) {
+            $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
+                ->whereIn('nhanvien_id', $employeesInDepartment)
+                ->get();
+        }
+        // Nếu chỉ có nhân viên
+        elseif ($request->employee) {
             $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
                 ->where('nhanvien_id', $request->employee)
                 ->get();
-            $nhanvien = NhanVien::find($request->employee);
         }
-        return view('Human.Timekeeping', compact('timekeepings', 'employees', 'nhanvien'));
+        if ($request->employee && $request->department && $request->dateWork) {
+            $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
+                ->where('nhanvien_id', $request->employee)
+                ->whereHas('lichLamViec', function ($query) use ($ngayLamViec) {
+                    $query->where('NgayLamViec', $ngayLamViec);
+                })
+                ->get();
+        }
+        return view('Human.Timekeeping', compact('timekeepings', 'employees', 'nhanvien', 'departments'));
     }
 }

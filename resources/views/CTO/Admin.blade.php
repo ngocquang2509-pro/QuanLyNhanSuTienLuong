@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 
-@include('admin.layouts.head')
+@include('CTO.layouts.head')
 
 <body class="bg-light">
     <!-- Header Bar -->
-    @include('admin.layouts.header')
+    @include('CTO.layouts.header')
 
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-
-            @include('admin.layouts.navigation')
+            @include('CTO.layouts.navigation')
 
             <!-- Main Content -->
-            @include('admin.contents.HR_Manager')
+            @include('admin.contents.dashboard')
         </div>
     </div>
 
