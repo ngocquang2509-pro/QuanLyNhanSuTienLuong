@@ -16,12 +16,12 @@ return new class extends Migration
             $table->unsignedBigInteger('nhanvien_id')->unique(); // Đảm bảo 1-1
             $table->string('LoaiHopDong');
             $table->date('ngay_bat_dau');
-            $table->date('ngay_ket_thuc');
+            $table->date('ngay_ket_thuc')->nullable();
             $table->date('ngay_ky');
             $table->text('noi_dung')->nullable();
             $table->foreign('nhanvien_id')->references('id')->on('nhanvien')->onDelete('cascade');
             $table->timestamps();
-            $table->string('TaiKhoan');
+            $table->string('TaiKhoan')->nullable();
             $table->integer('NPT');
         });
     }

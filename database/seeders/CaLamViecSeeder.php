@@ -33,8 +33,8 @@ class CaLamViecSeeder extends Seeder
             [
                 'id' => 3,
                 'TenLoaiCa' => 'Nghỉ phép',
-                'Giobatdau' => null,
-                'Gioketthuc' => null,
+                'Giobatdau' => '00:00:00',
+                'Gioketthuc' => '00:00:00',
                 'created_at' => null,
                 'updated_at' => null,
             ],
