@@ -44,7 +44,7 @@
 <div class="col-md-10 p4">
     <div class="header-section">
         <div class="container">
-            <h1 class="text-center mb-0">Thống Kê Nhân Sự</h1>
+            <h1 class="text-center mb-0">Thống Kê Nhân Sự - Lương</h1>
             <p class="text-center text-muted">
                 Cập nhật ngày: <span id="currentDate"></span>
             </p>
@@ -61,7 +61,7 @@
                             <i class="fas fa-users"></i>
                         </div>
                         <h5 class="card-title">Số lượng nhân sự hiện có</h5>
-                        <h2 class="card-text" id="totalEmployees">125</h2>
+                        <h2 class="card-text" id="totalEmployees">{{$nhanviens}}</h2>
                         <div class="progress mt-2">
                             <div
                                 class="progress-bar bg-primary"
@@ -198,22 +198,25 @@
         const departmentChart = new Chart(deptCtx, {
             type: "pie",
             data: {
-                labels: ["IT", "HR", "Marketing", "Finance", "Sales"],
+                labels: ["Hành chính", "Kế toán", "Nhân sự", "Kinh doanh", "Kĩ thuật", "Sản xuất", "Nghiên cứu và phát triển"],
                 datasets: [{
-                    data: [45, 15, 25, 20, 20],
+                    data: [10, 10, 10, 10, 10, 10, 10],
                     backgroundColor: [
                         "#4e73df",
                         "#1cc88a",
                         "#36b9cc",
                         "#f6c23e",
                         "#e74a3b",
+                        "#333",
+                        "purple",
                     ],
                     hoverBackgroundColor: [
                         "#2e59d9",
                         "#17a673",
                         "#2c9faf",
                         "#dda20a",
-                        "#be2617",
+                        "#be2617", "#333",
+                        "purple",
                     ],
                     hoverBorderColor: "rgba(234, 236, 244, 1)",
                 }, ],

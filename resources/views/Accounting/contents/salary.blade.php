@@ -252,7 +252,9 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    <tr>
+                        <td colspan="19" class="group-header"><b>Nhân viên chính thức</b></td>
+                    </tr>
                     @foreach($nhanvienchinhthucs as $nhanvienchinhthuc)
                     <tr class="text-center">
                         <td>{{ $nhanvienchinhthuc->id }}</td>
@@ -353,7 +355,9 @@
                     </tr>
 
                     @endforeach
-
+                    <tr>
+                        <td colspan="19" class="group-header"><b>Nhân viên thời vụ</b></td>
+                    </tr>
                     @foreach($nhanvienthoivus as $nhanvienthoivu)
                     <tr class="text-center">
                         <td>{{ $nhanvienthoivu->id }}</td>

@@ -10,7 +10,8 @@ class AccountingController extends Controller
 {
     public function index()
     {
-        return view('Accounting.dashboard');
+        $nhanviens = NhanVien::all()->count();
+        return view('Accounting.dashboard', compact('nhanviens'));
     }
     public function salary()
     {
