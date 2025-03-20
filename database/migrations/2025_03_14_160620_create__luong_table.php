@@ -29,6 +29,8 @@ return new class extends Migration
             $table->decimal('tam_ung', 15, 2)->default(0);
             $table->decimal('con_lanh', 15, 2);
             $table->date('NgayTao');
+            // Thêm cột NgayThanhToan kiểu timestamp, cho phép NULL
+            $table->timestamp('NgayThanhToan')->nullable();
             $table->timestamps();
         });
     }

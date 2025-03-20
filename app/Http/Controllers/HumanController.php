@@ -146,10 +146,15 @@ class HumanController extends Controller
             })->count();
 
             $TongNV =  NhanVien::where('MaPhongBan', $department->id)->count();
-
+            if ($TongNV == 0) {
+                $datasetDeparment1[] = 0;
+                $datasetDeparment2[] = 0;
+                $datasetDeparment3[] = 0;
+            } else {
             $datasetDeparment1[] = (($part1 / $TongNV) * 100);
             $datasetDeparment2[] = (($part2 / $TongNV) * 100);
             $datasetDeparment3[] = (($part3 / $TongNV) * 100);
+            }
         }
 
 
