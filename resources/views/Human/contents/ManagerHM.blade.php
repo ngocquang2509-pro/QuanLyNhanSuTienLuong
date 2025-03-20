@@ -597,7 +597,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <h3 class="modal-body text-danger">
-                Bạn có muốn xóa nhân viên này không?
+                Bạn có muốn xóa nhân sự này không?
             </h3>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>

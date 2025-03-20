@@ -12,7 +12,7 @@ class salary extends Model
     protected $table = '_luong';
     
     protected $fillable = [
-        'HoTen', 'ChucVu', 'PhongBan', 'LuongCB', 'pc_chuc_vu', 
+        'nhanvien_id', 'HoTen', 'ChucVu', 'PhongBan', 'LuongCB', 'pc_chuc_vu', 
         'pc_trach_nhiem', 'SoNgayCong', 'TongThuNhap', 'bhxh', 
         'bhyt', 'bhtn', 'thue_tncn', 'luong_thuc_lanh', 'tam_ung', 
         'con_lanh', 'NgayTao', 'NgayThanhToan'
@@ -42,4 +42,20 @@ class salary extends Model
         'NgayTao' => 'date',
         'NgayThanhToan' => 'datetime'
     ];
+    
+    /**
+     * Quan hệ với bảng nhân viên
+     */
+    public function nhanVien()
+    {
+        return $this->belongsTo(NhanVien::class, 'nhanvien_id');
+    }
+    
+    /**
+     * Quan hệ với bảng phiếu lương
+     */
+    public function phieuLuong()
+    {
+        return $this->hasMany('App\Models\PhieuLuong', 'Luong_id');
+    }
 }

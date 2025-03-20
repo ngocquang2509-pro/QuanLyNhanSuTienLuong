@@ -12,25 +12,26 @@ class AccountingController extends Controller
 {
     public function index()
     {
-        return view('Accounting.dashboard');
+        $nhanviens = NhanVien::all()->count();
+        return view('Accounting.dashboard', compact('nhanviens'));
     }
     public function salary()
     {
     // Lấy nhân viên có LoaiHopDong là "Chính thức"
     $nhanvienchinhthucs = NhanVien::with(['hopDong', 'chucVu', 'phongBan'])
         ->whereHas('hopDong', function($query) {
-            $query->where('LoaiHopDong', 'Chính thức');
+            $query->where('LoaiHopDong', 'Nhân viên chính thức');
         })
         ->get();
 
     // Lấy nhân viên có LoaiHopDong là "Thời vụ"
     $nhanvienthoivus = NhanVien::with(['hopDong', 'chucVu', 'phongBan'])
         ->whereHas('hopDong', function($query) {
-            $query->where('LoaiHopDong', 'Thời vụ');
+            $query->where('LoaiHopDong', 'Nhân viên thời vụ');
         })
         ->get();
 
-    return view('Accounting.salary', compact('nhanvienchinhthucs', 'nhanvienthoivus'));
+        return view('Accounting.salary', compact('nhanvienchinhthucs', 'nhanvienthoivus'));
     }
     public function salaryAdd(Request $request)
     {
@@ -100,6 +101,7 @@ class AccountingController extends Controller
                             '_luong.TongThuNhap',
                             '_luong.bhxh',
                             '_luong.bhyt',
+                            '_luong.bhtn',
                             '_luong.thue_tncn',
                             '_luong.luong_thuc_lanh',
                             '_luong.tam_ung',

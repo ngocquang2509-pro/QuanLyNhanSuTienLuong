@@ -349,7 +349,7 @@
         <div class="modal-contentHR">
             <button class="close" onclick="closeModal()">&times;</button>
             <div class="modal-header">
-                <h3>Thêm tài khoản Mới</h3>
+                <h3>Thêm tài khoản mới</h3>
             </div>
             <form class="modal-form" action="{{route('admin.store')}}" method="post">
                 @csrf
@@ -384,7 +384,7 @@
         <div class="modal-contentHR">
             <button class="close" onclick="closeModalEdit()">&times;</button>
             <div class="modal-header">
-                <h3>Cập nhật thông tin nhân sự</h3>
+                <h3>Sửa thông tin tài khoản</h3>
             </div>
             <form id="edit-form" class="modal-form" method="post">
                 @csrf
@@ -422,7 +422,7 @@
         <form id="delete-form" class="modal-content" method="post">
             @csrf
             @method('DELETE')
-            <p>Bạn có muốn xóa không?</p>
+            <p>Bạn có muốn xóa tài khoản không?</p>
             <div class="modal-buttons">
                 <button type="submit" class="delete-btnMD">Xóa</button>
                 <button type="button" class="cancel-btnMD" onclick="closeModalDelete()">Hủy</button>
