@@ -222,12 +222,7 @@
 
 <body>
     <div class="container-fluid py-4 col-md-10 ">
-        <h4 class="text-center mb-4">BẢNG LƯƠNG THÁNG 02/2025</h4>
-        <!-- Debug information -->
-        <div class="alert alert-info">
-            <p>Số nhân viên chính thức: {{ count($nhanvienchinhthucs) }}</p>
-            <p>Số nhân viên thời vụ: {{ count($nhanvienthoivus) }}</p>
-        </div>
+        <h4 class="text-center mb-4">BẢNG LƯƠNG THÁNG 03/2025</h4>
         <div class="table-responsive">
             <table class="table table-bordered table-hover salary-table" id="salaryTable">
                 <thead>
@@ -258,31 +253,31 @@
                 </thead>
                 <tbody>
 
-                    @foreach($nhanvienchinhthucs as $nhanvienchinhthuc)
+                    @foreach($nhanviens as $nhanvien)
                     <tr class="text-center">
-                        <td>{{ $nhanvienchinhthuc->id }}</td>
-                        <td class="text-start">{{ $nhanvienchinhthuc->HoTen }}</td>
-                        <td>{{ $nhanvienchinhthuc->chucVu->TenChucVu }}</td>
-                        <td>{{ $nhanvienchinhthuc->phongBan->TenPhongBan }}</td>
-                        <td>{{ number_format($nhanvienchinhthuc->chucVu->LuongCoBan) }}</td>
-                        <td>{{ number_format($nhanvienchinhthuc->chucVu->PC_Chuc_vu) }}</td>
-                        <td>{{ number_format($nhanvienchinhthuc->chucVu->PC_Trach_nhiem) }}</td>
-                        <td>{{ $nhanvienchinhthuc->TongSoCong }}</td>
+                        <td>{{ $nhanvien->id }}</td>
+                        <td class="text-start">{{ $nhanvien->HoTen }}</td>
+                        <td>{{ $nhanvien->chucVu->TenChucVu }}</td>
+                        <td>{{ $nhanvien->phongBan->TenPhongBan }}</td>
+                        <td>{{ number_format($nhanvien->chucVu->LuongCoBan) }}</td>
+                        <td>{{ number_format($nhanvien->chucVu->PC_Chuc_vu) }}</td>
+                        <td>{{ number_format($nhanvien->chucVu->PC_Trach_nhiem) }}</td>
+                        <td>{{ $nhanvien->TongSoCong }}</td>
 
 
                         @php
-                        $Tongthunhap = ($nhanvienchinhthuc->chucVu->LuongCoBan / 26) * $nhanvienchinhthuc->TongSoCong
-                        + $nhanvienchinhthuc->chucVu->PC_Chuc_vu
-                        + $nhanvienchinhthuc->chucVu->PC_Trach_nhiem;
-                        $bhxh =( $nhanvienchinhthuc->chucVu->LuongCoBan + $nhanvienchinhthuc->chucVu->PC_Chuc_vu+
-                        $nhanvienchinhthuc->chucVu->PC_Trach_nhiem)*0.08;
-                        $bhyt = ($nhanvienchinhthuc->chucVu->LuongCoBan + $nhanvienchinhthuc->chucVu->PC_Chuc_vu+
-                        $nhanvienchinhthuc->chucVu->PC_Trach_nhiem)*0.015;
-                        $bhtn = ($nhanvienchinhthuc->chucVu->LuongCoBan + $nhanvienchinhthuc->chucVu->PC_Chuc_vu+
-                        $nhanvienchinhthuc->chucVu->PC_Trach_nhiem)*0.01;
+                        $Tongthunhap = ($nhanvien->chucVu->LuongCoBan / 26) * $nhanvien->TongSoCong
+                        + $nhanvien->chucVu->PC_Chuc_vu
+                        + $nhanvien->chucVu->PC_Trach_nhiem;
+                        $bhxh =( $nhanvien->chucVu->LuongCoBan + $nhanvien->chucVu->PC_Chuc_vu+
+                        $nhanvien->chucVu->PC_Trach_nhiem)*0.08;
+                        $bhyt = ($nhanvien->chucVu->LuongCoBan + $nhanvien->chucVu->PC_Chuc_vu+
+                        $nhanvien->chucVu->PC_Trach_nhiem)*0.015;
+                        $bhtn = ($nhanvien->chucVu->LuongCoBan + $nhanvien->chucVu->PC_Chuc_vu+
+                        $nhanvien->chucVu->PC_Trach_nhiem)*0.01;
                         $tongBH = $bhxh + $bhyt + $bhtn;
-                        if($nhanvienchinhthuc->hopDong){
-                        $TNTT = $Tongthunhap - 11000000 - $nhanvienchinhthuc->hopDong->NPT*4400000- $tongBH;
+                        if($nhanvien->hopDong){
+                        $TNTT = $Tongthunhap - 11000000 - $nhanvien->hopDong->NPT*4400000- $tongBH;
                         switch (true) {
                         case ($TNTT <= 5000000): $thue=$TNTT * 0.05; break; case ($TNTT <=10000000): $thue=$TNTT * 0.1 -
                             250000; break; case ($TNTT <=18000000): $thue=$TNTT * 0.15 - 750000; break; case ($TNTT
@@ -298,20 +293,20 @@
                             <td>
 
                                 <span>{{number_format($thue)}}</span>
-                                @if($nhanvienchinhthuc->hopDong)
+                                @if($nhanvien->hopDong)
                                 <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation"
                                     data-bs-toggle="modal" data-bs-target="#taxCalculationModal"
-                                    data-id="{{$nhanvienchinhthuc->id}}" data-hoten="{{$nhanvienchinhthuc->HoTen}}"
-                                    data-position="{{$nhanvienchinhthuc->chucVu->TenChucVu}}"
-                                    data-department="{{$nhanvienchinhthuc->phongBan->TenPhongBan}}"
-                                    data-luongcoban="{{number_format($nhanvienchinhthuc->chucVu->LuongCoBan)}}"
-                                    data-ngaycong="{{$nhanvienchinhthuc->TongSoCong}}"
-                                    data-phucap="{{number_format($nhanvienchinhthuc->chucVu->PC_Chuc_vu + $nhanvienchinhthuc->chucVu->PC_Trach_nhiem)}}"
+                                    data-id="{{$nhanvien->id}}" data-hoten="{{$nhanvien->HoTen}}"
+                                    data-position="{{$nhanvien->chucVu->TenChucVu}}"
+                                    data-department="{{$nhanvien->phongBan->TenPhongBan}}"
+                                    data-luongcoban="{{number_format($nhanvien->chucVu->LuongCoBan)}}"
+                                    data-ngaycong="{{$nhanvien->TongSoCong}}"
+                                    data-phucap="{{number_format($nhanvien->chucVu->PC_Chuc_vu + $nhanvien->chucVu->PC_Trach_nhiem)}}"
                                     data-TongThuNhap="{{number_format($Tongthunhap)}}"
                                     data-bhxh="{{number_format($bhxh)}}" data-bhyt="{{number_format($bhyt)}}"
                                     data-bhtn="{{number_format($bhtn)}}"
-                                    data-NPT=" {{number_format($nhanvienchinhthuc->hopDong->NPT*4400000)}}"
-                                    data-TongGiamTru="{{number_format($bhxh + $bhyt + $bhtn+11000000+$nhanvienchinhthuc->hopDong->NPT*4400000)}}"
+                                    data-NPT=" {{number_format($nhanvien->hopDong->NPT*4400000)}}"
+                                    data-TongGiamTru="{{number_format($bhxh + $bhyt + $bhtn+11000000+$nhanvien->hopDong->NPT*4400000)}}"
                                     data-TNTT="{{number_format($TNTT)}}" data-TNTTtypeNumber={{$TNTT}}
                                     data-TNCN="{{number_format($thue)}}">
                                     <i class="fas fa-calculator"></i> Tính thuế
@@ -336,82 +331,7 @@
 
                     @endforeach
 
-                    @foreach($nhanvienthoivus as $nhanvienthoivu)
-                    <tr class="text-center">
-                        <td>{{ $nhanvienthoivu->id }}</td>
-                        <td class="text-start">{{ $nhanvienthoivu->HoTen }}</td>
-                        <td>{{ $nhanvienthoivu->chucVu->TenChucVu }}</td>
-                        <td>{{ $nhanvienthoivu->phongBan->TenPhongBan }}</td>
-                        <td>{{ number_format($nhanvienthoivu->chucVu->LuongCoBan) }}</td>
-                        <td>{{ number_format($nhanvienthoivu->chucVu->PC_Chuc_vu) }}</td>
-                        <td>{{ number_format($nhanvienthoivu->chucVu->PC_Trach_nhiem) }}</td>
-                        <td>{{ $nhanvienthoivu->TongSoCong }}</td>
 
-
-                        @php
-                        $Tongthunhap = ($nhanvienthoivu->chucVu->LuongCoBan / 26) * $nhanvienthoivu->TongSoCong
-                        + $nhanvienthoivu->chucVu->PC_Chuc_vu
-                        + $nhanvienthoivu->chucVu->PC_Trach_nhiem;
-                        $bhxh =( $nhanvienthoivu->chucVu->LuongCoBan + $nhanvienthoivu->chucVu->PC_Chuc_vu+
-                        $nhanvienthoivu->chucVu->PC_Trach_nhiem)*0.08;
-                        $bhyt = ($nhanvienthoivu->chucVu->LuongCoBan + $nhanvienthoivu->chucVu->PC_Chuc_vu+
-                        $nhanvienthoivu->chucVu->PC_Trach_nhiem)*0.015;
-                        $bhtn = ($nhanvienthoivu->chucVu->LuongCoBan + $nhanvienthoivu->chucVu->PC_Chuc_vu+
-                        $nhanvienthoivu->chucVu->PC_Trach_nhiem)*0.01;
-                        $tongBH = $bhxh + $bhyt + $bhtn;
-                        if($nhanvienthoivu->hopDong){
-                        $TNTT = $Tongthunhap - 11000000 - $nhanvienthoivu->hopDong->NPT*4400000- $tongBH;
-                        switch (true) {
-                        case ($TNTT <= 5000000): $thue=$TNTT * 0.05; break; case ($TNTT <=10000000): $thue=$TNTT * 0.1 -
-                            250000; break; case ($TNTT <=18000000): $thue=$TNTT * 0.15 - 750000; break; case ($TNTT
-                            <=32000000): $thue=$TNTT * 0.2 - 1650000; break; case ($TNTT <=52000000): $thue=$TNTT * 0.25
-                            - 3250000; break; case ($TNTT <=80000000): $thue=$TNTT * 0.3 - 5850000; break; default:
-                            $thue=$TNTT * 0.35 - 9850000; break; } } else $thue=0; $luongThucLanh=($Tongthunhap - $bhxh
-                            - $bhyt - $bhtn-$thue); if($thue < 0) $thue=0; @endphp <td>
-                            {{ number_format(($Tongthunhap)) }}</td>
-                            <td>{{ number_format($bhxh) }}</td>
-                            <td>{{ number_format($bhyt) }}</td>
-                            <td>{{ number_format($bhtn) }}</td>
-
-                            <td>
-
-                                <span>{{number_format($thue)}}</span>
-                                @if($nhanvienthoivu->hopDong)
-                                <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation"
-                                    data-bs-toggle="modal" data-bs-target="#taxCalculationModal"
-                                    data-id="{{$nhanvienthoivu->id}}" data-hoten="{{$nhanvienthoivu->HoTen}}"
-                                    data-position="{{$nhanvienthoivu->chucVu->TenChucVu}}"
-                                    data-department="{{$nhanvienthoivu->phongBan->TenPhongBan}}"
-                                    data-luongcoban="{{number_format($nhanvienthoivu->chucVu->LuongCoBan)}}"
-                                    data-ngaycong="{{$nhanvienthoivu->TongSoCong}}"
-                                    data-phucap="{{number_format($nhanvienthoivu->chucVu->PC_Chuc_vu + $nhanvienthoivu->chucVu->PC_Trach_nhiem)}}"
-                                    data-TongThuNhap="{{number_format($Tongthunhap)}}"
-                                    data-bhxh="{{number_format($bhxh)}}" data-bhyt="{{number_format($bhyt)}}"
-                                    data-bhtn="{{number_format($bhtn)}}"
-                                    data-NPT=" {{number_format($nhanvienthoivu->hopDong->NPT*4400000)}}"
-                                    data-TongGiamTru="{{number_format($bhxh + $bhyt + $bhtn+11000000+$nhanvienthoivu->hopDong->NPT*4400000)}}"
-                                    data-TNTT="{{number_format($TNTT)}}" data-TNTTtypeNumber={{$TNTT}}
-                                    data-TNCN="{{number_format($thue)}}">
-                                    <i class="fas fa-calculator"></i> Tính thuế
-                                </button>
-
-                                @else
-                                <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation"
-                                    data-bs-toggle="modal" data-bs-target="#taxCalculationModal">
-                                    <i class="fas fa-calculator"></i> Tính thuế
-                                </button>
-
-                                @endif
-                            </td>
-                            <td>{{number_format($luongThucLanh)}}</td>
-                            <td>{{number_format(2000000)}}</td>
-                            <td>{{number_format($luongThucLanh-2000000)}}</td>
-
-                            <td data-bs-toggle="modal" data-bs-target="#salaryModal">
-                                <i class="fa-solid fa-eye action-btn"></i>
-                            </td>
-                    </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>

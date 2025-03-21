@@ -20,7 +20,7 @@ Route::put('/dashboardAD/{id}', [App\Http\Controllers\AdminController::class, 'u
 Route::delete('/dashboardAD/{id}', [App\Http\Controllers\AdminController::class, 'destroy'])->name('admin.delete');
 Route::get('/dashboardAC', [App\Http\Controllers\AccountingController::class, 'index'])->name('Accounting.dashboard');
 Route::get('/salaryAC', [App\Http\Controllers\AccountingController::class, 'salary'])->name('Accounting.salary');
-Route::post('/salaryAC', [App\Http\Controllers\AccountingController::class, 'salaryAdd'])->name('Accounting.salaryAdd');
+Route::post('/salaryAC/add', [App\Http\Controllers\AccountingController::class, 'salaryAdd'])->name('Accounting.salaryAdd');
 Route::get('/paymentAC', [App\Http\Controllers\AccountingController::class, 'payment'])->name('Accounting.payment');
 Route::get('/payment', [App\Http\Controllers\AccountingController::class, 'payment'])->name('Accounting.payment');
 Route::get('/get-salaries-by-department', [App\Http\Controllers\AccountingController::class, 'getSalariesByDepartment'])->name('Accounting.getSalariesByDepartment');

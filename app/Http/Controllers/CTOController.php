@@ -8,7 +8,7 @@ class CTOController extends Controller
 {
     public function dashboard()
     {
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('Human.dashboard');
     }
     public function Admin()
     {

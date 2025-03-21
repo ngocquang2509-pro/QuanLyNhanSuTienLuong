@@ -8,13 +8,13 @@ class ChamCong extends Model
 {
     protected $table = 'chamcong';
     protected $fillable = [
-        'nhanvien_id',
         'NgayLamViec',
-        'NgayGioVao',
-        'NgayGioRa',
+        'GioVao',
+        'GioRa',
         'NguonMay',
         'SoCong',
-        'TrangThai'
+        'TrangThai',
+        'nhanvien_id'
     ];
     public function nhanVien()
     {

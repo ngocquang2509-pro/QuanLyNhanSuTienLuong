@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     data-income="${salary.TongThuNhap}"
                     data-social-insurance="${salary.bhxh}"
                     data-health-insurance="${salary.bhyt}"
+                    data-unemployment-insurance="${salary.bhtn}"
                     data-income-tax="${salary.thue_tncn}"
                     data-net-salary="${salary.luong_thuc_lanh}"
                     data-advance="${salary.tam_ung}"
@@ -228,6 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const income = button.getAttribute('data-income');
             const socialInsurance = button.getAttribute('data-social-insurance');
             const healthInsurance = button.getAttribute('data-health-insurance');
+            const unemploymentInsurance = button.getAttribute('data-unemployment-insurance');
             const incomeTax = button.getAttribute('data-income-tax');
             const netSalary = button.getAttribute('data-net-salary');
             const advance = button.getAttribute('data-advance');
@@ -253,6 +255,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 .format(socialInsurance) + ' đ';
             document.getElementById('modalHealthInsurance').textContent = new Intl.NumberFormat('vi-VN')
                 .format(healthInsurance) + ' đ';
+            document.getElementById('modalUnemploymentInsurance').textContent = new Intl.NumberFormat(
+                    'vi-VN')
+                .format(unemploymentInsurance) + ' đ';
             document.getElementById('modalIncomeTax').textContent = new Intl.NumberFormat('vi-VN')
                 .format(incomeTax) + ' đ';
             document.getElementById('modalNetSalary').textContent = new Intl.NumberFormat('vi-VN')
@@ -361,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="modal-header">
                 <h5 class="modal-title" id="salaryModalLabel">
                     <i class="fas fa-file-invoice-dollar me-2"></i>
-                    CÔNG TY ABC - PHIẾU THANH TOÁN LƯƠNG
+                    CÔNG TY TNHH SÂM NGỌC LINH - PHIẾU THANH TOÁN LƯƠNG
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -423,6 +428,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="detail-row">
                         <div class="detail-label">BHYT:</div>
                         <div class="detail-value" id="modalHealthInsurance"></div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-label">BHTN:</div>
+                        <div class="detail-value" id="modalUnemploymentInsurance"></div>
                     </div>
 
                     <div class="detail-row">
