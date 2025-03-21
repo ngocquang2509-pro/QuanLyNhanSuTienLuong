@@ -151,9 +151,17 @@ class HumanController extends Controller
             $datasetDeparment2[] = (($part2 / $TongNV) * 100);
             $datasetDeparment3[] = (($part3 / $TongNV) * 100);
         }
-
+        if ($request->department) {
+            $department = PhongBan::find($request->department);
+            $departmentName = $department->TenPhongBan;
+        }
 
         return view('Human.dashboard', compact('nhanviendunggio', 'nhanviendimuon', 'nhanvienvangmat', 'departments', 'days', 'dateWork', 'department', 'dataset1', 'dataset2', 'dataset3', 'datasetDeparment1', 'datasetDeparment2', 'datasetDeparment3'));
+    }
+    public function ChartHuman()
+    {
+        $nhanviens = NhanVien::all()->count();
+        return view('Human.chartHuman', compact('nhanviens'));
     }
     public function ManagerHM()
     {

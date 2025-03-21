@@ -8,7 +8,10 @@
     </div>
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link" href="{{route('Human.dashboard')}}"><i class="fas fa-chart-bar me-2"></i> Bảng số liệu thống kê</a>
+            <a class="nav-link" href="{{route('Human.chartHuman')}}"><i class="fas fa-chart-bar me-2"></i> Bảng số liệu thống kê nhân sự</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('Human.dashboard')}}"><i class="fas fa-chart-bar me-2"></i> Bảng số liệu thống kê chấm công</a>
         </li>
 
         <li class="nav-item">

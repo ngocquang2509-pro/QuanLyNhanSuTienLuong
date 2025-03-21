@@ -23,6 +23,7 @@ Route::get('/salaryAC', [App\Http\Controllers\AccountingController::class, 'sala
 Route::post('/salaryAC', [App\Http\Controllers\AccountingController::class, 'salaryAdd'])->name('Accounting.salaryAdd');
 Route::get('/paymentAC', [App\Http\Controllers\AccountingController::class, 'payment'])->name('Accounting.payment');
 Route::get('/dashboardHM', [App\Http\Controllers\HumanController::class, 'index'])->name('Human.dashboard');
+Route::get('/ChartHuman', [App\Http\Controllers\HumanController::class, 'ChartHuman'])->name('Human.chartHuman');
 Route::get('/ManagerHM', [App\Http\Controllers\HumanController::class, 'ManagerHM'])->name('Human.Manager');
 Route::post('/ManagerHM', [App\Http\Controllers\HumanController::class, 'ManagerAdd'])->name('Human.ManagerAdd');
 Route::put('/ManagerHM/{id}', [App\Http\Controllers\HumanController::class, 'ManagerUpdate'])->name('Human.ManagerUpdate');
