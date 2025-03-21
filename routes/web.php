@@ -26,6 +26,7 @@ Route::get('/payment', [App\Http\Controllers\AccountingController::class, 'payme
 Route::get('/get-salaries-by-department', [App\Http\Controllers\AccountingController::class, 'getSalariesByDepartment'])->name('Accounting.getSalariesByDepartment');
 Route::post('/pay-salary', [App\Http\Controllers\AccountingController::class, 'paySalary'])->name('Accounting.paySalary');
 Route::get('/dashboardHM', [App\Http\Controllers\HumanController::class, 'index'])->name('Human.dashboard');
+Route::get('/ChartHuman', [App\Http\Controllers\HumanController::class, 'ChartHuman'])->name('Human.chartHuman');
 Route::get('/ManagerHM', [App\Http\Controllers\HumanController::class, 'ManagerHM'])->name('Human.Manager');
 Route::post('/ManagerHM', [App\Http\Controllers\HumanController::class, 'ManagerAdd'])->name('Human.ManagerAdd');
 Route::put('/ManagerHM/{id}', [App\Http\Controllers\HumanController::class, 'ManagerUpdate'])->name('Human.ManagerUpdate');

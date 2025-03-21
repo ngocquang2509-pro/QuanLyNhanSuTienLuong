@@ -29,10 +29,20 @@
     <ul class="nav flex-column">
 
         <li class="nav-item">
+<<<<<<< HEAD
             <a href="{{route('Human.dashboard')}}" class="nav-link">Biểu đồ chấm công</a>
         </li>
         <li class="nav-item">
             <a href="{{route('Accounting.dashboard')}}" class="nav-link">Biểu đồ nhân sự - lương</a>
+=======
+            <a href="{{route('Human.dashboard')}}" class="nav-link">Bảng thống kê chấm công</a>
+        </li>
+        <li class="nav-item">
+            <a href="{{route('Human.chartHuman')}}" class="nav-link">Bảng thống kê nhân sự </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{route('Accounting.dashboard')}}" class="nav-link">Bảng thống kê lương </a>
+>>>>>>> origin/branSub
         </li>
         <li class="nav-item">
             <a href="{{route('Accounting.salary')}}" class="nav-link">Bảng lương chi tiết </a>
