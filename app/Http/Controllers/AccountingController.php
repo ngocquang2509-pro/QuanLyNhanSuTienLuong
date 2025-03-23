@@ -49,6 +49,9 @@ class AccountingController extends Controller
             if (!$nv->chucVu || !$nv->phongBan) {
                 continue;
             }
+            $heSoLuong = 1;
+            $KTKL = 0;
+            $NPT = 0;
             if (isset($nv->hopDong)) {
                 $soNamLamViec = floor(Carbon::parse($nv->hopDong->ngay_bat_dau)->diffInYears(Carbon::now()));
                 if ($soNamLamViec < 1) {
