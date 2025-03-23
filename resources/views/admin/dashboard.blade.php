@@ -13,7 +13,7 @@
             @if(Auth::user()->type == 'CTO')
             @include('CTO.layouts.navigation')
             @else
-            @include('admin.layouts.navigation')
+            @include('Human.layouts.navigation')
             @endif
             <!-- Main Content -->
             @include('admin.contents.dashboard')

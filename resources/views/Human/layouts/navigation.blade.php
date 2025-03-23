@@ -13,7 +13,9 @@
         <li class="nav-item">
             <a class="nav-link" href="{{route('Human.dashboard')}}"><i class="fas fa-chart-bar me-2"></i> Bảng số liệu thống kê chấm công</a>
         </li>
-
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('admin.dashboard')}}"><i class="fas fa-users me-2 me-2"></i> Quản lý tài khoản </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" href="{{route('Human.Manager')}}"><i class="fas fa-users me-2 me-2"></i> Quản lý nhân sự</a>
         </li>
