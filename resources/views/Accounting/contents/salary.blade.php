@@ -1,222 +1,222 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
-.table-header {
-    background-color: #f8f9fa;
-    font-weight: bold;
-}
-
-.sub-header {
-    background-color: #e9ecef;
-}
-
-.salary-table th,
-.salary-table td {
-    font-size: 0.85rem;
-    vertical-align: middle;
-}
-
-.department {
-    background-color: #f1f3f5;
-    font-weight: bold;
-}
-
-.action-btn {
-    color: #0d6efd;
-    cursor: pointer;
-    padding: 5px;
-    transition: color 0.2s;
-}
-
-.action-btn:hover {
-    color: #0a58ca;
-}
-
-.tax-button {
-    padding: 4px 8px;
-    font-size: 0.8rem;
-}
-
-.modal.fade .modal-dialog {
-    transform: scale(0.7);
-    opacity: 0;
-    transition: all 0.3s ease-in-out;
-}
-
-.modal.show .modal-dialog {
-    transform: scale(1);
-    opacity: 1;
-}
-
-.modal-content {
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.modal-header {
-    background: linear-gradient(135deg, #0d6efd, #0a58ca);
-    color: white;
-    border-radius: 15px 15px 0 0;
-    padding: 1.5rem;
-}
-
-.modal-title {
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-.modal-body {
-    padding: 2rem;
-}
-
-.modal-footer {
-    background-color: #f8f9fa;
-    border-radius: 0 0 15px 15px;
-    padding: 1rem;
-}
-
-.detail-row {
-    display: flex;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.detail-label {
-    width: 180px;
-    font-weight: 600;
-    color: #495057;
-}
-
-.detail-value {
-    flex: 1;
-    color: #212529;
-}
-
-.modal .close {
-    color: white;
-    opacity: 1;
-}
-
-.modal .close:hover {
-    color: #dee2e6;
-}
-
-.highlight-section {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-.tax-modal .modal-content {
-    background: #f8f9fa;
-    border: none;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.tax-modal .modal-header {
-    background: linear-gradient(135deg, #20bf55 0%, #01baef 100%);
-    color: white;
-    border-radius: 20px 20px 0 0;
-    padding: 1.5rem;
-}
-
-.tax-calculation-table {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin: 1rem 0;
-}
-
-.tax-calculation-table th {
-    background: #e9ecef;
-    border: none;
-}
-
-.tax-calculation-table td,
-.tax-calculation-table th {
-    padding: 1rem;
-    vertical-align: middle;
-}
-
-.tax-result {
-    background: #e8f5e9;
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-.tax-value {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #2e7d32;
-}
-
-/* Animation for tax modal */
-@keyframes slideIn {
-    from {
-        transform: translateY(-100px);
-        opacity: 0;
+    .table-header {
+        background-color: #f8f9fa;
+        font-weight: bold;
     }
 
-    to {
+    .sub-header {
+        background-color: #e9ecef;
+    }
+
+    .salary-table th,
+    .salary-table td {
+        font-size: 0.85rem;
+        vertical-align: middle;
+    }
+
+    .department {
+        background-color: #f1f3f5;
+        font-weight: bold;
+    }
+
+    .action-btn {
+        color: #0d6efd;
+        cursor: pointer;
+        padding: 5px;
+        transition: color 0.2s;
+    }
+
+    .action-btn:hover {
+        color: #0a58ca;
+    }
+
+    .tax-button {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+
+    .modal.fade .modal-dialog {
+        transform: scale(0.7);
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .modal.show .modal-dialog {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    .modal-content {
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: white;
+        border-radius: 15px 15px 0 0;
+        padding: 1.5rem;
+    }
+
+    .modal-title {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .modal-footer {
+        background-color: #f8f9fa;
+        border-radius: 0 0 15px 15px;
+        padding: 1rem;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .detail-label {
+        width: 180px;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .detail-value {
+        flex: 1;
+        color: #212529;
+    }
+
+    .modal .close {
+        color: white;
+        opacity: 1;
+    }
+
+    .modal .close:hover {
+        color: #dee2e6;
+    }
+
+    .highlight-section {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+
+    .tax-modal .modal-content {
+        background: #f8f9fa;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .tax-modal .modal-header {
+        background: linear-gradient(135deg, #20bf55 0%, #01baef 100%);
+        color: white;
+        border-radius: 20px 20px 0 0;
+        padding: 1.5rem;
+    }
+
+    .tax-calculation-table {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin: 1rem 0;
+    }
+
+    .tax-calculation-table th {
+        background: #e9ecef;
+        border: none;
+    }
+
+    .tax-calculation-table td,
+    .tax-calculation-table th {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .tax-result {
+        background: #e8f5e9;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .tax-value {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2e7d32;
+    }
+
+    /* Animation for tax modal */
+    @keyframes slideIn {
+        from {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .tax-modal.fade .modal-dialog {
+        transform: translateY(-100px);
+        opacity: 0;
+        transition: all 0.3s ease-out;
+    }
+
+    .tax-modal.show .modal-dialog {
         transform: translateY(0);
         opacity: 1;
     }
-}
 
-.tax-modal.fade .modal-dialog {
-    transform: translateY(-100px);
-    opacity: 0;
-    transition: all 0.3s ease-out;
-}
+    .tax-row {
+        animation: slideIn 0.3s ease-out forwards;
+    }
 
-.tax-modal.show .modal-dialog {
-    transform: translateY(0);
-    opacity: 1;
-}
+    .tax-row:nth-child(2) {
+        animation-delay: 0.1s;
+    }
 
-.tax-row {
-    animation: slideIn 0.3s ease-out forwards;
-}
+    .tax-row:nth-child(3) {
+        animation-delay: 0.2s;
+    }
 
-.tax-row:nth-child(2) {
-    animation-delay: 0.1s;
-}
+    .tax-row:nth-child(4) {
+        animation-delay: 0.3s;
+    }
 
-.tax-row:nth-child(3) {
-    animation-delay: 0.2s;
-}
+    .tax-row:nth-child(5) {
+        animation-delay: 0.4s;
+    }
 
-.tax-row:nth-child(4) {
-    animation-delay: 0.3s;
-}
+    .calculation-step {
+        background: white;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
 
-.tax-row:nth-child(5) {
-    animation-delay: 0.4s;
-}
-
-.calculation-step {
-    background: white;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.step-number {
-    width: 30px;
-    height: 30px;
-    background: #20bf55;
-    color: white;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-}
+    .step-number {
+        width: 30px;
+        height: 30px;
+        background: #20bf55;
+        color: white;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+    }
 </style>
 </head>
 
@@ -523,122 +523,122 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const viewButtons = document.querySelectorAll(".taxCalculation");
-        viewButtons.forEach(button => {
-            button.addEventListener("click", function() {
-                const MaNV = button.getAttribute("data-id");
-                const HoTen = button.getAttribute("data-hoten");
-                const ChucVu = button.getAttribute("data-position");
-                const PhongBan = button.getAttribute("data-department");
-                const LuongCoBan = button.getAttribute("data-luongcoban");
-                const NgayCong = button.getAttribute("data-ngaycong");
-                const PhuCap = button.getAttribute("data-phucap");
-                const TongThuNhap = button.getAttribute("data-TongThuNhap");
-                const BHXH = button.getAttribute("data-bhxh");
+        document.addEventListener("DOMContentLoaded", function() {
+            const viewButtons = document.querySelectorAll(".taxCalculation");
+            viewButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const MaNV = button.getAttribute("data-id");
+                    const HoTen = button.getAttribute("data-hoten");
+                    const ChucVu = button.getAttribute("data-position");
+                    const PhongBan = button.getAttribute("data-department");
+                    const LuongCoBan = button.getAttribute("data-luongcoban");
+                    const NgayCong = button.getAttribute("data-ngaycong");
+                    const PhuCap = button.getAttribute("data-phucap");
+                    const TongThuNhap = button.getAttribute("data-TongThuNhap");
+                    const BHXH = button.getAttribute("data-bhxh");
 
-                const BHYT = button.getAttribute("data-bhyt");
-                const BHTN = button.getAttribute("data-bhtn");
-                const NPT = button.getAttribute("data-NPT");
+                    const BHYT = button.getAttribute("data-bhyt");
+                    const BHTN = button.getAttribute("data-bhtn");
+                    const NPT = button.getAttribute("data-NPT");
 
-                const TongGiamTru = button.getAttribute("data-TongGiamTru");
-                const TNTT = button.getAttribute("data-TNTT");
-                const TNCN = button.getAttribute("data-TNCN");
-                document.getElementById("MaNV").innerText = MaNV;
-                document.getElementById("HoTen").innerText = HoTen;
-                document.getElementById("ChucVu").innerText = ChucVu;
-                document.getElementById("PhongBan").innerText = PhongBan;
-                document.getElementById("LuongCoBan").innerText = LuongCoBan;
-                document.getElementById("NgayCong").innerText = NgayCong;
-                document.getElementById("PhuCap").innerText = PhuCap;
-                document.getElementById("TongThuNhap").innerText = TongThuNhap;
-                document.getElementById("BHXH").innerText = BHXH;
-                document.getElementById("BHYT").innerText = BHYT;
-                document.getElementById("BHTT").innerText = BHTN;
-                document.getElementById("NPT").innerText = NPT;
-                document.getElementById("TongGiamTru").innerText = TongGiamTru;
-                document.getElementById("TNTT").innerText = TNTT;
-                document.getElementById("TNCN").innerText = TNCN;
-                const TNTTtypeNumber = (button.getAttribute("data-TNTTtypeNumber"));
+                    const TongGiamTru = button.getAttribute("data-TongGiamTru");
+                    const TNTT = button.getAttribute("data-TNTT");
+                    const TNCN = button.getAttribute("data-TNCN");
+                    document.getElementById("MaNV").innerText = MaNV;
+                    document.getElementById("HoTen").innerText = HoTen;
+                    document.getElementById("ChucVu").innerText = ChucVu;
+                    document.getElementById("PhongBan").innerText = PhongBan;
+                    document.getElementById("LuongCoBan").innerText = LuongCoBan;
+                    document.getElementById("NgayCong").innerText = NgayCong;
+                    document.getElementById("PhuCap").innerText = PhuCap;
+                    document.getElementById("TongThuNhap").innerText = TongThuNhap;
+                    document.getElementById("BHXH").innerText = BHXH;
+                    document.getElementById("BHYT").innerText = BHYT;
+                    document.getElementById("BHTT").innerText = BHTN;
+                    document.getElementById("NPT").innerText = NPT;
+                    document.getElementById("TongGiamTru").innerText = TongGiamTru;
+                    document.getElementById("TNTT").innerText = TNTT;
+                    document.getElementById("TNCN").innerText = TNCN;
+                    const TNTTtypeNumber = (button.getAttribute("data-TNTTtypeNumber"));
 
-                let bac;
-                switch (true) {
-                    case (TNTTtypeNumber <= 5000000):
-                        bac = "1 (5% x TNTT)";
-                        break;
-                    case (TNTTtypeNumber <= 10000000):
-                        bac = "2 (10% x TNTT - 250,000)";
-                        break;
-                    case (TNTTtypeNumber <= 18000000):
-                        bac = "3 (15% x TNTT - 750,000)";
-                        break;
-                    case (TNTTtypeNumber <= 32000000):
-                        bac = "4 (20% x TNTT - 1,650,000)";
-                        break;
-                    case (TNTTtypeNumber <= 52000000):
-                        bac = "5 (25% x TNTT - 3,250,000)";
-                        break;
-                    case (TNTTtypeNumber <= 80000000):
-                        bac = "6 (30% x TNTT - 5,850,000)";
-                        break;
-                    default:
-                        bac = "7 (35% x TNTT - 9,850,000)";
-                        break;
-                }
-                document.getElementById("BacThue").innerText = bac;
+                    let bac;
+                    switch (true) {
+                        case (TNTTtypeNumber <= 5000000):
+                            bac = "1 (5% x TNTT)";
+                            break;
+                        case (TNTTtypeNumber <= 10000000):
+                            bac = "2 (10% x TNTT - 250,000)";
+                            break;
+                        case (TNTTtypeNumber <= 18000000):
+                            bac = "3 (15% x TNTT - 750,000)";
+                            break;
+                        case (TNTTtypeNumber <= 32000000):
+                            bac = "4 (20% x TNTT - 1,650,000)";
+                            break;
+                        case (TNTTtypeNumber <= 52000000):
+                            bac = "5 (25% x TNTT - 3,250,000)";
+                            break;
+                        case (TNTTtypeNumber <= 80000000):
+                            bac = "6 (30% x TNTT - 5,850,000)";
+                            break;
+                        default:
+                            bac = "7 (35% x TNTT - 9,850,000)";
+                            break;
+                    }
+                    document.getElementById("BacThue").innerText = bac;
+                });
             });
         });
-    });
-    document.getElementById("createSalary").addEventListener("click", function() {
+        document.getElementById("createSalary").addEventListener("click", function() {
 
-        let table = document.getElementById("salaryTable");
-        let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-        let luongData = [];
-        for (let i = 0; i < rows.length; i++) {
-            let row = rows[i];
-            let cells = row.getElementsByTagName("td");
-            let luong = {
-                HoTen: cells[1].innerText,
-                ChucVu: cells[2].innerText,
-                PhongBan: cells[3].innerText,
-                LuongCB: cells[4].innerText,
-                pc_chuc_vu: cells[5].innerText,
-                pc_trach_nhiem: cells[6].innerText,
-                SoNgayCong: cells[7].innerText,
-                TongThuNhap: cells[8].innerText,
-                bhxh: cells[9].innerText,
-                bhyt: cells[10].innerText,
-                bhtn: cells[11].innerText,
-                thue_tncn: cells[12].innerText,
-                luong_thuc_lanh: cells[13].innerText,
-                tam_ung: cells[14].innerText,
-                con_lanh: cells[15].innerText
-            };
-            luongData.push(luong);
+            let table = document.getElementById("salaryTable");
+            let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+            let luongData = [];
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                let cells = row.getElementsByTagName("td");
+                let luong = {
+                    HoTen: cells[1].innerText,
+                    ChucVu: cells[2].innerText,
+                    PhongBan: cells[3].innerText,
+                    LuongCB: cells[4].innerText,
+                    pc_chuc_vu: cells[5].innerText,
+                    pc_trach_nhiem: cells[6].innerText,
+                    SoNgayCong: cells[7].innerText,
+                    TongThuNhap: cells[8].innerText,
+                    bhxh: cells[9].innerText,
+                    bhyt: cells[10].innerText,
+                    bhtn: cells[11].innerText,
+                    thue_tncn: cells[12].innerText,
+                    luong_thuc_lanh: cells[13].innerText,
+                    tam_ung: cells[14].innerText,
+                    con_lanh: cells[15].innerText
+                };
+                luongData.push(luong);
 
-        }
+            }
 
-        console.log("Creating salary...");
-        console.log(luongData);
-        fetch("{{ route('Accounting.salaryAdd') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
-                        "content") // Laravel CSRF Token
-                },
-                body: JSON.stringify({
-                    salaries: luongData
-                }) // Đóng gói mảng vào một object
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Dữ liệu lương đã được gửi thành công!");
-                } else {
-                    alert("Có lỗi xảy ra!");
-                }
-            })
-            .catch(error => console.error("Lỗi:", error));
-    });
+            console.log("Creating salary...");
+            console.log(luongData);
+            fetch("{{ route('Accounting.salaryAdd') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            "content") // Laravel CSRF Token
+                    },
+                    body: JSON.stringify({
+                        salaries: luongData
+                    }) // Đóng gói mảng vào một object
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Dữ liệu lương đã được gửi thành công!");
+                    } else {
+                        alert("Có lỗi xảy ra!");
+                    }
+                })
+                .catch(error => console.error("Lỗi:", error));
+        });
     </script>

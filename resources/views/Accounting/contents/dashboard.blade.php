@@ -52,90 +52,90 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
 <script>
-// Dữ liệu phòng ban và lương
-const departments = ["Kỹ thuật", "Kinh doanh", "Nhân sự", "Kế toán", "Marketing"];
-const salaryByDept = [50000000, 40000000, 30000000, 45000000, 35000000];
-const employeeCountByDept = [10, 8, 6, 9, 7];
+    // Dữ liệu phòng ban và lương
+    const departments = ["Kỹ thuật", "Kinh doanh", "Nhân sự", "Kế toán", "Marketing"];
+    const salaryByDept = [50000000, 40000000, 30000000, 45000000, 35000000];
+    const employeeCountByDept = [10, 8, 6, 9, 7];
 
-// Biến lưu trữ biểu đồ
-let departmentChart;
+    // Biến lưu trữ biểu đồ
+    let departmentChart;
 
-// Khởi tạo khi trang được tải
-document.addEventListener('DOMContentLoaded', function() {
-    updateStatistics();
-    renderCharts();
-});
+    // Khởi tạo khi trang được tải
+    document.addEventListener('DOMContentLoaded', function() {
+        updateStatistics();
+        renderCharts();
+    });
 
-// Cập nhật thống kê
-function updateStatistics() {
-    const totalEmployees = employeeCountByDept.reduce((sum, count) => sum + count, 0);
-    document.getElementById('totalEmployees').textContent = totalEmployees;
+    // Cập nhật thống kê
+    function updateStatistics() {
+        const totalEmployees = employeeCountByDept.reduce((sum, count) => sum + count, 0);
+        document.getElementById('totalEmployees').textContent = totalEmployees;
 
-    const avgSalary = salaryByDept.reduce((sum, salary) => sum + salary, 0) / salaryByDept.length;
-    document.getElementById('averageSalary').textContent = formatCurrency(avgSalary);
+        const avgSalary = salaryByDept.reduce((sum, salary) => sum + salary, 0) / salaryByDept.length;
+        document.getElementById('averageSalary').textContent = formatCurrency(avgSalary);
 
-    const maxSalary = Math.max(...salaryByDept);
-    const minSalary = Math.min(...salaryByDept);
+        const maxSalary = Math.max(...salaryByDept);
+        const minSalary = Math.min(...salaryByDept);
 
-    document.getElementById('highestSalary').textContent = formatCurrency(maxSalary);
-    document.getElementById('lowestSalary').textContent = formatCurrency(minSalary);
-}
-
-// Vẽ biểu đồ
-function renderCharts() {
-    const deptCtx = document.getElementById('departmentChart').getContext('2d');
-    if (departmentChart) {
-        departmentChart.destroy();
+        document.getElementById('highestSalary').textContent = formatCurrency(maxSalary);
+        document.getElementById('lowestSalary').textContent = formatCurrency(minSalary);
     }
-    departmentChart = new Chart(deptCtx, {
-        type: 'bar',
-        data: {
-            labels: departments,
-            datasets: [{
-                label: 'Lương trung bình (VNĐ)',
-                data: salaryByDept,
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgb(54, 162, 235)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return formatCompactCurrency(value);
+
+    // Vẽ biểu đồ
+    function renderCharts() {
+        const deptCtx = document.getElementById('departmentChart').getContext('2d');
+        if (departmentChart) {
+            departmentChart.destroy();
+        }
+        departmentChart = new Chart(deptCtx, {
+            type: 'bar',
+            data: {
+                labels: departments,
+                datasets: [{
+                    label: 'Lương trung bình (VNĐ)',
+                    data: salaryByDept,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return formatCompactCurrency(value);
+                            }
                         }
                     }
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return 'Lương TB: ' + formatCurrency(context.raw);
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Lương TB: ' + formatCurrency(context.raw);
+                            }
                         }
                     }
                 }
             }
-        }
-    });
-}
-
-// Format tiền tệ
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-    }).format(amount);
-}
-
-// Format tiền tệ ngắn gọn cho biểu đồ
-function formatCompactCurrency(amount) {
-    if (amount >= 1000000) {
-        return (amount / 1000000).toFixed(1) + ' triệu';
+        });
     }
-    return amount.toLocaleString('vi-VN');
-}
+
+    // Format tiền tệ
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    }
+
+    // Format tiền tệ ngắn gọn cho biểu đồ
+    function formatCompactCurrency(amount) {
+        if (amount >= 1000000) {
+            return (amount / 1000000).toFixed(1) + ' triệu';
+        }
+        return amount.toLocaleString('vi-VN');
+    }
 </script>

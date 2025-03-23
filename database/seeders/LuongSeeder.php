@@ -13,37 +13,37 @@ class LuongSeeder extends Seeder
     {
         // Tạm thời vô hiệu hóa kiểm tra khóa ngoại
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
+
         // Xóa tất cả dữ liệu trong bảng _phieu_luong
         DB::table('_phieu_luong')->truncate();
-        
+
         // Xóa tất cả dữ liệu trong bảng _luong
         DB::table('_luong')->truncate();
-        
+
         // Bật lại kiểm tra khóa ngoại
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        
+
         // Lấy tất cả nhân viên cùng với các mối quan hệ cần thiết
         $nhanviens = NhanVien::with(['chucVu', 'phongBan', 'hopDong', 'chamCongs', 'lichLamViec'])->get();
-        
+
         // Lấy tháng hiện tại
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
-        
+
         foreach ($nhanviens as $nv) {
             // Bỏ qua nếu không có chức vụ hoặc phòng ban
             if (!$nv->chucVu || !$nv->phongBan) {
                 continue;
             }
-            
+
             // Tính toán các giá trị lương
             $luongCB = $nv->chucVu->LuongCoBan ?? 5000000;
             $pcChucVu = $nv->chucVu->PC_Chuc_vu ?? 500000;
             $pcTrachNhiem = $nv->chucVu->PC_Trach_nhiem ?? 300000;
-            
+
             // Lấy số ngày công từ dữ liệu chấm công thực tế của tháng hiện tại
             $soNgayCong = 0;
-            
+
             try {
                 // Lấy tổng số công từ bảng chamcong cho tháng và năm hiện tại
                 $soNgayCong = DB::table('chamcong')
@@ -52,7 +52,7 @@ class LuongSeeder extends Seeder
                     ->whereMonth('lichlamviec.NgayLamViec', $currentMonth)
                     ->whereYear('lichlamviec.NgayLamViec', $currentYear)
                     ->sum('chamcong.SoCong');
-                    
+
                 // Nếu không có dữ liệu chấm công, kiểm tra từ lịch làm việc
                 if ($soNgayCong == 0) {
                     // Đếm số ngày làm việc từ lịch làm việc
@@ -66,21 +66,21 @@ class LuongSeeder extends Seeder
                 // Ghi log lỗi nhưng không dừng chương trình
                 \Log::error('Lỗi khi lấy dữ liệu chấm công: ' . $e->getMessage());
             }
-            
+
             // Nếu vẫn không có dữ liệu, bỏ qua nhân viên này
             if ($soNgayCong == 0) {
                 continue;
             }
-            
+
             // Tính tổng thu nhập dựa trên ngày công đúng theo công thức trong salary.blade.php
             $tongThuNhap = ($luongCB / 26) * $soNgayCong + $pcChucVu + $pcTrachNhiem;
             $tongThuNhap = round($tongThuNhap);
-            
+
             // Tỷ lệ đóng BHXH, BHYT, BHTN của người lao động - chính xác từ salary.blade.php
             $tyLeBHXH_NLD = 0.08;  // 8.0%
             $tyLeBHYT_NLD = 0.015; // 1.5%
             $tyLeBHTN_NLD = 0.01;  // 1.0%
-            
+
             // Tính các khoản khấu trừ bảo hiểm dựa trên tổng lương và phụ cấp
             // Cơ sở tính đóng BHXH, BHYT, BHTN chính xác từ salary.blade.php
             $tongLuongBaoHiem = $luongCB + $pcChucVu + $pcTrachNhiem;
@@ -88,20 +88,20 @@ class LuongSeeder extends Seeder
             $bhyt = round($tongLuongBaoHiem * $tyLeBHYT_NLD);
             $bhtn = round($tongLuongBaoHiem * $tyLeBHTN_NLD);
             $tongBH = $bhxh + $bhyt + $bhtn;
-            
+
             // Tính thuế thu nhập cá nhân - giảm trừ gia cảnh
             $giamTruGiaCanh = 11000000;
             $giamTruNguoiPhuThuoc = 0;
-            
+
             // Kiểm tra và tính giảm trừ người phụ thuộc từ hợp đồng
             if ($nv->hopDong && isset($nv->hopDong->NPT)) {
                 $giamTruNguoiPhuThuoc = $nv->hopDong->NPT * 4400000;
             }
-            
+
             // Tính thu nhập chịu thuế - chính xác từ salary.blade.php
             $thuNhapChiuThue = $tongThuNhap - $giamTruGiaCanh - $giamTruNguoiPhuThuoc - $tongBH;
             $thueTncn = 0;
-            
+
             // Chỉ tính thuế nếu thu nhập chịu thuế > 0
             if ($thuNhapChiuThue > 0) {
                 // Biểu thuế lũy tiến theo cách tính giống trong salary.blade.php
@@ -128,21 +128,21 @@ class LuongSeeder extends Seeder
                     $thueTncn = $thuNhapChiuThue * 0.35 - 9850000;
                 }
             }
-            
+
             // Đảm bảo thuế không âm - giống trong salary.blade.php
             if ($thueTncn < 0) {
                 $thueTncn = 0;
             } else {
                 $thueTncn = round($thueTncn);
             }
-            
+
             // Tính lương thực lãnh
             $luongThucLanh = $tongThuNhap - $bhxh - $bhyt - $bhtn - $thueTncn;
-            
+
             // Tạm ứng cố định 2,000,000 VND như trong salary.blade.php
             $tamUng = 2000000;
             $conLanh = $luongThucLanh - $tamUng;
-            
+
             // Tạo bản ghi lương sử dụng DB facade
             DB::table('_luong')->insert([
                 'HoTen' => $nv->HoTen,
@@ -160,13 +160,18 @@ class LuongSeeder extends Seeder
                 'luong_thuc_lanh' => $luongThucLanh,
                 'tam_ung' => $tamUng,
                 'con_lanh' => $conLanh,
+                'tam_ung' => $tamUng,
+                'con_lanh' => $conLanh,
                 'NgayTao' => Carbon::now()->format('Y-m-d'),
+                'NgayThanhToan' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
                 'NgayThanhToan' => null,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
         }
-        
+
         return "Đã tạo dữ liệu lương cho " . count($nhanviens) . " nhân viên";
     }
 }

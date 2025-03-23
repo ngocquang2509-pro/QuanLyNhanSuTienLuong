@@ -53,53 +53,53 @@ class AccountingController extends Controller
         try {
             $departmentId = $request->departmentId;
             $month = $request->month ?? date('Y-m');
-            
+
             $monthParts = explode('-', $month);
             $monthNumber = isset($monthParts[1]) ? $monthParts[1] : date('m');
             $year = isset($monthParts[0]) ? $monthParts[0] : date('Y');
-            
+
             \Log::info('Fetching salaries', [
                 'departmentId' => $departmentId,
                 'month' => $month,
                 'monthNumber' => $monthNumber,
                 'year' => $year
             ]);
-            
+
             // Lấy tên phòng ban
             $departmentName = DB::table('phongban')->where('id', $departmentId)->value('TenPhongBan');
-            
+
             if (!$departmentName) {
                 return response()->json(['error' => 'Không tìm thấy phòng ban'], 404);
             }
-            
+
             // Lấy dữ liệu từ bảng _luong
             $salaries = DB::table('_luong')
-                        ->leftJoin('nhanvien', '_luong.HoTen', '=', 'nhanvien.HoTen')
-                        ->where('_luong.PhongBan', $departmentName)
-                        ->whereMonth('_luong.NgayTao', $monthNumber)
-                        ->whereYear('_luong.NgayTao', $year)
-                        ->select(
-                            '_luong.id',
-                            '_luong.HoTen',
-                            '_luong.ChucVu',
-                            '_luong.PhongBan',
-                            '_luong.LuongCB as LuongCoBan',  // Đổi tên cột khi trả về
-                            '_luong.pc_chuc_vu',
-                            '_luong.pc_trach_nhiem',
-                            '_luong.SoNgayCong',
-                            '_luong.TongThuNhap',
-                            '_luong.bhxh',
-                            '_luong.bhyt',
-                            '_luong.bhtn',
-                            '_luong.thue_tncn',
-                            '_luong.luong_thuc_lanh',
-                            '_luong.tam_ung',
-                            '_luong.con_lanh',
-                            '_luong.NgayThanhToan',
-                            'nhanvien.id as MaNV'
-                        )
-                        ->get();
-            
+                ->leftJoin('nhanvien', '_luong.HoTen', '=', 'nhanvien.HoTen')
+                ->where('_luong.PhongBan', $departmentName)
+                ->whereMonth('_luong.NgayTao', $monthNumber)
+                ->whereYear('_luong.NgayTao', $year)
+                ->select(
+                    '_luong.id',
+                    '_luong.HoTen',
+                    '_luong.ChucVu',
+                    '_luong.PhongBan',
+                    '_luong.LuongCB as LuongCoBan',  // Đổi tên cột khi trả về
+                    '_luong.pc_chuc_vu',
+                    '_luong.pc_trach_nhiem',
+                    '_luong.SoNgayCong',
+                    '_luong.TongThuNhap',
+                    '_luong.bhxh',
+                    '_luong.bhyt',
+                    '_luong.bhtn',
+                    '_luong.thue_tncn',
+                    '_luong.luong_thuc_lanh',
+                    '_luong.tam_ung',
+                    '_luong.con_lanh',
+                    '_luong.NgayThanhToan',
+                    'nhanvien.id as MaNV'
+                )
+                ->get();
+
             // Xử lý khi không có MaNV
             if ($salaries->count() > 0) {
                 foreach ($salaries as $salary) {
@@ -114,9 +114,9 @@ class AccountingController extends Controller
                     }
                 }
             }
-            
+
             \Log::info('Found ' . count($salaries) . ' salaries');
-            
+
             return response()->json($salaries);
         } catch (\Exception $e) {
             \Log::error('Error in getSalariesByDepartment: ' . $e->getMessage());
@@ -128,7 +128,7 @@ class AccountingController extends Controller
     public function paySalary(Request $request)
     {
         $salaryId = $request->salaryId;
-        
+
         try {
             DB::table('_luong')
                 ->where('id', $salaryId)
@@ -136,16 +136,16 @@ class AccountingController extends Controller
                     'NgayThanhToan' => now(),
                     'updated_at' => now()
                 ]);
-            
+
             return response()->json([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Thanh toán lương thành công!'
             ]);
         } catch (\Exception $e) {
             \Log::error('Error paying salary: ' . $e->getMessage());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'message' => 'Có lỗi xảy ra khi thanh toán lương: ' . $e->getMessage()
             ], 500);
         }
