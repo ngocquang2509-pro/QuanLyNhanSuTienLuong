@@ -231,21 +231,22 @@
                         <th rowspan="2">Họ tên</th>
                         <th rowspan="2">Chức vụ</th>
                         <th rowspan="2">Bộ phận</th>
-                        <th colspan="3">LƯƠNG CB + PHỤ CẤP THEO HĐLĐ</th>
+                        <th colspan="4">LƯƠNG CB + PHỤ CẤP THEO HĐLĐ</th>
                         <th rowspan="2">Số ngày công</th>
-
+                        <th rowspan="2">Khen thưởng - Kỷ luật</th>
                         <th rowspan="2">Tổng thu nhập</th>
                         <th colspan="3">BẢO HIỂM NHÂN VIÊN ĐÓNG</th>
                         <th rowspan="2">Thuế TNCN phải nộp</th>
                         <th rowspan="2">Lương thực lãnh</th>
                         <th rowspan="2">Tạm ứng</th>
                         <th rowspan="2">Còn lãnh</th>
-                        <th rowspan="2">Hành động</th>
                     </tr>
                     <tr class="table-header text-center">
                         <th>Lương CB</th>
+                        <th>Hệ số lương</th>
                         <th>PC Chức vụ</th>
                         <th>PC Trách nhiệm</th>
+
                         <th>BHXH (8%)</th>
                         <th>BHYT (1.5%)</th>
                         <th>BHTN (1%)</th>
@@ -253,80 +254,54 @@
                 </thead>
                 <tbody>
 
-                    @foreach($nhanviens as $nhanvien)
+                    @foreach($salaries as $salary)
                     <tr class="text-center">
-                        <td>{{ $nhanvien->id }}</td>
-                        <td class="text-start">{{ $nhanvien->HoTen }}</td>
-                        <td>{{ $nhanvien->chucVu->TenChucVu }}</td>
-                        <td>{{ $nhanvien->phongBan->TenPhongBan }}</td>
-                        <td>{{ number_format($nhanvien->chucVu->LuongCoBan) }}</td>
-                        <td>{{ number_format($nhanvien->chucVu->PC_Chuc_vu) }}</td>
-                        <td>{{ number_format($nhanvien->chucVu->PC_Trach_nhiem) }}</td>
-                        <td>{{ $nhanvien->TongSoCong }}</td>
+                        <td>{{ $salary->id }}</td>
+                        <td class="text-start">{{ $salary->HoTen }}</td>
+                        <td>{{ $salary->ChucVu }}</td>
+                        <td>{{ $salary->PhongBan }}</td>
+                        <td>{{ number_format($salary->LuongCB) }}</td>
+                        <td>{{ $salary->HSL }}</td>
+                        <td>{{ number_format($salary->pc_chuc_vu) }}</td>
+                        <td>{{ number_format($salary->pc_trach_nhiem) }}</td>
+                        <td>{{ $salary->SoNgayCong }}</td>
+                        <td>{{ $salary->KTKL }}</td>
+                        <td>
+                            {{ number_format(($salary->TongThuNhap)) }}
+                        </td>
+                        <td>{{ number_format($salary->bhxh) }}</td>
+                        <td>{{ number_format($salary->bhyt) }}</td>
+                        <td>{{ number_format($salary->bhtn) }}</td>
+
+                        <td>
+
+                            <span>{{number_format($salary->thue_tncn)}}</span>
+                            <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation"
+                                data-bs-toggle="modal" data-bs-target="#taxCalculationModal"
+                                data-id="{{$salary->id}}" data-hoten="{{$salary->HoTen}}"
+                                data-position="{{$salary->ChucVu}}"
+                                data-department="{{$salary->PhongBan}}"
+                                data-luongcoban="{{number_format($salary->LuongCB)}}"
+                                data-ngaycong="{{$salary->SoNgayCong}}"
+                                data-phucap="{{number_format($salary->pc_chuc_vu+$salary->pc_trach_nhiem)}}"
+                                data-TongThuNhap="{{number_format($salary->TongThuNhap)}}"
+                                data-bhxh="{{number_format($salary->bhxh)}}" data-bhyt="{{number_format($salary->bhyt)}}"
+                                data-bhtn="{{number_format($salary->bhtn)}}"
+                                data-NPT=" {{number_format($salary->NPT*4400000)}}"
+                                data-TongGiamTru="{{number_format($salary->bhxh + $salary->bhyt + $salary->bhtn+11000000+$salary->NPT*4400000)}}"
+                                data-TNTT="{{number_format($salary->TongThuNhap-($salary->bhxh + $salary->bhyt + $salary->bhtn+11000000+$salary->NPT*4400000))}}"
+                                data-TNTTtypeNumber="{{($salary->TongThuNhap-($salary->bhxh + $salary->bhyt + $salary->bhtn+11000000+$salary->NPT*4400000))}}"
+                                data-TNCN="{{number_format($salary->thue_tncn)}}">
+                                <i class="fas fa-calculator"></i> Tính thuế
+                            </button>
 
 
-                        @php
-                        $Tongthunhap = ($nhanvien->chucVu->LuongCoBan / 26) * $nhanvien->TongSoCong
-                        + $nhanvien->chucVu->PC_Chuc_vu
-                        + $nhanvien->chucVu->PC_Trach_nhiem;
-                        $bhxh =( $nhanvien->chucVu->LuongCoBan + $nhanvien->chucVu->PC_Chuc_vu+
-                        $nhanvien->chucVu->PC_Trach_nhiem)*0.08;
-                        $bhyt = ($nhanvien->chucVu->LuongCoBan + $nhanvien->chucVu->PC_Chuc_vu+
-                        $nhanvien->chucVu->PC_Trach_nhiem)*0.015;
-                        $bhtn = ($nhanvien->chucVu->LuongCoBan + $nhanvien->chucVu->PC_Chuc_vu+
-                        $nhanvien->chucVu->PC_Trach_nhiem)*0.01;
-                        $tongBH = $bhxh + $bhyt + $bhtn;
-                        if($nhanvien->hopDong){
-                        $TNTT = $Tongthunhap - 11000000 - $nhanvien->hopDong->NPT*4400000- $tongBH;
-                        switch (true) {
-                        case ($TNTT <= 5000000): $thue=$TNTT * 0.05; break; case ($TNTT <=10000000): $thue=$TNTT * 0.1 -
-                            250000; break; case ($TNTT <=18000000): $thue=$TNTT * 0.15 - 750000; break; case ($TNTT
-                            <=32000000): $thue=$TNTT * 0.2 - 1650000; break; case ($TNTT <=52000000): $thue=$TNTT * 0.25
-                            - 3250000; break; case ($TNTT <=80000000): $thue=$TNTT * 0.3 - 5850000; break; default:
-                            $thue=$TNTT * 0.35 - 9850000; break; } } else $thue=0; $luongThucLanh=($Tongthunhap - $bhxh
-                            - $bhyt - $bhtn-$thue); if($thue < 0) $thue=0; @endphp <td>
-                            {{ number_format(($Tongthunhap)) }}</td>
-                            <td>{{ number_format($bhxh) }}</td>
-                            <td>{{ number_format($bhyt) }}</td>
-                            <td>{{ number_format($bhtn) }}</td>
+                        </td>
+                        <td>{{number_format($salary->luong_thuc_lanh)}}</td>
+                        <td>{{number_format(2000000)}}</td>
+                        <td>{{number_format($salary->luong_thuc_lanh-2000000)}}</td>
 
-                            <td>
 
-                                <span>{{number_format($thue)}}</span>
-                                @if($nhanvien->hopDong)
-                                <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation"
-                                    data-bs-toggle="modal" data-bs-target="#taxCalculationModal"
-                                    data-id="{{$nhanvien->id}}" data-hoten="{{$nhanvien->HoTen}}"
-                                    data-position="{{$nhanvien->chucVu->TenChucVu}}"
-                                    data-department="{{$nhanvien->phongBan->TenPhongBan}}"
-                                    data-luongcoban="{{number_format($nhanvien->chucVu->LuongCoBan)}}"
-                                    data-ngaycong="{{$nhanvien->TongSoCong}}"
-                                    data-phucap="{{number_format($nhanvien->chucVu->PC_Chuc_vu + $nhanvien->chucVu->PC_Trach_nhiem)}}"
-                                    data-TongThuNhap="{{number_format($Tongthunhap)}}"
-                                    data-bhxh="{{number_format($bhxh)}}" data-bhyt="{{number_format($bhyt)}}"
-                                    data-bhtn="{{number_format($bhtn)}}"
-                                    data-NPT=" {{number_format($nhanvien->hopDong->NPT*4400000)}}"
-                                    data-TongGiamTru="{{number_format($bhxh + $bhyt + $bhtn+11000000+$nhanvien->hopDong->NPT*4400000)}}"
-                                    data-TNTT="{{number_format($TNTT)}}" data-TNTTtypeNumber={{$TNTT}}
-                                    data-TNCN="{{number_format($thue)}}">
-                                    <i class="fas fa-calculator"></i> Tính thuế
-                                </button>
-
-                                @else
-                                <button class="btn btn-primary btn-sm tax-button ms-2 taxCalculation"
-                                    data-bs-toggle="modal" data-bs-target="#taxCalculationModal">
-                                    <i class="fas fa-calculator"></i> Tính thuế
-                                </button>
-
-                                @endif
-                            </td>
-                            <td>{{number_format($luongThucLanh)}}</td>
-                            <td>{{number_format(2000000)}}</td>
-                            <td>{{number_format($luongThucLanh-2000000)}}</td>
-
-                            <td data-bs-toggle="modal" data-bs-target="#salaryModal">
-                                <i class="fa-solid fa-eye action-btn"></i>
-                            </td>
                     </tr>
 
                     @endforeach
@@ -335,60 +310,9 @@
                 </tbody>
             </table>
         </div>
-        <button class="btn btn-primary my-2 " id="createSalary">Tạo lương</button>
+        <a href="{{route('Accounting.salaryAdd')}}" class="btn btn-primary my-2 " id="createSalary">Tạo lương</a>
     </div>
-    <div class="modal fade" id="salaryModal" tabindex="-1" aria-labelledby="salaryModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="salaryModalLabel">
-                        <i class="fas fa-file-invoice-dollar me-2"></i>
-                        CÔNG TY TNHH DƯỢC PHẨM SÂM NGỌC LINH - PHIẾU CHI LƯƠNG
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-end mb-3">Tháng 02/2025</div>
 
-                    <div class="detail-row">
-                        <div class="detail-label">Họ và tên:</div>
-                        <div class="detail-value" id="salaryName">Nguyễn Văn A</div>
-                    </div>
-
-                    <div class="detail-row">
-                        <div class="detail-label">Mã số NV:</div>
-                        <div class="detail-value" id="salaryID">NV-001</div>
-                    </div>
-
-                    <div class="detail-row">
-                        <div class="detail-label">Chức vụ:</div>
-                        <div class="detail-value" id="salaryPosition">Trưởng phòng</div>
-                    </div>
-
-                    <div class="detail-row">
-                        <div class="detail-label">Phòng ban:</div>
-                        <div class="detail-value" id="salaryDeparment">Hành chính</div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Tiền lương:</div>
-                        <div class="detail-value" id="salary"></div>
-                    </div>
-
-                    <div class="detail-row">
-                        <div class="detail-label">Ghi chú:</div>
-                        <div class="detail-value">Không có</div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary">
-                        <i class="fas fa-print me-2"></i>In phiếu lương
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="modal fade" id="taxCalculationModal" tabindex="-1" aria-labelledby="salaryModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -401,7 +325,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="nhanvienthoivu-info mb-4">
+                    <div class="salarythoivu-info mb-4">
                         <h6 class="text-muted mb-3">Thông tin nhân viên</h6>
                         <div class="row">
                             <div class="col-md-6">
@@ -588,57 +512,5 @@
                     document.getElementById("BacThue").innerText = bac;
                 });
             });
-        });
-        document.getElementById("createSalary").addEventListener("click", function() {
-
-            let table = document.getElementById("salaryTable");
-            let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-            let luongData = [];
-            for (let i = 0; i < rows.length; i++) {
-                let row = rows[i];
-                let cells = row.getElementsByTagName("td");
-                let luong = {
-                    HoTen: cells[1].innerText,
-                    ChucVu: cells[2].innerText,
-                    PhongBan: cells[3].innerText,
-                    LuongCB: cells[4].innerText,
-                    pc_chuc_vu: cells[5].innerText,
-                    pc_trach_nhiem: cells[6].innerText,
-                    SoNgayCong: cells[7].innerText,
-                    TongThuNhap: cells[8].innerText,
-                    bhxh: cells[9].innerText,
-                    bhyt: cells[10].innerText,
-                    bhtn: cells[11].innerText,
-                    thue_tncn: cells[12].innerText,
-                    luong_thuc_lanh: cells[13].innerText,
-                    tam_ung: cells[14].innerText,
-                    con_lanh: cells[15].innerText
-                };
-                luongData.push(luong);
-
-            }
-
-            console.log("Creating salary...");
-            console.log(luongData);
-            fetch("{{ route('Accounting.salaryAdd') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            "content") // Laravel CSRF Token
-                    },
-                    body: JSON.stringify({
-                        salaries: luongData
-                    }) // Đóng gói mảng vào một object
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Dữ liệu lương đã được gửi thành công!");
-                    } else {
-                        alert("Có lỗi xảy ra!");
-                    }
-                })
-                .catch(error => console.error("Lỗi:", error));
         });
     </script>

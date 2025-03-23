@@ -24,7 +24,7 @@ class LuongSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Lấy tất cả nhân viên cùng với các mối quan hệ cần thiết
-        $nhanviens = NhanVien::with(['chucVu', 'phongBan', 'hopDong', 'chamCongs', 'lichLamViec'])->get();
+        $nhanviens = NhanVien::with(['chucVu', 'phongBan', 'hopDong', 'chamCongs', 'lichLamViec', 'ktkls'])->get();
 
         // Lấy tháng hiện tại
         $currentMonth = Carbon::now()->month;
@@ -35,7 +35,26 @@ class LuongSeeder extends Seeder
             if (!$nv->chucVu || !$nv->phongBan) {
                 continue;
             }
-
+            if (isset($nv->hopDong)) {
+                $soNamLamViec = floor(Carbon::parse($nv->hopDong->ngay_bat_dau)->diffInYears(Carbon::now()));
+                if ($soNamLamViec < 1) {
+                    $bacLuongID = 1; // Bậc 1
+                } elseif ($soNamLamViec >= 2 && $soNamLamViec < 5) {
+                    $bacLuongID = 2; // Bậc 2
+                } elseif ($soNamLamViec >= 5 && $soNamLamViec < 8) {
+                    $bacLuongID = 3; // Bậc 3
+                } else {
+                    $bacLuongID = 3; // Mặc định Bậc 3 nếu > 8 năm
+                }
+                $heSoLuong = DB::table('bacluong_chucvu')
+                    ->where('chucvu_id', $nv->MaChucVu) // Lấy theo chức vụ
+                    ->where('bacluong_id', $bacLuongID) // Lấy theo bậc lương
+                    ->value('HeSo');
+                $KTKL = DB::table('_khen_thuong_ki_luat_nhan_vien')
+                    ->where('nhanvien_id', $nv->id)
+                    ->sum('NoiDung');
+                $NPT = $nv->hopDong->NPT;
+            }
             // Tính toán các giá trị lương
             $luongCB = $nv->chucVu->LuongCoBan ?? 5000000;
             $pcChucVu = $nv->chucVu->PC_Chuc_vu ?? 500000;
@@ -73,7 +92,7 @@ class LuongSeeder extends Seeder
             }
 
             // Tính tổng thu nhập dựa trên ngày công đúng theo công thức trong salary.blade.php
-            $tongThuNhap = ($luongCB / 26) * $soNgayCong + $pcChucVu + $pcTrachNhiem;
+            $tongThuNhap = ($luongCB * $heSoLuong / 26) * $soNgayCong + $pcChucVu + $pcTrachNhiem + $KTKL;
             $tongThuNhap = round($tongThuNhap);
 
             // Tỷ lệ đóng BHXH, BHYT, BHTN của người lao động - chính xác từ salary.blade.php
@@ -145,9 +164,13 @@ class LuongSeeder extends Seeder
 
             // Tạo bản ghi lương sử dụng DB facade
             DB::table('_luong')->insert([
+                'nhanvien_id' => $nv->id,
                 'HoTen' => $nv->HoTen,
+                'NPT' => $NPT,
                 'ChucVu' => $nv->chucVu->TenChucVu,
                 'PhongBan' => $nv->phongBan->TenPhongBan,
+                'HSL' => $heSoLuong,
+                'KTKL' => $KTKL,
                 'LuongCB' => $luongCB,
                 'pc_chuc_vu' => $pcChucVu,
                 'pc_trach_nhiem' => $pcTrachNhiem,

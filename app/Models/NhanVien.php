@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+
 class NhanVien extends Model
 {
     use HasFactory;
@@ -43,8 +44,16 @@ class NhanVien extends Model
     {
         return $this->chamCongs()->sum('SoCong');
     }
+    public function TongTienKTKL()
+    {
+        return $this->ktkls()->sum('NoiDung');
+    }
     public function lichLamViec()
     {
         return $this->hasMany(LichLamViec::class, 'nhanvien_id');
+    }
+    public function ktkls()
+    {
+        return $this->hasMany(KTKL::class, 'nhanvien_id');
     }
 }

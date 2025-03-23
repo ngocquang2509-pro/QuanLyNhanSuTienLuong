@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('_luong', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('nhanvien_id')->constrained('nhanvien')->onDelete('cascade');
+            $table->integer('NPT');
             $table->string('HoTen');
             $table->string('ChucVu')->nullable();
             $table->string('PhongBan')->nullable();
             $table->decimal('LuongCB', 15, 2);
+            $table->decimal('HSL', 8, 2)->default(1.00);
+            $table->bigInteger('KTKL')->default(0);
             $table->decimal('pc_chuc_vu', 15, 2)->nullable();
             $table->decimal('pc_trach_nhiem', 15, 2)->nullable();
             $table->integer('SoNgayCong')->default(0);

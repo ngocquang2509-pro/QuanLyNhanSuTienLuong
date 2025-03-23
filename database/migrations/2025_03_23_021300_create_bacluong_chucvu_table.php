@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('_khen_thuong_ki_luat', function (Blueprint $table) {
+        Schema::create('bacluong_chucvu', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('nhanVien_id')->constrained('nhanvien')->onDelete('cascade');
-            $table->enum('Loai', ['Khen thưởng', 'Kỷ luật']);
-            $table->text('NoiDung');
-            $table->date('NgayTao');
+            $table->foreignId('chucvu_id')->constrained('chucvu')->onDelete('cascade');
+            $table->foreignId('bacluong_id')->constrained('bacluong')->onDelete('cascade');
+            $table->decimal('HeSo', 8, 2);
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('_khen_thuong_ki_luat');
+        Schema::dropIfExists('bacluong_chucvu');
     }
 };

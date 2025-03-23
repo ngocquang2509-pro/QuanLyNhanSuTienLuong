@@ -23,7 +23,11 @@ class DatabaseSeeder extends Seeder
             CaLamViecSeeder::class,
             LichLamViecSeeder::class,
             ChamCongSeeder::class,
-            LuongSeeder::class
+            LuongSeeder::class,
+            bacluongSeeder::class,
+            bacluongChucvuSeeder::class,
+            KTKLSeeder::class,
+            KTKLNhanVienSeeder::class,
         ]);
     }
 }

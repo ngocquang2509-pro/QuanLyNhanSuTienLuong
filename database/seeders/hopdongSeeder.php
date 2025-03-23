@@ -45,7 +45,7 @@ class hopdongSeeder extends Seeder
                 'noi_dung' => 'Hợp đồng nhân viên thời vụ',
                 'created_at' => now(),
                 'updated_at' => now(),
-                'NPT' => 1
+                'NPT' => 0
             ]);
 
             // Tạo hợp đồng cho nhân viên chính thức còn lại
@@ -60,7 +60,7 @@ class hopdongSeeder extends Seeder
                     'noi_dung' => 'Hợp đồng nhân viên chính thức',
                     'created_at' => now(),
                     'updated_at' => now(),
-                    'NPT' => 1
+                    'NPT' => 0
                 ]);
             }
         }
