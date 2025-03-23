@@ -35,6 +35,9 @@ class LuongSeeder extends Seeder
             if (!$nv->chucVu || !$nv->phongBan) {
                 continue;
             }
+            $heSoLuong = 1;
+            $KTKL = 0;
+            $NPT = 0;
             if (isset($nv->hopDong)) {
                 $soNamLamViec = floor(Carbon::parse($nv->hopDong->ngay_bat_dau)->diffInYears(Carbon::now()));
                 if ($soNamLamViec < 1) {
@@ -49,7 +52,7 @@ class LuongSeeder extends Seeder
                 $heSoLuong = DB::table('bacluong_chucvu')
                     ->where('chucvu_id', $nv->MaChucVu) // Lấy theo chức vụ
                     ->where('bacluong_id', $bacLuongID) // Lấy theo bậc lương
-                    ->value('HeSo');
+                    ->value('HeSo') ?? 1;
                 $KTKL = DB::table('_khen_thuong_ki_luat_nhan_vien')
                     ->where('nhanvien_id', $nv->id)
                     ->sum('NoiDung');
