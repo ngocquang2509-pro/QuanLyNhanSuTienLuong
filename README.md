@@ -22,3 +22,17 @@
   - **Composer**: [Tải tại đây](https://getcomposer.org/Composer-Setup.exe)
 
 - Kiểm tra kết nối cơ sở dữ liệu trong file `.env` trước khi chạy lệnh `migrate` và `db:seed`.
+
+## Các lỗi có thể gặp
+
+## Tài khoản đăng nhập cho các role
+
+- **Giám đốc**:
+  - Tài khoản: phat@gmail.com
+  - Mật khẩu: 123
+- **Quản lý nhân sự**:
+  - Tài khoản: Hai123@gmail.com
+  - Mật khẩu: 123
+- **Quản lý kế toán**:
+  - Tài khoản: thuphuong@gmail.com
+  - Mật khẩu: 123
