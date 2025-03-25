@@ -18,17 +18,9 @@ class userSeeder extends Seeder
         DB::table('users')->insert([
 
             [
-                'name' => 'quang',
-                'email' => 'user@gmail.com',
-                'password' => Hash::make('password123'),
-                'type' => 'ADM',
-                'created_at' => '2025-02-19 02:34:08',
-                'updated_at' => '2025-02-21 03:15:20',
-            ],
-            [
                 'name' => 'Hải',
                 'email' => 'Hai123@gmail.com',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('123'),
                 'type' => 'HMN',
                 'created_at' => '2025-02-19 03:39:52',
                 'updated_at' => '2025-02-22 02:45:01',
@@ -36,16 +28,16 @@ class userSeeder extends Seeder
             [
                 'name' => 'Phương',
                 'email' => 'thuphuong@gmail.com',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('123'),
                 'type' => 'ACC',
                 'created_at' => '2025-02-19 03:42:15',
                 'updated_at' => '2025-02-22 02:45:12',
             ],
             [
-                'name' => 'phat ngu',
+                'name' => 'Phat',
                 'email' => 'phat@gmail.com',
-                'password' => Hash::make('password123'),
-                'type' => 'ACC',
+                'password' => Hash::make('123'),
+                'type' => 'CTO',
                 'created_at' => '2025-02-26 04:41:30',
                 'updated_at' => '2025-02-26 04:41:30',
             ],
