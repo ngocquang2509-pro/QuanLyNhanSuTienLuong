@@ -1,15 +1,20 @@
 # Hướng Dẫn Chạy Chương Trình
 
-## Các bước thực hiện
+## Các bước thực hiện sau khi clone thành công về
 
 1. Chạy lệnh: `composer install`
 2. Đổi tên file: `.env.xample` thành `.env`
 3. Chạy lệnh: `php artisan key:generate`
 4. Chạy lệnh: `php artisan migrate`
 5. Chạy lệnh: `php artisan db:seed`
+6. Chạy lệnh: `php artisan serve` 
 
 ## Ghi chú
 
+- Đảm bảo bật XAMPP trong suốt quá trình thực hiện các bước trên:
+  - Chạy Apache
+  - Chạy MySQL
+ ![alt text](image.png)
 - Đảm bảo bạn đã cài đặt các công cụ sau trước khi thực hiện:
   - **PHP**
   - **Laravel**
