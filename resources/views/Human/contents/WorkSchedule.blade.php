@@ -94,7 +94,7 @@
 
                     </div>
 
-                    <div class="calendar-header">
+                    <form class="calendar-header" action="{{route('Human.WorkSchedule')}}" method="GET">
                         <div class="row align-items-center">
                             <div class="col-md-4">
                                 <div class="input-group mb-2 mb-md-0">
@@ -104,12 +104,15 @@
                                     <input
                                         type="date"
                                         class="form-control"
-                                        value="2025-03-10" />
+                                        value="{{$startDate}}"
+                                        name="start_date" />
+
                                     <span class="input-group-text bg-white">đến</span>
                                     <input
                                         type="date"
                                         class="form-control"
-                                        value="2025-03-16" />
+                                        value="{{$endDate}}"
+                                        name="end_date" />
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -117,25 +120,28 @@
                                     <span class="input-group-text bg-white">
                                         <i class="fas fa-sitemap me-1"></i> Phòng ban
                                     </span>
-                                    <select class="form-select">
-                                        <option value="all">Tất cả</option>
-                                        <option value="it">IT</option>
-                                        <option value="hr">Nhân sự</option>
-                                        <option value="sales">Kinh doanh</option>
+                                    <select class="form-select" name="phongban_id">
+                                        <option value="" selected disabled>-- Chọn nhân viên --</option>
+
+                                        @foreach($phongbans as $phongban)
+                                        <option value="{{$phongban->id}}">{{$phongban->TenPhongBan}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="search-bar">
                                     <i class="fas fa-search"></i>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Tìm kiếm nhân viên..." />
+                                    <select name="idEmployee" id="" class="form-control">
+                                        <option value="" selected disabled>-- Chọn nhân viên --</option>
+                                        @foreach($employees as $employee)
+                                        <option value="{{$employee->id}}">{{$employee->id}}-{{$employee->HoTen}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-2 text-md-end">
-                                <button class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-filter me-1"></i> Lọc
                                 </button>
                                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
@@ -143,7 +149,7 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </form>
 
                     <div class="card-body">
                         <div class="table-responsive">

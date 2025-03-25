@@ -151,9 +151,9 @@ class HumanController extends Controller
                 $datasetDeparment2[] = 0;
                 $datasetDeparment3[] = 0;
             } else {
-            $datasetDeparment1[] = (($part1 / $TongNV) * 100);
-            $datasetDeparment2[] = (($part2 / $TongNV) * 100);
-            $datasetDeparment3[] = (($part3 / $TongNV) * 100);
+                $datasetDeparment1[] = (($part1 / $TongNV) * 100);
+                $datasetDeparment2[] = (($part2 / $TongNV) * 100);
+                $datasetDeparment3[] = (($part3 / $TongNV) * 100);
             }
         }
         if ($request->department) {
@@ -332,12 +332,31 @@ class HumanController extends Controller
         $shift->delete();
         return redirect()->route('Human.ShiftManager')->with('success', 'Xóa ca làm việc thành công');
     }
-    public function WorkSchedule()
+    public function WorkSchedule(Request $request)
     {
+        $phongbans = PhongBan::all();
         $employees = NhanVien::all();
         $shifts = calamviec::all();
+        $startDate = '2025-03-03';
+        $endDate = '2025-03-03';
+        $phongban = null;
         $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->whereDate('NgayLamViec', '2025-03-03')->get();
-        return view('Human.WorkSchedule', compact('schedules', 'employees', 'shifts'));
+        if (isset($request->phongban_id)) {
+            $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->whereHas('nhanVien', function ($query) use ($request) {
+                $query->where('MaPhongBan', $request->phongban_id);
+
+            })->get();
+           
+        }
+        if (isset($request->start_date) && isset($request->end_date)) {
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
+            $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->whereBetween('NgayLamViec', [$request->start_date, $request->end_date])->get();
+        }
+        if(isset($request->idEmployee)&&isset($request->start_date)&&isset($request->end_date)){
+            $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->where('nhanvien_id',$request->idEmployee)->whereBetween('NgayLamViec', [$request->start_date, $request->end_date])->get();
+        }
+        return view('Human.WorkSchedule', compact('schedules', 'employees', 'shifts', 'phongbans', 'startDate', 'endDate'));
     }
     public function WorkScheduleAdd(Request $request)
     {

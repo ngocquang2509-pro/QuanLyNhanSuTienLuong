@@ -7,8 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
-
+Auth::routes(); 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'login'])->name('auth.login');
 Route::get('/logout', [App\Http\Controllers\HomeController::class, 'logout'])->name('auth.logout');
 Route::get('/register', [App\Http\Controllers\HomeController::class, 'register'])->name('auth.register');
