@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\NhanVien;
 use App\Models\salary;
 use Illuminate\Http\Request;
@@ -9,13 +10,23 @@ use DB;
 use App\Models\PhongBan;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB as FacadesDB;
-
 class AccountingController extends Controller
 {
     public function index()
     {
         $nhanviens = NhanVien::all()->count();
-        return view('Accounting.dashboard', compact('nhanviens'));
+        $salaryMax = salary::max('TongThuNhap');
+        $salaryMin = salary::min('TongThuNhap');
+        $salaryAvg = salary::avg('TongThuNhap');
+        $HanhChinhAvg = salary::where('PhongBan', 'Hành chính')->avg('TongThuNhap');
+        $KinhDoanhAvg = salary::where('PhongBan', 'Kinh doanh')->avg('TongThuNhap');
+        $KyThuatAvg = salary::where('PhongBan', 'Kĩ thuật')->avg('TongThuNhap');
+        $NhanSuAvg = salary::where('PhongBan', 'Nhân sự')->avg('TongThuNhap');
+        $KeToanAvg = salary::where('PhongBan', 'Kế toán')->avg('TongThuNhap');
+        $SanXuatAvg = salary::where('PhongBan', 'Sản xuất')->avg('TongThuNhap');
+        $NghienCuuAvg = salary::where('PhongBan', 'Nghiên cứu và phát triển')->avg('TongThuNhap');
+
+        return view('Accounting.dashboard', compact('nhanviens', 'salaryMax', 'salaryMin', 'salaryAvg', 'HanhChinhAvg', 'KinhDoanhAvg', 'KyThuatAvg', 'NhanSuAvg', 'KeToanAvg', 'SanXuatAvg', 'NghienCuuAvg'));
     }
     public function salary()
     {

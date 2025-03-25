@@ -1,13 +1,19 @@
 <div class="col-md-10 p-4 container my-5">
     <h1 class="text-center mb-4">Hệ Thống Thống Kê Lương</h1>
-
+    <input type="hidden" id="HanhChinhAvg" data-HanhChinh="{{($HanhChinhAvg)}}">
+    <input type="hidden" id="KeToanAvg" data-KeToan="{{($KeToanAvg)}}">
+    <input type="hidden" id="NhanSuAvg" data-NhanSu="{{($NhanSuAvg)}}">
+    <input type="hidden" id="KinhDoanhAvg" data-KinhDoanh="{{($KinhDoanhAvg)}}">
+    <input type="hidden" id="KyThuatAvg" data-KiThuat="{{($KyThuatAvg)}} " value="{{$KyThuatAvg}}">
+    <input type="hidden" id="SanXuatAvg" data-SanXuat="{{($SanXuatAvg)}}">
+    <input type="hidden" id="NghienCuuAvg" data-NghienCuu="{{($NghienCuuAvg)}}">
     <!-- Thống kê tổng quan -->
     <div class="row mb-4">
         <div class="col-md-3">
             <div class="card text-white bg-primary">
                 <div class="card-body text-center">
                     <h5 class="card-title">Tổng nhân viên</h5>
-                    <h2 id="totalEmployees">0</h2>
+                    <h2 id="totalEmployees">{{$nhanviens}}</h2>
                 </div>
             </div>
         </div>
@@ -15,7 +21,7 @@
             <div class="card text-white bg-success">
                 <div class="card-body text-center">
                     <h5 class="card-title">Lương TB</h5>
-                    <h2 id="averageSalary">0</h2>
+                    <h2 id="averageSalary">{{number_format($salaryAvg)}}</h2>
                 </div>
             </div>
         </div>
@@ -23,7 +29,7 @@
             <div class="card text-white bg-warning">
                 <div class="card-body text-center">
                     <h5 class="card-title">Lương cao nhất</h5>
-                    <h2 id="highestSalary">0</h2>
+                    <h2 id="highestSalary">{{number_format($salaryMax)}}</h2>
                 </div>
             </div>
         </div>
@@ -31,7 +37,7 @@
             <div class="card text-white bg-danger">
                 <div class="card-body text-center">
                     <h5 class="card-title">Lương thấp nhất</h5>
-                    <h2 id="lowestSalary">0</h2>
+                    <h2 id="lowestSalary">{{number_format($salaryMin)}}</h2>
                 </div>
             </div>
         </div>
@@ -53,8 +59,16 @@
 
 <script>
     // Dữ liệu phòng ban và lương
-    const departments = ["Kỹ thuật", "Kinh doanh", "Nhân sự", "Kế toán", "Marketing"];
-    const salaryByDept = [50000000, 40000000, 30000000, 45000000, 35000000];
+    const departments = ["Hành chính", "Kế toán", "Nhân sự", "Kinh doanh", "Kĩ thuật", "Sản xuất", "Nghiên cứu và phát triển"];
+    const HanhChinhAvg = document.getElementById('HanhChinhAvg').getAttribute('data-HanhChinh');
+    const KeToanAvg = document.getElementById('KeToanAvg').getAttribute('data-KeToan');
+    const NhanSuAvg = document.getElementById('NhanSuAvg').getAttribute('data-NhanSu');
+    const KinhDoanhAvg = document.getElementById('KinhDoanhAvg').getAttribute('data-KinhDoanh');
+    const KyThuatAvg = document.getElementById('KyThuatAvg').getAttribute('data-KiThuat');
+
+    const SanXuatAvg = document.getElementById('SanXuatAvg').getAttribute('data-SanXuat');
+    const NghienCuuAvg = document.getElementById('NghienCuuAvg').getAttribute('data-NghienCuu');
+    const salaryByDept = [HanhChinhAvg, KeToanAvg, NhanSuAvg, KinhDoanhAvg, KyThuatAvg, SanXuatAvg, NghienCuuAvg];
     const employeeCountByDept = [10, 8, 6, 9, 7];
 
     // Biến lưu trữ biểu đồ
@@ -64,21 +78,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         updateStatistics();
         renderCharts();
+        console.log(SanXuatAvg);
     });
 
     // Cập nhật thống kê
     function updateStatistics() {
         const totalEmployees = employeeCountByDept.reduce((sum, count) => sum + count, 0);
-        document.getElementById('totalEmployees').textContent = totalEmployees;
 
-        const avgSalary = salaryByDept.reduce((sum, salary) => sum + salary, 0) / salaryByDept.length;
-        document.getElementById('averageSalary').textContent = formatCurrency(avgSalary);
-
-        const maxSalary = Math.max(...salaryByDept);
-        const minSalary = Math.min(...salaryByDept);
-
-        document.getElementById('highestSalary').textContent = formatCurrency(maxSalary);
-        document.getElementById('lowestSalary').textContent = formatCurrency(minSalary);
     }
 
     // Vẽ biểu đồ
