@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('nhanvien_id')->unique(); // Đảm bảo 1-1
             $table->string('LoaiHopDong');
+            $table->bigInteger('LuongCoBan');
             $table->date('ngay_bat_dau');
             $table->date('ngay_ket_thuc')->nullable();
             $table->date('ngay_ky');

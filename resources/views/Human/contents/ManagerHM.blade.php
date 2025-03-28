@@ -209,6 +209,10 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach ($employees->groupBy('phongBan.TenPhongBan') as $tenPhongBan => $employees)
+                <tr>
+                    <td colspan="7"><strong>Phòng: {{ $tenPhongBan }}</strong></td>
+                </tr>
                 @foreach($employees as $index => $employee)
                 <tr>
                     <td>{{$employee->id}}</td>
@@ -277,6 +281,7 @@
                             data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
+                @endforeach
                 @endforeach
             </tbody>
         </table>
@@ -350,27 +355,32 @@
                         <input type="text" class="form-control" id="employeePosition" readonly />
                     </div>
                 </div>
-
-                <div class="form-group mt-3">
-                    <label class="form-label">Loại hợp đồng:</label>
-                    <select class="form-control" name="LoaiHopDong">
-                        <option value="Chính thức">Hợp đồng chính thức</option>
-                        <option value="Thời vụ">Hợp đồng thời vụ</option>
-                    </select>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Loại hợp đồng:</label>
+                        <select class="form-control" name="LoaiHopDong" required>
+                            <option value="Nhân viên chính thức">Hợp đồng chính thức</option>
+                            <option value="Nhân viên thời vụ">Hợp đồng thời vụ</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="" class="form-label">Lương thỏa thuận:</label>
+                        <input type="number" class="form-control" id="" name="LuongCoBan" required />
+                    </div>
                 </div>
 
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="ngay_ky" class="form-label">Ngày ký:</label>
-                        <input type="date" class="form-control" id="ngay_ky" name="ngay_ky">
+                        <input type="date" class="form-control" id="ngay_ky" name="ngay_ky" required>
                     </div>
                     <div class="col-md-4">
                         <label for="ngay_bat_dau" class="form-label">Ngày bắt đầu:</label>
-                        <input type="date" class="form-control" id="ngay_bat_dau" name="ngay_bat_dau">
+                        <input type="date" class="form-control" id="ngay_bat_dau" name="ngay_bat_dau" required>
                     </div>
                     <div class="col-md-4">
                         <label for="ngay_ket_thuc" class="form-label">Ngày kết thúc:</label>
-                        <input type="date" class="form-control" id="ngay_ket_thuc" name="ngay_ket_thuc">
+                        <input type="date" class="form-control" id="ngay_ket_thuc" name="ngay_ket_thuc" required>
                     </div>
                 </div>
 

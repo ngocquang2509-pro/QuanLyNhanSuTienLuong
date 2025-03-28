@@ -13,29 +13,30 @@ return new class extends Migration
     {
         Schema::create('_luong', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('nhanvien_id')->constrained('nhanvien')->onDelete('cascade');
-            $table->integer('NPT');
+            $table->decimal('HSL', 8, 2)->default(1.00);
+            $table->bigInteger('KTKL')->default(0);
             $table->string('HoTen');
             $table->string('ChucVu')->nullable();
             $table->string('PhongBan')->nullable();
-            $table->decimal('LuongCB', 15, 2);
-            $table->decimal('HSL', 8, 2)->default(1.00);
-            $table->bigInteger('KTKL')->default(0);
+            $table->decimal('LuongCB', 15, 2)->default(0);
             $table->decimal('pc_chuc_vu', 15, 2)->nullable();
             $table->decimal('pc_trach_nhiem', 15, 2)->nullable();
-            $table->integer('SoNgayCong')->default(0);
+            $table->integer('SoNgayCong')->default(2);
             $table->decimal('TongThuNhap', 15, 2);
-            $table->decimal('bhxh', 15, 2)->default(0); // 8%
-            $table->decimal('bhyt', 15, 2)->default(0); // 1.5%
-            $table->decimal('bhtn', 15, 2)->default(0); // 1%
+            $table->decimal('bhxh', 15, 2)->default(0);
+            $table->decimal('bhyt', 15, 2)->default(0);
+            $table->decimal('bhtn', 15, 2)->default(0);
             $table->decimal('thue_tncn', 15, 2)->default(0);
-            $table->decimal('luong_thuc_lanh', 15, 2);
+            $table->decimal('luong_thuc_lanh', 15, 2)->nullable();
             $table->decimal('tam_ung', 15, 2)->default(0);
-            $table->decimal('con_lanh', 15, 2);
-            $table->date('NgayTao');
-            // Thêm cột NgayThanhToan kiểu timestamp, cho phép NULL
-            $table->timestamp('NgayThanhToan')->nullable();
+            $table->decimal('con_lanh', 15, 2)->nullable();
+            $table->date('NgayTao')->nullable();
             $table->timestamps();
+            $table->timestamp('NgayThanhToan')->nullable();
+            $table->foreignId('nhanvien_id')->constrained('nhanvien')->onDelete('cascade');
+            $table->integer('NPT')->nullable();
+            $table->integer('LuongTheoGio')->nullable();
+            $table->integer('TrangThai')->default(0);
         });
     }
 

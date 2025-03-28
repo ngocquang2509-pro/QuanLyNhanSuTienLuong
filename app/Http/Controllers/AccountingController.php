@@ -10,6 +10,7 @@ use DB;
 use App\Models\PhongBan;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB as FacadesDB;
+
 class AccountingController extends Controller
 {
     public function index()
@@ -30,10 +31,27 @@ class AccountingController extends Controller
     }
     public function salary()
     {
-        // Lấy nhân viên có LoaiHopDong là "Chính thức"
-        $salaries = FacadesDB::table('_luong')->get();
-        return view('Accounting.salary', compact('salaries'));
+        // Lấy danh sách lương của nhân viên chính thức, sắp xếp theo tổng thu nhập giảm dần
+        $salaries = FacadesDB::table('_luong')
+            ->join('nhanvien', '_luong.nhanvien_id', '=', 'nhanvien.id') // Join bảng nhân viên
+            ->join('hopdong', 'nhanvien.id', '=', 'hopdong.nhanvien_id') // Join bảng hợp đồng
+            ->where('hopdong.LoaiHopDong', 'Nhân viên chính thức') // Lọc theo loại hợp đồng
+            ->select('_luong.*', 'nhanvien.HoTen', 'hopdong.LoaiHopDong') // Chọn các cột cần thiết
+            ->orderByDesc('_luong.TongThuNhap') // Sắp xếp theo tổng thu nhập giảm dần
+            ->get();
+
+        // Lấy danh sách lương của nhân viên thời vụ, sắp xếp theo tổng thu nhập giảm dần
+        $salariesThoiVu = FacadesDB::table('_luong')
+            ->join('nhanvien', '_luong.nhanvien_id', '=', 'nhanvien.id') // Join bảng nhân viên
+            ->join('hopdong', 'nhanvien.id', '=', 'hopdong.nhanvien_id') // Join bảng hợp đồng
+            ->where('hopdong.LoaiHopDong', 'Nhân viên thời vụ') // Lọc theo loại hợp đồng
+            ->select('_luong.*', 'nhanvien.HoTen', 'hopdong.LoaiHopDong') // Chọn các cột cần thiết
+            ->orderByDesc('_luong.TongThuNhap') // Sắp xếp theo tổng thu nhập giảm dần
+            ->get();
+
+        return view('Accounting.salary', compact('salaries', 'salariesThoiVu'));
     }
+
     public function salaryAdd(Request $request)
     {
         // Tạm thời vô hiệu hóa kiểm tra khóa ngoại
@@ -49,12 +67,30 @@ class AccountingController extends Controller
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Lấy tất cả nhân viên cùng với các mối quan hệ cần thiết
-        $nhanviens = NhanVien::with(['chucVu', 'phongBan', 'hopDong', 'chamCongs', 'lichLamViec', 'ktkls'])->get();
-
+        $nhanviens = NhanVien::with(['chucVu', 'phongBan', 'hopDong'])
+            ->whereHas('hopDong', function ($query) {
+                $query->where('LoaiHopDong', 'Nhân viên chính thức');
+            })
+            ->get();
+        $nhanviensThoiVu = NhanVien::with(['chucVu', 'phongBan', 'hopDong'])
+            ->whereHas('hopDong', function ($query) {
+                $query->where('LoaiHopDong', 'Nhân viên thời vụ');
+            })
+            ->get();
         // Lấy tháng hiện tại
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
-
+        foreach ($nhanviensThoiVu as $nhanvien) {
+            DB::table('_luong')->insert([
+                'nhanvien_id' => $nhanvien->id,
+                'HoTen' => $nhanvien->HoTen,
+                'ChucVu' => $nhanvien->chucVu->TenChucVu,
+                'PhongBan' => $nhanvien->phongBan->TenPhongBan,
+                'SoNgayCong' => $nhanvien->TongSoCong,
+                'TongThuNhap' => $nhanvien->TongSoCong * $nhanvien->hopDong->LuongCoBan,
+                'LuongTheoGio' => $nhanvien->hopDong->LuongCoBan,
+            ]);
+        }
         foreach ($nhanviens as $nv) {
             // Bỏ qua nếu không có chức vụ hoặc phòng ban
             if (!$nv->chucVu || !$nv->phongBan) {
@@ -84,7 +120,7 @@ class AccountingController extends Controller
                 $NPT = $nv->hopDong->NPT;
             }
             // Tính toán các giá trị lương
-            $luongCB = $nv->chucVu->LuongCoBan ?? 5000000;
+            $luongCB = $nv->hopDong->LuongCoBan ?? 5000000;
             $pcChucVu = $nv->chucVu->PC_Chuc_vu ?? 500000;
             $pcTrachNhiem = $nv->chucVu->PC_Trach_nhiem ?? 300000;
 
@@ -226,112 +262,27 @@ class AccountingController extends Controller
         return redirect()->route('Accounting.salary');
     }
 
-    public function payment()
+    public function payment(Request $request)
     {
         $departments = PhongBan::all();
-        return view('Accounting.payment', compact('departments'));
-    }
-
-    public function getSalariesByDepartment(Request $request)
-    {
-        try {
-            $departmentId = $request->departmentId;
-            $month = $request->month ?? date('Y-m');
-
-            $monthParts = explode('-', $month);
-            $monthNumber = isset($monthParts[1]) ? $monthParts[1] : date('m');
-            $year = isset($monthParts[0]) ? $monthParts[0] : date('Y');
-
-            \Log::info('Fetching salaries', [
-                'departmentId' => $departmentId,
-                'month' => $month,
-                'monthNumber' => $monthNumber,
-                'year' => $year
-            ]);
-
-            // Lấy tên phòng ban
-            $departmentName = DB::table('phongban')->where('id', $departmentId)->value('TenPhongBan');
-
-            if (!$departmentName) {
-                return response()->json(['error' => 'Không tìm thấy phòng ban'], 404);
-            }
-
-            // Lấy dữ liệu từ bảng _luong
-            $salaries = DB::table('_luong')
-                ->leftJoin('nhanvien', '_luong.HoTen', '=', 'nhanvien.HoTen')
-                ->where('_luong.PhongBan', $departmentName)
-                ->whereMonth('_luong.NgayTao', $monthNumber)
-                ->whereYear('_luong.NgayTao', $year)
-                ->select(
-                    '_luong.id',
-                    '_luong.HoTen',
-                    '_luong.ChucVu',
-                    '_luong.PhongBan',
-                    '_luong.LuongCB as LuongCoBan',  // Đổi tên cột khi trả về
-                    '_luong.pc_chuc_vu',
-                    '_luong.pc_trach_nhiem',
-                    '_luong.SoNgayCong',
-                    '_luong.TongThuNhap',
-                    '_luong.bhxh',
-                    '_luong.bhyt',
-                    '_luong.bhtn',
-                    '_luong.thue_tncn',
-                    '_luong.luong_thuc_lanh',
-                    '_luong.tam_ung',
-                    '_luong.con_lanh',
-                    '_luong.NgayThanhToan',
-                    'nhanvien.id as MaNV'
-                )
-                ->get();
-
-            // Xử lý khi không có MaNV
-            if ($salaries->count() > 0) {
-                foreach ($salaries as $salary) {
-                    if (is_null($salary->MaNV)) {
-                        // Tìm nhân viên với tên tương ứng
-                        $nhanvien = DB::table('nhanvien')->where('HoTen', $salary->HoTen)->first();
-                        if ($nhanvien) {
-                            $salary->MaNV = $nhanvien->id;
-                        } else {
-                            $salary->MaNV = 0; // Gán giá trị mặc định
-                        }
-                    }
-                }
-            }
-
-            \Log::info('Found ' . count($salaries) . ' salaries');
-
-            return response()->json($salaries);
-        } catch (\Exception $e) {
-            \Log::error('Error in getSalariesByDepartment: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            return response()->json(['error' => $e->getMessage()], 500);
+        $salaries = [];
+        $department = $request->department;
+        if (isset($request->department)) {
+            $salaries = DB::table('_luong')->where('PhongBan', $request->department)->get();
         }
+
+        return view('Accounting.payment', compact('departments', 'salaries', 'department'));
     }
+
+
 
     public function paySalary(Request $request)
     {
-        $salaryId = $request->salaryId;
-
-        try {
+        if (isset($request->status)) {
             DB::table('_luong')
-                ->where('id', $salaryId)
-                ->update([
-                    'NgayThanhToan' => now(),
-                    'updated_at' => now()
-                ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Thanh toán lương thành công!'
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Error paying salary: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            return response()->json([
-                'success' => false,
-                'message' => 'Có lỗi xảy ra khi thanh toán lương: ' . $e->getMessage()
-            ], 500);
+                ->where('PhongBan', $request->department)
+                ->update(['TrangThai' => 1]);
         }
+        return redirect()->route('Accounting.payment', ['department' => $request->department]);
     }
 }

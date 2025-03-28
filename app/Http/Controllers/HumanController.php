@@ -231,6 +231,7 @@ class HumanController extends Controller
             'LoaiHopDong' => $request->LoaiHopDong,
             'ngay_bat_dau' => $request->ngay_bat_dau,
             'ngay_ket_thuc' => $request->ngay_ket_thuc,
+            'LuongCoBan' => $request->LuongCoBan,
             'ngay_ky' => $request->ngay_ky,
             'TaiKhoan' => $request->TaiKhoan,
             'NPT' => $request->NPT,
@@ -334,28 +335,44 @@ class HumanController extends Controller
     }
     public function WorkSchedule(Request $request)
     {
+
         $phongbans = PhongBan::all();
-        $employees = NhanVien::all();
+        $employees = NhanVien::with(['hopDong'])->get();
         $shifts = calamviec::all();
         $startDate = '2025-03-03';
         $endDate = '2025-03-03';
         $phongban = null;
-        $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->whereDate('NgayLamViec', '2025-03-03')->get();
-        if (isset($request->phongban_id)) {
-            $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->whereHas('nhanVien', function ($query) use ($request) {
-                $query->where('MaPhongBan', $request->phongban_id);
-
-            })->get();
-           
+        $typeContract = 'Nhân viên chính thức';
+        if ($request->typeContract) {
+            $typeContract = $request->typeContract;
         }
+        $schedules = LichLamViec::with(['nhanVien', 'caLamViec'])
+            ->whereDate('NgayLamViec', '2025-03-03')
+            ->whereHas('nhanVien.hopDong', function ($query) use ($typeContract) {
+                $query->where('LoaiHopDong', $typeContract);
+            })
+            ->get();
+
         if (isset($request->start_date) && isset($request->end_date)) {
             $startDate = $request->start_date;
             $endDate = $request->end_date;
-            $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->whereBetween('NgayLamViec', [$request->start_date, $request->end_date])->get();
+            $schedules = LichLamViec::with(['nhanVien', 'caLamViec'])
+                ->whereHas('nhanVien.hopDong', function ($query) use ($typeContract) {
+                    $query->where('LoaiHopDong', $typeContract);
+                })->whereBetween('NgayLamViec', [$request->start_date, $request->end_date])->get();
         }
-        if(isset($request->idEmployee)&&isset($request->start_date)&&isset($request->end_date)){
-            $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->where('nhanvien_id',$request->idEmployee)->whereBetween('NgayLamViec', [$request->start_date, $request->end_date])->get();
+        if (isset($request->start_date) && isset($request->end_date) && isset($request->typeContract)) {
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
+            $schedules = LichLamViec::with(['nhanVien', 'caLamViec'])
+                ->whereHas('nhanVien.hopDong', function ($query) use ($typeContract) {
+                    $query->where('LoaiHopDong', $typeContract);
+                })->whereBetween('NgayLamViec', [$request->start_date, $request->end_date])->get();
         }
+        if (isset($request->idEmployee) && isset($request->start_date) && isset($request->end_date)) {
+            $schedules = lichlamviec::with(['nhanVien', 'caLamViec'])->where('nhanvien_id', $request->idEmployee)->whereBetween('NgayLamViec', [$request->start_date, $request->end_date])->get();
+        }
+
         return view('Human.WorkSchedule', compact('schedules', 'employees', 'shifts', 'phongbans', 'startDate', 'endDate'));
     }
     public function WorkScheduleAdd(Request $request)
@@ -388,14 +405,20 @@ class HumanController extends Controller
     public function Timekeeping(Request $request)
     {
         $departments = PhongBan::all();
-        $employees = NhanVien::all();
+        $employees = NhanVien::with(['hopDong'])
+            ->whereHas('hopDong', function ($query) {
+                $query->where('LoaiHopDong', 'Nhân viên chính thức');
+            })
+            ->get();
         $nhanvien = null;
 
         // Lấy ngày làm việc từ request, nếu không có thì mặc định là hôm nay
         $ngayLamViec = $request->dateWork ?? '2025-03-03';
-
+        $typeContract =  'Nhân viên chính thức';
         // Mặc định lấy công của nhân viên có id = 1 theo ngày làm việc
-        $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])
+        $timekeepings = ChamCong::with(['nhanVien', 'lichLamViec'])->whereHas('nhanVien.hopDong', function ($query) use ($typeContract) {
+            $query->where('LoaiHopDong', $typeContract);
+        })
             ->whereHas('lichLamViec', function ($query) use ($ngayLamViec) {
                 $query->where('NgayLamViec', $ngayLamViec);
             })
@@ -405,9 +428,8 @@ class HumanController extends Controller
         }
         // Nếu có lọc theo nhân viên
         if ($request->employee) {
-            $nhanvien = NhanVien::find($request->employee);
+            $nhanvien = NhanVien::with(['hopDong'])->find($request->employee);
         }
-
         // Nếu có lọc theo phòng ban
         if ($request->department) {
             $employeesInDepartment = NhanVien::where('MaPhongBan', $request->department)->pluck('id');
@@ -457,6 +479,17 @@ class HumanController extends Controller
                 })
                 ->get();
         }
-        return view('Human.Timekeeping', compact('timekeepings', 'employees', 'nhanvien', 'departments'));
+        $timekeepingsThoiVu = ChamCong::with(['nhanVien', 'lichLamViec.caLamViec'])
+            ->whereHas('nhanVien.hopDong', function ($query) {
+                $query->where('LoaiHopDong', 'Nhân viên thời vụ');
+            })
+            ->get()
+            ->groupBy('nhanvien_id'); // Nhóm theo nhân viên
+        $typeContract = 'Nhân viên chính thức';
+        if ($request->typeContract) {
+            $typeContract = $request->typeContract;
+        }
+
+        return view('Human.Timekeeping', compact('timekeepings', 'employees', 'nhanvien', 'departments', 'timekeepingsThoiVu', 'typeContract'));
     }
 }

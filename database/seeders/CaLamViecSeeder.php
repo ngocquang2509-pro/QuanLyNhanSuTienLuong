@@ -24,6 +24,14 @@ class CaLamViecSeeder extends Seeder
             ],
             [
                 'id' => 2,
+                'TenLoaiCa' => 'Parttime',
+                'Giobatdau' => '08:00:00',
+                'Gioketthuc' => '17:00:00',
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            [
+                'id' => 3,
                 'TenLoaiCa' => 'Tăng ca',
                 'Giobatdau' => '17:00:00',
                 'Gioketthuc' => '20:00:00',
@@ -31,7 +39,7 @@ class CaLamViecSeeder extends Seeder
                 'updated_at' => null,
             ],
             [
-                'id' => 3,
+                'id' => 4,
                 'TenLoaiCa' => 'Nghỉ phép',
                 'Giobatdau' => '00:00:00',
                 'Gioketthuc' => '00:00:00',
@@ -39,7 +47,7 @@ class CaLamViecSeeder extends Seeder
                 'updated_at' => null,
             ],
             [
-                'id' => 4,
+                'id' => 5,
                 'TenLoaiCa' => 'Công tác',
                 'Giobatdau' => '08:00:00',
                 'Gioketthuc' => '17:00:00',
@@ -47,7 +55,7 @@ class CaLamViecSeeder extends Seeder
                 'updated_at' => null,
             ],
             [
-                'id' => 5,
+                'id' => 6,
                 'TenLoaiCa' => 'Làm việc đặc biệt',
                 'Giobatdau' => '08:00:00',
                 'Gioketthuc' => '17:00:00',

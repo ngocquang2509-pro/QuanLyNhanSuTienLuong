@@ -84,6 +84,16 @@
                         @endif
                     </div>
 
+                    <form class="card">
+                        <div class="card-title">
+                            <span>Loại hợp đồng</span>
+                            <button type="submit" class="btn">🔄</button>
+                        </div>
+                        <select class="form-control" name="typeContract" action="{{route('Human.Timekeeping')}}" id="">
+                            <option value="Nhân viên chính thức">Nhân viên chính thức</option>
+                            <option value="Nhân viên thời vụ">Nhân viên thời vụ</option>
+                        </select>
+                    </form>
                     <div class="card">
                         <div class="card-title">
                             <span>Dữ liệu đồng bộ</span>
@@ -93,58 +103,62 @@
                         <div class="stat-detail">Cập nhật lần cuối: 10:15 AM</div>
                     </div>
 
-
                 </div>
+                <form class="row align-items-center" method="" action="{{route('Human.Timekeeping')}}">
+                    @csrf
+                    <div class="col-md-4">
+                        <div class="input-group mb-2 mb-md-0">
+                            <h3>Danh Sách chấm công</h3>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group custom-filter mb-2 mb-md-0">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-sitemap me-1"></i> Phòng ban
+                            </span>
+                            <select class="form-select" name="department">
+                                <option value="">Tất cả phòng ban</option>
+                                @foreach ($departments as $department)
+                                <option value="{{$department->id}}">{{$department->TenPhongBan}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group custom-filter mb-2 mb-md-0">
+                            <span class="input-group-text bg-white">
+                                Ngày làm việc
+                            </span>
+
+                            <input type="date" name="dateWork" class="form-control">
+
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="search-bar">
+
+                            <select name="employee" id="" class="form-control">
+                                <option value="">Tìm kiếm theo nhân viên....</option>
+                                @foreach ($employees as $employee)
+                                <option value="{{$employee->id}}">{{$employee->id}}-{{$employee->HoTen}}--{{isset($employee->hopDong)?$employee->hopDong->LoaiHopDong:''}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-md-end">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-filter me-1"></i> Lọc
+                        </button>
+
+                    </div>
+
+                </form>
                 <div class="card-body">
-                    <form class="row align-items-center" method="" action="{{route('Human.Timekeeping')}}">
-                        @csrf
-                        <div class="col-md-4">
-                            <div class="input-group mb-2 mb-md-0">
-                                <h3>Danh Sách chấm công</h3>
 
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="input-group custom-filter mb-2 mb-md-0">
-                                <span class="input-group-text bg-white">
-                                    <i class="fas fa-sitemap me-1"></i> Phòng ban
-                                </span>
-                                <select class="form-select" name="department">
-                                    <option value="">Tất cả phòng ban</option>
-                                    @foreach ($departments as $department)
-                                    <option value="{{$department->id}}">{{$department->TenPhongBan}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="input-group custom-filter mb-2 mb-md-0">
-                                <span class="input-group-text bg-white">
-                                    Ngày làm việc
-                                </span>
-
-                                <input type="date" name="dateWork" class="form-control">
-
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="search-bar">
-
-                                <select name="employee" id="" class="form-control">
-                                    <option value="">Tìm kiếm theo nhân viên....</option>
-                                    @foreach ($employees as $employee)
-                                    <option value="{{$employee->id}}">{{$employee->id}}-{{$employee->HoTen}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2 text-md-end">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="fas fa-filter me-1"></i> Lọc
-                            </button>
-
-                        </div>
-                    </form>
+                    @if($typeContract == 'Nhân viên chính thức')
+                    <h6 class="mx-3 text-danger">{{$typeContract}}</h6>
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
@@ -159,39 +173,95 @@
                         </thead>
                         <tbody>
                             @if($timekeepings->count() != 0)
-                            @foreach ($timekeepings as $timekeeping)<tr>
-
-                                <td class="">{{$timekeeping->nhanVien->id}}-{{$timekeeping->nhanVien->HoTen}}</td>
-                                <td class="">{{$timekeeping->lichLamViec->caLamViec->TenLoaiCa}}</td>
-                                <td class="">{{$timekeeping->lichLamViec->caLamViec->Giobatdau}}</td>
-                                <td class="">{{$timekeeping->lichLamViec->caLamViec->Gioketthuc}}</td>
-                                <td class="">{{$timekeeping->GioVao}}</td>
-                                <td class="">{{$timekeeping->GioRa}}</td>
-
-
-                                <td>
-                                    <!-- Nút mở modal -->
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm btn-primary detailBtn"
-                                        data-name="{{$timekeeping->nhanVien->HoTen}}"
-                                        data-department="{{$timekeeping->nhanVien->phongBan->TenPhongBan}}"
-                                        data-date-work="{{$timekeeping->lichLamViec->NgayLamViec}}"
-                                        data-shift="{{$timekeeping->lichLamViec->caLamViec->TenLoaiCa}}"
-                                        data-time-start="{{$timekeeping->GioVao}}"
-                                        data-time-end="{{$timekeeping->GioRa}}"
-                                        data-status="{{$timekeeping->TrangThai}}"
-                                        data-total="{{$timekeeping->SoCong}}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#detailView">
-                                        <i class="fas fa-eye me-1"></i>Chi tiết
-                                    </button>
-                                </td>
+                            @foreach ($timekeepings->groupBy('nhanVien.phongBan.TenPhongBan') as $tenPhongBan => $dsChamCong)
+                            <!-- Hiển thị tiêu đề phòng ban -->
+                            <tr>
+                                <td colspan="7" class="fw-bold ">Phòng: {{ $tenPhongBan }}</td>
                             </tr>
+
+                            <!-- Hiển thị danh sách chấm công của nhân viên trong phòng -->
+                            @foreach ($dsChamCong as $timekeeping)
+
+                            <td class="">{{$timekeeping->nhanVien->id}}-{{$timekeeping->nhanVien->HoTen}}</td>
+                            <td class="">{{$timekeeping->lichLamViec->caLamViec->TenLoaiCa}}</td>
+                            <td class="">{{$timekeeping->lichLamViec->caLamViec->Giobatdau}}</td>
+                            <td class="">{{$timekeeping->lichLamViec->caLamViec->Gioketthuc}}</td>
+                            <td class="">{{$timekeeping->GioVao}}</td>
+                            <td class="">{{$timekeeping->GioRa}}</td>
+
+
+                            <td>
+                                <!-- Nút mở modal -->
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-primary detailBtn"
+                                    data-name="{{$timekeeping->nhanVien->HoTen}}"
+                                    data-department="{{$timekeeping->nhanVien->phongBan->TenPhongBan}}"
+                                    data-date-work="{{$timekeeping->lichLamViec->NgayLamViec}}"
+                                    data-shift="{{$timekeeping->lichLamViec->caLamViec->TenLoaiCa}}"
+                                    data-time-start="{{$timekeeping->GioVao}}"
+                                    data-time-end="{{$timekeeping->GioRa}}"
+                                    data-status="{{$timekeeping->TrangThai}}"
+                                    data-total="{{$timekeeping->SoCong}}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#detailView">
+                                    <i class="fas fa-eye me-1"></i>Chi tiết
+                                </button>
+                            </td>
+                            </tr>
+                            @endforeach
                             @endforeach
                             @endif
                         </tbody>
                     </table>
+                    @else
+                    <h6 class="mx-3 text-danger">{{$typeContract}}</h6>
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Họ và tên</th>
+                                <th>Ca làm việc</th>
+                                <th>Giờ vào</th>
+                                <th>Giờ ra</th>
+                                <th>Giờ vào thực tế</th>
+                                <th>Giờ ra thực tế</th>
+                                <th>Số giờ làm việc</th>
+                                <th>Ngày làm việc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if($timekeepingsThoiVu->count() != 0)
+                            @foreach ($timekeepingsThoiVu as $nhanVienId => $timekeepings)
+                            @php
+                            $tongSoCong = $timekeepings->sum('SoCong'); // Tính tổng số công của nhân viên
+                            $totalRows = $timekeepings->count(); // Số hàng của nhân viên
+                            @endphp
+                            @foreach ($timekeepings as $index => $timekeeping)
+                            <tr class="{{ $index + 1 == $totalRows ? 'table-danger fw-bold' : '' }}">
+                                <td>{{$timekeeping->nhanVien->id}}-{{$timekeeping->nhanVien->HoTen}}</td>
+                                <td>{{$timekeeping->lichLamViec->caLamViec->TenLoaiCa}}</td>
+                                <td>{{$timekeeping->lichLamViec->caLamViec->Giobatdau}}</td>
+                                <td>{{$timekeeping->lichLamViec->caLamViec->Gioketthuc}}</td>
+                                <td>{{$timekeeping->GioVao}}</td>
+                                <td>{{$timekeeping->GioRa}}</td>
+                                <td>{{$timekeeping->SoCong}}</td>
+                                <td>{{$timekeeping->lichLamViec->NgayLamViec}}</td>
+                            </tr>
+
+                            {{-- Hiển thị tổng số công ở dòng cuối của nhân viên --}}
+                            @if ($index + 1 == $totalRows)
+                            <tr class="table-danger fw-bold">
+                                <td colspan="6" class="text-center">Tổng số công của {{$timekeeping->nhanVien->HoTen}}</td>
+                                <td colspan="2" class="text-center">{{ $tongSoCong }}</td>
+                            </tr>
+                            @endif
+                            @endforeach
+                            @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                    @endif
+
                 </div>
             </div>
         </div>

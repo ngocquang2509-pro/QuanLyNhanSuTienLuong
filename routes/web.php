@@ -7,7 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes(); 
+Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'login'])->name('auth.login');
 Route::get('/logout', [App\Http\Controllers\HomeController::class, 'logout'])->name('auth.logout');
 Route::get('/register', [App\Http\Controllers\HomeController::class, 'register'])->name('auth.register');
@@ -23,7 +23,7 @@ Route::get('/salaryAC/add', [App\Http\Controllers\AccountingController::class, '
 Route::get('/paymentAC', [App\Http\Controllers\AccountingController::class, 'payment'])->name('Accounting.payment');
 Route::get('/payment', [App\Http\Controllers\AccountingController::class, 'payment'])->name('Accounting.payment');
 Route::get('/get-salaries-by-department', [App\Http\Controllers\AccountingController::class, 'getSalariesByDepartment'])->name('Accounting.getSalariesByDepartment');
-Route::post('/pay-salary', [App\Http\Controllers\AccountingController::class, 'paySalary'])->name('Accounting.paySalary');
+Route::get('/pay-salary', [App\Http\Controllers\AccountingController::class, 'paySalary'])->name('Accounting.paySalary');
 Route::get('/dashboardHM', [App\Http\Controllers\HumanController::class, 'index'])->name('Human.dashboard');
 Route::get('/ChartHuman', [App\Http\Controllers\HumanController::class, 'ChartHuman'])->name('Human.chartHuman');
 Route::get('/ManagerHM', [App\Http\Controllers\HumanController::class, 'ManagerHM'])->name('Human.Manager');

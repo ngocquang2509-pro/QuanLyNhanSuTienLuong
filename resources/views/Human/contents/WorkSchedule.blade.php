@@ -118,14 +118,11 @@
                             <div class="col-md-3">
                                 <div class="input-group custom-filter mb-2 mb-md-0">
                                     <span class="input-group-text bg-white">
-                                        <i class="fas fa-sitemap me-1"></i> Phòng ban
+                                        <i class="fas fa-sitemap me-1"></i> Loại hợp đồng
                                     </span>
-                                    <select class="form-select" name="phongban_id">
-                                        <option value="" selected disabled>-- Chọn nhân viên --</option>
-
-                                        @foreach($phongbans as $phongban)
-                                        <option value="{{$phongban->id}}">{{$phongban->TenPhongBan}}</option>
-                                        @endforeach
+                                    <select class="form-select" name="typeContract">
+                                        <option value="Nhân viên chính thức">Nhân viên chính thức</option>
+                                        <option value="Nhân viên thời vụ">Nhân viên thời vụ</option>
                                     </select>
                                 </div>
                             </div>
@@ -135,7 +132,7 @@
                                     <select name="idEmployee" id="" class="form-control">
                                         <option value="" selected disabled>-- Chọn nhân viên --</option>
                                         @foreach($employees as $employee)
-                                        <option value="{{$employee->id}}">{{$employee->id}}-{{$employee->HoTen}}</option>
+                                        <option value="{{$employee->id}}">{{$employee->id}}-{{$employee->HoTen}}-{{isset($employee->hopDong)?$employee->hopDong->LoaiHopDong:''}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -144,9 +141,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-filter me-1"></i> Lọc
                                 </button>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
+                                <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
                                     <i class="fas fa-plus me-1"></i> Thêm
-                                </button>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -168,29 +165,45 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($schedules as $schedule)
+
+                                <tbody>
+                                    @foreach ($schedules->groupBy('nhanVien.phongBan.TenPhongBan') as $tenPhongBan => $dsLichLam)
+                                    <!-- Hiển thị tiêu đề phòng ban -->
                                     <tr>
-                                        <td class="text-center">{{$schedule->nhanVien->id}}</td>
-                                        <td class="text-center">{{$schedule->nhanVien->HoTen}}</td>
-                                        <td class="text-center">{{$schedule->nhanVien->chucVu->TenChucVu}}</td>
-                                        <td class="text-center">{{$schedule->nhanVien->phongBan->TenPhongBan}}</td>
-                                        <td class="text-center">{{$schedule->caLamViec->TenLoaiCa}}</td>
-                                        <td class="text-center">{{$schedule->caLamViec->Giobatdau}}-{{$schedule->caLamViec->Gioketthuc}}</td>
-                                        <td class="text-center">{{$schedule->NgayLamViec}}</td>
+                                        <td colspan="8" class=""><strong>Phòng: {{ $tenPhongBan }}</strong></td>
+                                    </tr>
+
+                                    <!-- Hiển thị danh sách lịch làm việc của nhân viên trong phòng -->
+                                    @foreach ($dsLichLam as $schedule)
+                                    <tr>
+                                        <td class="text-center">{{ $schedule->nhanVien->id }}</td>
+                                        <td class="text-center">{{ $schedule->nhanVien->HoTen }}</td>
+                                        <td class="text-center">{{ $schedule->nhanVien->chucVu->TenChucVu }}</td>
+                                        <td class="text-center">{{ $schedule->nhanVien->phongBan->TenPhongBan }}</td>
+                                        <td class="text-center">{{ $schedule->caLamViec->TenLoaiCa }}</td>
+                                        <td class="text-center">{{ $schedule->caLamViec->Giobatdau }} - {{ $schedule->caLamViec->Gioketthuc }}</td>
+                                        <td class="text-center">{{ $schedule->NgayLamViec }}</td>
                                         <td class="text-center">
                                             <button class="btn btn-warning mx-2 EditBtn"
-                                                data-id="{{$schedule->id}}"
-                                                data-name="{{$schedule->nhanVien->id}}"
-                                                data-shift="{{$schedule->caLamViec->id}}"
-                                                data-dateWork="{{$schedule->NgayLamViec}}"
-                                                data-description="{{$schedule->MoTa}}"
-                                                data-bs-toggle="modal" data-bs-target="#editScheduleModal"><i class="fa-solid fa-pen"></i></button>
+                                                data-id="{{ $schedule->id }}"
+                                                data-name="{{ $schedule->nhanVien->id }}"
+                                                data-shift="{{ $schedule->caLamViec->id }}"
+                                                data-dateWork="{{ $schedule->NgayLamViec }}"
+                                                data-description="{{ $schedule->MoTa }}"
+                                                data-bs-toggle="modal" data-bs-target="#editScheduleModal">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </button>
                                             <button class="btn btn-danger mx-2 DeleteBtn"
-                                                data-id="{{$schedule->id}}"
-                                                data-bs-toggle="modal" data-bs-target="#deleteScheduleModal"><i class="fa-solid fa-trash"></i></button>
+                                                data-id="{{ $schedule->id }}"
+                                                data-bs-toggle="modal" data-bs-target="#deleteScheduleModal">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                     @endforeach
+                                    @endforeach
+                                </tbody>
+
                                 </tbody>
                             </table>
                         </div>

@@ -224,6 +224,7 @@
     <div class="container-fluid py-4 col-md-10 ">
         <h4 class="text-center mb-4">BẢNG LƯƠNG THÁNG 03/2025</h4>
         <div class="table-responsive">
+            <h6 class="m-3 text-danger"> Nhân viên chính thức</h6>
             <table class="table table-bordered table-hover salary-table" id="salaryTable">
                 <thead>
                     <tr class="table-header text-center">
@@ -253,8 +254,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($salaries->groupBy('PhongBan') as $phongBan => $salaries)
+                    <tr>
+                        <td colspan="7"><strong>Phòng: {{ $phongBan }}</strong></td>
+                    </tr>
+                    @foreach ($salaries as $salary)
 
-                    @foreach($salaries as $salary)
+
+
                     <tr class="text-center">
                         <td>{{ $salary->id }}</td>
                         <td class="text-start">{{ $salary->HoTen }}</td>
@@ -305,8 +312,39 @@
                     </tr>
 
                     @endforeach
+                    @endforeach
 
+                </tbody>
+            </table>
+            <h6 class="m-3 text-danger"> Nhân viên thời vụ</h6>
+            <table class="table table-bordered table-hover salary-table" id="salaryTable">
+                <thead>
+                    <th>Mã số NV</th>
+                    <th>Họ tên</th>
+                    <th>Chức vụ</th>
+                    <th>Bộ phận</th>
+                    <th>Số giờ làm việc</th>
+                    <th>Lương giờ</th>
+                    <th>Tổng thu nhập</th>
+                </thead>
 
+                <tbody>
+                    @foreach ($salariesThoiVu->groupBy('PhongBan') as $phongBan => $salaries)
+                    <tr>
+                        <td colspan="7"><strong>Phòng: {{ $phongBan }}</strong></td>
+                    </tr>
+                    @foreach ($salaries as $salary)
+                    <tr>
+                        <td>{{ $salary->id }}</td>
+                        <td>{{ $salary->HoTen }}</td>
+                        <td>{{ $salary->ChucVu }}</td>
+                        <td>{{ $salary->PhongBan }}</td>
+                        <td>{{ $salary->SoNgayCong }}</td>
+                        <td>{{ number_format($salary->LuongTheoGio) }}</td>
+                        <td>{{ number_format($salary->TongThuNhap) }}</td>
+                    </tr>
+                    @endforeach
+                    @endforeach
                 </tbody>
             </table>
         </div>
