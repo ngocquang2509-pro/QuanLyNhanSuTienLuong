@@ -165,60 +165,59 @@
         </table>
     </div>
 
- <!-- Nút Thanh Toán -->
-@if(!empty($salaries))
-<form class="text-center mt-4" id="paySalaryForm" action="{{ route('Accounting.paySalary') }}" method="POST">
-    @csrf
-    <input type="hidden" name="status" value="confirmed">
-    <input type="hidden" name="department" value="{{ $department }}">
-    <button type="button" class="btn btn-success btn-lg" id="paySalaryButton">
-        <i class="fa-solid fa-money-bill-wave me-2"></i> Thanh Toán Lương
-    </button>
-</form>
-@endif
+    <!-- Nút Thanh Toán -->
+    @if(!empty($salaries))
 
-<!-- Modal Xác Nhận -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmModalLabel">Xác Nhận Thanh Toán</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="text-center"> <button type="button" class="btn btn-success btn-lg" id="paySalaryButton">
+            <i class="fa-solid fa-money-bill-wave me-2"></i> Thanh Toán Lương
+        </button></div>
+
+
+    <!-- Modal Xác Nhận -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <form class="modal-dialog" action="{{ route('Accounting.paySalary') }}" method="get">
+            <input type="hidden" name="status" value="confirmed">
+            <input type="hidden" name="department" value="{{ $department }}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Xác Nhận Thanh Toán</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn thanh toán lương cho phòng ban <strong>{{ $department }}</strong> không?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-success" id="confirmPayButton">Thanh toán</button>
+                </div>
             </div>
-            <div class="modal-body">
-                Bạn có chắc chắn muốn thanh toán lương cho phòng ban <strong>{{ $department }}</strong> không?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-success" id="confirmPayButton">Xác Nhận</button>
-            </div>
-        </div>
+        </form>
     </div>
-</div>
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    @endif
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let department = "{{ $department }}";
-        document.getElementById("departmentSelect").value = department;
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let department = "{{ $department }}";
+            document.getElementById("departmentSelect").value = department;
 
-        const paySalaryButton = document.getElementById("paySalaryButton");
-        const confirmPayButton = document.getElementById("confirmPayButton");
-        const paySalaryForm = document.getElementById("paySalaryForm");
+            const paySalaryButton = document.getElementById("paySalaryButton");
+            const confirmPayButton = document.getElementById("confirmPayButton");
+            const paySalaryForm = document.getElementById("paySalaryForm");
 
-        // Hiển thị modal khi nhấn nút Thanh Toán
-        paySalaryButton.addEventListener("click", function() {
-            const confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
-            confirmModal.show();
+            // Hiển thị modal khi nhấn nút Thanh Toán
+            paySalaryButton.addEventListener("click", function() {
+                const confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
+                confirmModal.show();
+            });
+
+            // Gửi form khi nhấn nút Xác Nhận trong modal
+            confirmPayButton.addEventListener("click", function() {
+                paySalaryForm.submit();
+            });
         });
-
-        // Gửi form khi nhấn nút Xác Nhận trong modal
-        confirmPayButton.addEventListener("click", function() {
-            paySalaryForm.submit();
-        });
-    });
-</script>
+    </script>

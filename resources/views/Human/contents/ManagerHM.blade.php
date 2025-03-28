@@ -238,6 +238,7 @@
                             data-endDate="{{$employee->hopDong->ngay_ket_thuc}}"
                             data-signDate="{{$employee->hopDong->ngay_ky}}"
                             data-baseSalary="{{$employee->chucVu->LuongCoBan}}"
+                            data-NPT="{{$employee->hopDong->NPT}}"
                             data-bs-toggle="modal"
                             data-bs-target="#ViewContractModel">
                             <i class="fa-solid fa-eye"></i>
@@ -750,6 +751,7 @@
                                     <div class="indent">
                                         <p class="mb-1">• Tiền lương cơ bản: <span id="baseSalaryContract">10,000,000 VNĐ/tháng</span></p>
                                         <p class="mb-1">• Hình thức trả lương: Chuyển khoản</p>
+                                        <p class="mb-1">• Người phụ thuộc: <span id="NPT"></span></p>
                                         <p class="mb-1">• Được trả lương vào ngày 10 hàng tháng</p>
                                         <p class="mb-1">• Tài khoản được công ty cấp: <span id="bankContract">89324723984</span></p>
                                         <p class="mb-1">• Phụ cấp: Theo quy định của công ty</p>
@@ -875,6 +877,7 @@
         const deleteEmployeeButtons = document.querySelectorAll(".deleteBtnEmployee");
         const editEmployeeButtons = document.querySelectorAll(".editBtnEmployee");
         const deleteContractButtons = document.querySelectorAll(".ClassBtnDeleteContract");
+
         viewButtons.forEach(button => {
             button.addEventListener("click", function() {
                 // Lấy dữ liệu từ data-* attributes
@@ -922,6 +925,7 @@
                 const signDate = button.getAttribute("data-signDate");
                 const baseSalary = button.getAttribute("data-baseSalary");
                 const contractID = button.getAttribute("data-id");
+                const NPT = button.getAttribute("data-NPT");
 
                 // Gán dữ liệu vào các input trong modal
                 document.getElementById("nameContract").innerText = employeeName;
@@ -939,6 +943,7 @@
                 document.getElementById("signPeopleContract").innerText = employeeName;
                 document.getElementById("dateEffordContract").innerText = signDate;
                 document.getElementById("deleteBtnContract").setAttribute("data-id", contractID);
+                document.getElementById("NPT").innerText = NPT;
 
             });
         });
