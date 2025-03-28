@@ -165,23 +165,60 @@
         </table>
     </div>
 
-    <!-- Nút Thanh Toán -->
-    @if(!empty($salaries))
-    <form class="text-center mt-4 " action="{{ route('Accounting.paySalary') }}" method="">
-        <input type="hidden" name="status" value="confirmed">
-        <input type="hidden" name="department" value="{{ $department }}">
-        <button class="btn btn-success btn-lg" id="paySalaryButton">
-            <i class="fa-solid fa-money-bill-wave me-2"></i> Thanh Toán Lương
-        </button>
+ <!-- Nút Thanh Toán -->
+@if(!empty($salaries))
+<form class="text-center mt-4" id="paySalaryForm" action="{{ route('Accounting.paySalary') }}" method="POST">
+    @csrf
+    <input type="hidden" name="status" value="confirmed">
+    <input type="hidden" name="department" value="{{ $department }}">
+    <button type="button" class="btn btn-success btn-lg" id="paySalaryButton">
+        <i class="fa-solid fa-money-bill-wave me-2"></i> Thanh Toán Lương
+    </button>
+</form>
+@endif
 
-    </form>
-    @endif
-
+<!-- Modal Xác Nhận -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Xác Nhận Thanh Toán</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn thanh toán lương cho phòng ban <strong>{{ $department }}</strong> không?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-success" id="confirmPayButton">Xác Nhận</button>
+            </div>
+        </div>
+    </div>
 </div>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    let deparment = "{{ $department }}";
     document.addEventListener("DOMContentLoaded", function() {
-        console.log(deparment);
-        document.getElementById("departmentSelect").value = deparment;
+        let department = "{{ $department }}";
+        document.getElementById("departmentSelect").value = department;
+
+        const paySalaryButton = document.getElementById("paySalaryButton");
+        const confirmPayButton = document.getElementById("confirmPayButton");
+        const paySalaryForm = document.getElementById("paySalaryForm");
+
+        // Hiển thị modal khi nhấn nút Thanh Toán
+        paySalaryButton.addEventListener("click", function() {
+            const confirmModal = new bootstrap.Modal(document.getElementById("confirmModal"));
+            confirmModal.show();
+        });
+
+        // Gửi form khi nhấn nút Xác Nhận trong modal
+        confirmPayButton.addEventListener("click", function() {
+            paySalaryForm.submit();
+        });
     });
 </script>

@@ -10,7 +10,7 @@
 6. Chạy lệnh: `php artisan serve` 
 
 ## Ghi chú
-
+- Sản phẩm được thiết kế bằng Laravel
 - Đảm bảo bật XAMPP trong suốt quá trình thực hiện các bước trên:
   - Chạy Apache
   - Chạy MySQL
