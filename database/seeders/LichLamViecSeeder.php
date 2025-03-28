@@ -17,8 +17,10 @@ class LichLamViecSeeder extends Seeder
         $congTacCaId = 5;
         $parttimeCaId = 2; // Ca làm việc Part-time
 
-        $startDate = Carbon::now()->startOfMonth();
-        $endDate = Carbon::now()->endOfMonth();
+        // Lấy ngày bắt đầu là ngày đầu tiên của tháng 3
+        $startDate = Carbon::now()->setMonth(1)->startOfMonth();
+        // Lấy ngày kết thúc là ngày cuối cùng của tháng 4
+        $endDate = Carbon::now()->setMonth(3)->endOfMonth();
 
         // Lấy danh sách nhân viên chính thức
         $nhanvienchinhthucs = NhanVien::whereHas('hopdong', function ($query) {

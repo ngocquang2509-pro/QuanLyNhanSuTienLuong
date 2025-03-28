@@ -14,6 +14,11 @@ class NhanVienSeeder extends Seeder
 
         $faker = Faker::create('vi_VN');
 
+        // Danh sách họ, tên đệm và tên
+        $ho = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Vũ', 'Đặng', 'Bùi', 'Đỗ', 'Hồ'];
+        $tenDem = ['Văn', 'Thị', 'Hữu', 'Minh', 'Quốc', 'Gia', 'Thanh', 'Ngọc', 'Đức', 'Xuân'];
+        $ten = ['An', 'Bình', 'Cường', 'Dũng', 'Hạnh', 'Hòa', 'Khánh', 'Linh', 'Phúc', 'Quang'];
+
         $phongBans = DB::table('phongban')->pluck('id'); // Lấy danh sách ID phòng ban
         $chucVus = [
             'Giám đốc' => 3,
@@ -23,10 +28,15 @@ class NhanVienSeeder extends Seeder
         ];
 
         foreach ($phongBans as $phongBan) {
+            // Hàm tạo tên ngẫu nhiên
+            $randomName = function () use ($ho, $tenDem, $ten) {
+                return $ho[array_rand($ho)] . ' ' . $tenDem[array_rand($tenDem)] . ' ' . $ten[array_rand($ten)];
+            };
+
             // Thêm 1 Giám đốc
             DB::table('nhanvien')->insert([
                 'id' => $id++,
-                'HoTen' => $faker->name,
+                'HoTen' => $randomName(),
                 'GioiTinh' => $faker->randomElement(['Nam', 'Nữ']),
                 'NgaySinh' => $faker->date,
                 'DienThoai' => $faker->phoneNumber,
@@ -42,7 +52,7 @@ class NhanVienSeeder extends Seeder
             // Thêm 1 Trưởng phòng
             DB::table('nhanvien')->insert([
                 'id' => $id++,
-                'HoTen' => $faker->name,
+                'HoTen' => $randomName(),
                 'GioiTinh' => $faker->randomElement(['Nam', 'Nữ']),
                 'NgaySinh' => $faker->date,
                 'DienThoai' => $faker->phoneNumber,
@@ -59,7 +69,7 @@ class NhanVienSeeder extends Seeder
             for ($i = 0; $i < 2; $i++) {
                 DB::table('nhanvien')->insert([
                     'id' => $id++,
-                    'HoTen' => $faker->name,
+                    'HoTen' => $randomName(),
                     'GioiTinh' => $faker->randomElement(['Nam', 'Nữ']),
                     'NgaySinh' => $faker->date,
                     'DienThoai' => $faker->phoneNumber,
@@ -77,7 +87,7 @@ class NhanVienSeeder extends Seeder
             for ($i = 0; $i < 6; $i++) {
                 DB::table('nhanvien')->insert([
                     'id' => $id++,
-                    'HoTen' => $faker->name,
+                    'HoTen' => $randomName(),
                     'GioiTinh' => $faker->randomElement(['Nam', 'Nữ']),
                     'NgaySinh' => $faker->date,
                     'DienThoai' => $faker->phoneNumber,
