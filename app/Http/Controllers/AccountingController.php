@@ -293,9 +293,24 @@ class AccountingController extends Controller
     {
         $departments = PhongBan::all();
         $salaries = [];
+        $month = Carbon::now()->format('Y-m');
         $department = $request->department;
-        if (isset($request->department)) {
-            $salaries = DB::table('_luong')->where('PhongBan', $request->department)->get();
+        if (isset($request->month)) {
+            $currentMonth = Carbon::createFromFormat('Y-m', $request->month)->month;
+            $currentYear = Carbon::createFromFormat('Y-m', $request->month)->year;
+            $month = Carbon::createFromFormat('Y-m', $request->month)->format('Y-m');
+            $checkMonth = DB::table('_luong')
+                ->whereMonth('NgayTao', $currentMonth)
+                ->whereYear('NgayTao', $currentYear)
+                ->exists();
+            if ($checkMonth != 1) {
+                return view('Accounting.payment', compact('departments', 'salaries', 'department'));
+            }
+        }
+
+        if (isset($request->department) && isset($request->month)) {
+            $salaries = DB::table('_luong')->where('PhongBan', $request->department)->whereYear('_luong.NgayTao', Carbon::parse($month)->year)  // Lọc theo năm
+                ->whereMonth('_luong.NgayTao', Carbon::parse($month)->month)->get();
         }
 
         return view('Accounting.payment', compact('departments', 'salaries', 'department'));
@@ -318,12 +333,17 @@ class AccountingController extends Controller
 
     public function paySalary(Request $request)
     {
+
         if (isset($request->status)) {
+
+            $month = Carbon::createFromFormat('Y-m', $request->month)->format('Y-m');
             DB::table('_luong')
                 ->where('PhongBan', $request->department)
+                ->whereYear('_luong.NgayTao', Carbon::parse($month)->year)  // Lọc theo năm
+                ->whereMonth('_luong.NgayTao', Carbon::parse($month)->month)
                 ->update(['TrangThai' => 1]);
         }
-        return redirect()->route('Accounting.payment', ['department' => $request->department]);
+        return redirect()->route('Accounting.payment', ['department' => $request->department, 'month' => $request->month]);
     }
     public function show($id)
     {

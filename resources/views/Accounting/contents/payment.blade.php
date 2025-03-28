@@ -100,8 +100,8 @@
 
             <div class="collapse navbar-collapse" id="navbarControls">
                 <form class="d-flex align-items-center ms-auto gap-3" action="{{route('Accounting.payment')}}" method="GET">
-                    <input type="month" class="form-control" id="monthSelect" style="width: 200px;"
-                        value="{{ date('Y-m') }}">
+                    <input type="month" class="form-control" id="month" name="month" style="width: 200px;"
+                        value="{{ request('month') }}">
                     <select class="form-select" style="width: 200px;" id="departmentSelect" name="department">
                         <option value="">Chọn Phòng Ban</option>
                         @foreach($departments as $departmen)
@@ -128,20 +128,19 @@
                 @if(empty($salaries))
                 <tr>
                     <td colspan="6" class="empty-table">
-                        <i class="fa-solid fa-filter me-2"></i>
-                        Vui lòng chọn phòng ban và tháng để xem danh sách thanh toán lương
+
                     </td>
                 </tr>
                 @else
                 @php
                 $totalSalary = 0;
                 @endphp
-                @foreach($salaries as $key => $salary)
+                @foreach($salaries as $salary)
                 @php
                 $totalSalary += $salary->con_lanh;
                 @endphp
                 <tr class="text-center">
-                    <td>{{ $key + 1 }}</td>
+                    <td></td>
                     <td>{{ $salary->id }}</td>
                     <td>{{ $salary->HoTen }}</td>
                     <td>{{ ($salary->con_lanh)!= 0 ? number_format($salary->con_lanh) : number_format($salary-> TongThuNhap) }} VNĐ</td>
@@ -178,6 +177,7 @@
         <form class="modal-dialog" action="{{ route('Accounting.paySalary') }}" method="get">
             <input type="hidden" name="status" value="confirmed">
             <input type="hidden" name="department" value="{{ $department }}">
+            <input type="hidden" name="month" value="{{ request('month') }}">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmModalLabel">Xác Nhận Thanh Toán</h5>
