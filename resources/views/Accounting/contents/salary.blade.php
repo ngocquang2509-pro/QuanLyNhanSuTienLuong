@@ -241,6 +241,7 @@
                         <th rowspan="2">Lương thực lãnh</th>
                         <th rowspan="2">Tạm ứng</th>
                         <th rowspan="2">Còn lãnh</th>
+                        <td rowspan="2">Phiếu lương</td>
                     </tr>
                     <tr class="table-header text-center">
                         <th>Lương CB</th>
@@ -307,7 +308,24 @@
                         <td>{{number_format($salary->luong_thuc_lanh)}}</td>
                         <td>{{number_format(2000000)}}</td>
                         <td>{{number_format($salary->luong_thuc_lanh-2000000)}}</td>
-
+                        <td> <button class="btn btn-primary phieuChiBTN" data-bs-toggle="modal" data-bs-target="#phieuLuongModal" data-name="{{$salary->HoTen}}"
+                                data-id="{{$salary->id}}"
+                                data-position="{{$salary->ChucVu}}"
+                                data-department="{{$salary->PhongBan}}"
+                                data-luongcoban="{{number_format($salary->LuongCB)}}"
+                                data-HSL="{{$salary->HSL}}"
+                                data-ngaycong="{{$salary->SoNgayCong}}"
+                                data-PCCV="{{number_format($salary->pc_chuc_vu)}}"
+                                data-PCTN="{{number_format($salary->pc_trach_nhiem)}}"
+                                data-KTKL="{{number_format($salary->KTKL)}}"
+                                data-TongThuNhap="{{number_format($salary->TongThuNhap)}}"
+                                data-bhxh="{{number_format($salary->bhxh)}}"
+                                data-bhyt="{{number_format($salary->bhyt)}}"
+                                data-bhtn="{{number_format($salary->bhtn)}}"
+                                data-TongBH="{{number_format($salary->bhxh + $salary->bhyt + $salary->bhtn)}}"
+                                data-TNTT="{{number_format($salary->thue_tncn)}}"
+                                data-luongthucnhan="{{number_format($salary->luong_thuc_lanh)}}"
+                                data-conlanh="{{number_format($salary->con_lanh)}}"><i class="fas fa-eye"></i></button></td>
 
                     </tr>
 
@@ -326,6 +344,7 @@
                     <th>Số giờ làm việc</th>
                     <th>Lương giờ</th>
                     <th>Tổng thu nhập</th>
+                    <th>Phiếu lương</th>
                 </thead>
 
                 <tbody>
@@ -342,6 +361,24 @@
                         <td>{{ $salary->SoNgayCong }}</td>
                         <td>{{ number_format($salary->LuongTheoGio) }}</td>
                         <td>{{ number_format($salary->TongThuNhap) }}</td>
+                        <td> <button class="btn btn-primary phieuChiBTN" data-bs-toggle="modal" data-bs-target="#phieuLuongModal" data-name="{{$salary->HoTen}}"
+                                data-id="{{$salary->id}}"
+                                data-position="{{$salary->ChucVu}}"
+                                data-department="{{$salary->PhongBan}}"
+                                data-luongcoban="{{number_format($salary->LuongCB)}}"
+                                data-HSL="{{$salary->HSL}}"
+                                data-ngaycong="{{$salary->SoNgayCong}}"
+                                data-PCCV="{{number_format($salary->pc_chuc_vu)}}"
+                                data-PCTN="{{number_format($salary->pc_trach_nhiem)}}"
+                                data-KTKL="{{number_format($salary->KTKL)}}"
+                                data-TongThuNhap="{{number_format($salary->TongThuNhap)}}"
+                                data-bhxh="{{number_format($salary->bhxh)}}"
+                                data-bhyt="{{number_format($salary->bhyt)}}"
+                                data-bhtn="{{number_format($salary->bhtn)}}"
+                                data-TongBH="{{number_format($salary->bhxh + $salary->bhyt + $salary->bhtn)}}"
+                                data-TNTT="{{number_format($salary->thue_tncn)}}"
+                                data-luongthucnhan="{{number_format($salary->luong_thuc_lanh)}}"
+                                data-conlanh="{{number_format($salary->con_lanh)}}"><i class="fas fa-eye"></i></button></td>
                     </tr>
                     @endforeach
                     @endforeach
@@ -482,11 +519,149 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="phieuLuongModal" tabindex="-1" aria-labelledby="salaryModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-calculator me-2"></i>
+                        Phiếu chi lương của nhân viên
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="salarythoivu-info mb-4">
+                        <h6 class="text-muted mb-3">Thông tin nhân viên</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Họ và tên:</strong> <span id="salaryName">Nguyễn Văn A</span></p>
+                                <p><strong>Mã số NV:</strong> <span id="salaryMa">NV-001</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Chức vụ:</strong> <span id="salaryPosition">Trưởng phòng</span></p>
+                                <p><strong>Phòng ban:</strong> <span id="salaryDepartment">Hành chính</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calculation-steps">
+                        <div class="calculation-step tax-row">
+                            <div class="step-number">1</div>
+                            <h6 class="d-inline-block mb-3">Tổng thu nhập</h6>
+                            <table class="table tax-calculation-table">
+                                <thead>
+                                    <tr>
+                                        <th>Khoản thu nhập</th>
+                                        <th class="text-end">Số tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Lương cơ bản</td>
+                                        <td class="text-end" id="salaryLuongCB">10,000,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hệ số lương</td>
+                                        <td class="text-end" id="salaryHSL">1,500,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Số ngày công</td>
+                                        <td class="text-end" id="salaryCong">1,500,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phụ cấp chức vụ</td>
+                                        <td class="text-end" id="salaryPhuCapCV">3,800,000</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Phụ cấp trách nhiệm</td>
+                                        <td class="text-end" id="salaryPhuCapTN">3,800,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Khen thưởng kỷ luật</td>
+                                        <td class="text-end" id="salaryKTKL">3,800,000</td>
+                                    </tr>
+                                    <tr class="table-info">
+                                        <td><strong>Tổng thu nhập</strong></td>
+                                        <td class="text-end" id="salaryTongThuNhap"><strong>15,300,000</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="calculation-step tax-row">
+                            <div class="step-number">2</div>
+                            <h6 class="d-inline-block mb-3">Bảo hiểm nhân viên</h6>
+                            <table class="table tax-calculation-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Bảo hiểm xã hội (8%)</td>
+                                        <td class="text-end"><span id="salaryBHXH">800,000</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bảo hiểm y tế (1.5%)</td>
+                                        <td class="text-end" id="salaryBHYT">150,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bảo hiểm thất nghiệp (1%)</td>
+                                        <td class="text-end" id="salaryBHTT">100,000</td>
+                                    </tr>
+                                    <tr class="table-info">
+                                        <td><strong>Tổng bảo hiểm</strong></td>
+                                        <td class="text-end" id="salaryBH"><strong>2,050,000</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="calculation-step tax-row">
+
+                            <table class="table tax-calculation-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Thuế TNCN phải nộp</td>
+                                        <td class="text-end" id="salaryTNTT">13,800,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lương thực lãnh</td>
+                                        <td class="text-end" id="salaryThucLanh">3 (15%)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lương tạm ứng</td>
+                                        <td class="text-end" id="">2,000,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tax-result tax-row">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="mb-0">Còn lãnh:</h6>
+                                </div>
+                                <div class="col-auto">
+                                    <span class="tax-value"><span id="salaryConLanh">600,000</span> VNĐ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary">
+                        <i class="fas fa-download me-2"></i>Xuất báo cáo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const viewButtons = document.querySelectorAll(".taxCalculation");
+            const phieuChiButtons = document.querySelectorAll(".phieuChiBTN");
             viewButtons.forEach(button => {
                 button.addEventListener("click", function() {
                     const MaNV = button.getAttribute("data-id");
@@ -548,6 +723,69 @@
                             break;
                     }
                     document.getElementById("BacThue").innerText = bac;
+                });
+            });
+            phieuChiButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    console.log("Button clicked!");
+                    const MaNV = button.getAttribute("data-id");
+                    const HoTen = button.getAttribute("data-name");
+                    const ChucVu = button.getAttribute("data-position");
+                    const PhongBan = button.getAttribute("data-department");
+                    const LuongCoBan = button.getAttribute("data-luongcoban");
+                    const HSL = button.getAttribute("data-HSL");
+                    const NgayCong = button.getAttribute("data-ngaycong");
+                    const PCCV = button.getAttribute("data-PCCV");
+                    const PCTN = button.getAttribute("data-PCTN");
+                    const KTKL = button.getAttribute("data-KTKL");
+                    const TongThuNhap = button.getAttribute("data-TongThuNhap");
+                    const BHXH = button.getAttribute("data-bhxh");
+
+                    const BHYT = button.getAttribute("data-bhyt");
+                    const BHTN = button.getAttribute("data-bhtn");
+
+                    const TongBH = button.getAttribute("data-TongBH");
+
+                    const TNTT = button.getAttribute("data-TNTT");
+                    const luongthucnhan = button.getAttribute("data-luongthucnhan");
+                    const conlanh = button.getAttribute("data-conlanh");
+                    console.log(HoTen);
+                    console.log(ChucVu);
+                    console.log(PhongBan);
+                    console.log(LuongCoBan);
+                    console.log(HSL);
+                    console.log(NgayCong);
+                    console.log(PCCV);
+                    console.log(PCTN);
+                    console.log(KTKL);
+                    console.log(TongThuNhap);
+                    console.log(BHXH);
+                    console.log(BHYT);
+                    console.log(BHTN);
+                    console.log(TongBH);
+                    console.log(TNTT);
+                    console.log(luongthucnhan);
+                    console.log(conlanh);
+
+
+                    document.getElementById("salaryMa").innerText = MaNV;
+                    document.getElementById("salaryName").innerText = HoTen;
+                    document.getElementById("salaryPosition").innerText = ChucVu;
+                    document.getElementById("salaryDepartment").innerText = PhongBan;
+                    document.getElementById("salaryLuongCB").innerText = LuongCoBan;
+                    document.getElementById("salaryHSL").innerText = HSL;
+                    document.getElementById("salaryCong").innerText = NgayCong;
+                    document.getElementById("salaryPhuCapCV").innerText = PCCV;
+                    document.getElementById("salaryPhuCapTN").innerText = PCTN;
+                    document.getElementById("salaryKTKL").innerText = KTKL;
+                    document.getElementById("salaryTongThuNhap").innerText = TongThuNhap;
+                    document.getElementById("salaryBHXH").innerText = BHXH;
+                    document.getElementById("salaryBHYT").innerText = BHYT;
+                    document.getElementById("salaryBHTT").innerText = BHTN;
+                    document.getElementById("salaryBH").innerText = TongBH;
+                    document.getElementById("salaryTNTT").innerText = TNTT;
+                    document.getElementById("salaryThucLanh").innerText = luongthucnhan;
+                    document.getElementById("salaryConLanh").innerText = conlanh;
                 });
             });
         });
