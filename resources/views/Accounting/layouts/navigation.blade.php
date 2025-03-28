@@ -22,6 +22,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('Accounting.payment')}}">Thanh toán lương</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('Accounting.record')}}">Hồ sơ lương</a>
+                </li>
             </ul>
         </li>
 

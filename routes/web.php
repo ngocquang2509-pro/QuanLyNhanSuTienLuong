@@ -22,6 +22,8 @@ Route::get('/salaryAC', [App\Http\Controllers\AccountingController::class, 'sala
 Route::get('/salaryAC/add', [App\Http\Controllers\AccountingController::class, 'salaryAdd'])->name('Accounting.salaryAdd');
 Route::get('/paymentAC', [App\Http\Controllers\AccountingController::class, 'payment'])->name('Accounting.payment');
 Route::get('/payment', [App\Http\Controllers\AccountingController::class, 'payment'])->name('Accounting.payment');
+Route::get('/record', [App\Http\Controllers\AccountingController::class, 'record'])->name('Accounting.record');
+Route::get('/luong/{id}', [App\Http\Controllers\AccountingController::class, 'show'])->name('luong.show');
 Route::get('/get-salaries-by-department', [App\Http\Controllers\AccountingController::class, 'getSalariesByDepartment'])->name('Accounting.getSalariesByDepartment');
 Route::get('/pay-salary', [App\Http\Controllers\AccountingController::class, 'paySalary'])->name('Accounting.paySalary');
 Route::get('/dashboardHM', [App\Http\Controllers\HumanController::class, 'index'])->name('Human.dashboard');

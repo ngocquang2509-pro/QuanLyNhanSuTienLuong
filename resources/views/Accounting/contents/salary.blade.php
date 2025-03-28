@@ -222,7 +222,15 @@
 
 <body>
     <div class="container-fluid py-4 col-md-10 ">
-        <h4 class="text-center mb-4">BẢNG LƯƠNG THÁNG 03/2025</h4>
+        <form class="navbar px-5" action="{{route('Accounting.salary')}}" method="get">
+            <h4 class=" mb-4">BẢNG LƯƠNG THÁNG {{ request()->get('month')?\Carbon\Carbon::parse(request('month'))->format('m/Y'): '01/2025' }}
+            </h4>
+            <div>
+                <input name="month" type="month" class="form-control" value="{{ request()->get('month') }}"
+                    placeholder="Nhập tháng" required>
+                <button class="btn btn-primary">Tìm kiếm</button>
+            </div>
+        </form>
         <div class="table-responsive">
             <h6 class="m-3 text-danger"> Nhân viên chính thức</h6>
             <table class="table table-bordered table-hover salary-table" id="salaryTable">
@@ -385,7 +393,14 @@
                 </tbody>
             </table>
         </div>
-        <a href="{{route('Accounting.salaryAdd')}}" class="btn btn-primary my-2 " id="createSalary">Tạo lương</a>
+        <form class="" action="{{route('Accounting.salaryAdd')}}" method="get">
+
+            <button class="btn btn-primary">Tạo lương</button>
+
+            <input name="month" type="month" class="" value=""
+                placeholder="Nhập tháng" required>
+
+        </form>
     </div>
 
     <div class="modal fade" id="taxCalculationModal" tabindex="-1" aria-labelledby="salaryModalLabel"

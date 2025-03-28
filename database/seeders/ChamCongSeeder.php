@@ -61,7 +61,7 @@ class ChamCongSeeder extends Seeder
         // Xử lý chấm công cho nhân viên thời vụ
         foreach ($lichLamViecThoiVu as $lich) {
             // Chọn số công ngẫu nhiên (1 công = 8 giờ)
-            $soCong = rand(4, 6);
+            $soCong = rand(2, 5);
             $soGioLam = $soCong * 8; // Số giờ làm việc trong ngày
 
             // Tính giờ vào và giờ ra thực tế
