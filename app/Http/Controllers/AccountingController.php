@@ -13,25 +13,62 @@ use Illuminate\Support\Facades\DB as FacadesDB;
 
 class AccountingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $nhanviens = NhanVien::all()->count();
-        $salaryMax = salary::max('TongThuNhap');
-        $salaryMin = salary::min('TongThuNhap');
-        $salaryAvg = salary::avg('TongThuNhap');
-        $HanhChinhAvg = salary::where('PhongBan', 'Hành chính')->avg('TongThuNhap');
-        $KinhDoanhAvg = salary::where('PhongBan', 'Kinh doanh')->avg('TongThuNhap');
-        $KyThuatAvg = salary::where('PhongBan', 'Kĩ thuật')->avg('TongThuNhap');
-        $NhanSuAvg = salary::where('PhongBan', 'Nhân sự')->avg('TongThuNhap');
-        $KeToanAvg = salary::where('PhongBan', 'Kế toán')->avg('TongThuNhap');
-        $SanXuatAvg = salary::where('PhongBan', 'Sản xuất')->avg('TongThuNhap');
-        $NghienCuuAvg = salary::where('PhongBan', 'Nghiên cứu và phát triển')->avg('TongThuNhap');
+        $month = Carbon::parse($request->month);
+        $salaryMax = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->max('TongThuNhap');
+
+        $salaryMin = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->min('TongThuNhap');
+
+        $salaryAvg = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->avg('TongThuNhap');
+
+        $HanhChinhAvg = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->where('PhongBan', 'Hành chính')
+            ->avg('TongThuNhap');
+
+        $KinhDoanhAvg = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->where('PhongBan', 'Kinh doanh')
+            ->avg('TongThuNhap');
+
+        $KyThuatAvg = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->where('PhongBan', 'Kĩ thuật')
+            ->avg('TongThuNhap');
+
+        $NhanSuAvg = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->where('PhongBan', 'Nhân sự')
+            ->avg('TongThuNhap');
+
+        $KeToanAvg = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->where('PhongBan', 'Kế toán')
+            ->avg('TongThuNhap');
+
+        $SanXuatAvg = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->where('PhongBan', 'Sản xuất')
+            ->avg('TongThuNhap');
+
+        $NghienCuuAvg = salary::whereMonth('NgayTao', $month->month)
+            ->whereYear('NgayTao', $month->year)
+            ->where('PhongBan', 'Nghiên cứu và phát triển')
+            ->avg('TongThuNhap');
 
         return view('Accounting.dashboard', compact('nhanviens', 'salaryMax', 'salaryMin', 'salaryAvg', 'HanhChinhAvg', 'KinhDoanhAvg', 'KyThuatAvg', 'NhanSuAvg', 'KeToanAvg', 'SanXuatAvg', 'NghienCuuAvg'));
     }
     public function salary(Request $request)
     {
-        $month = Carbon::now()->format('Y-m');
+        $month = Carbon::createFromFormat('Y-m', '2025-01')->format('Y-m');
         if ($request->has('month')) {
             $month = Carbon::createFromFormat('Y-m', $request->month)->format('Y-m');
         }
@@ -40,8 +77,8 @@ class AccountingController extends Controller
             ->join('nhanvien', '_luong.nhanvien_id', '=', 'nhanvien.id') // Join bảng nhân viên
             ->join('hopdong', 'nhanvien.id', '=', 'hopdong.nhanvien_id') // Join bảng hợp đồng
             ->where('hopdong.LoaiHopDong', 'Nhân viên chính thức') // Lọc theo loại hợp đồng
-            ->whereYear('_luong.NgayTao', Carbon::parse($month)->year)  // Lọc theo năm
-            ->whereMonth('_luong.NgayTao', Carbon::parse($month)->month) // Lọc theo tháng
+            ->whereYear('_luong.NgayTao', Carbon::parse($request->month)->year)  // Lọc theo năm
+            ->whereMonth('_luong.NgayTao', Carbon::parse($request->month)->month) // Lọc theo tháng
             ->select('_luong.*', 'nhanvien.HoTen', 'hopdong.LoaiHopDong') // Chọn các cột cần thiết
             ->orderByDesc('_luong.TongThuNhap') // Sắp xếp theo tổng thu nhập giảm dần
             ->get();
@@ -51,8 +88,8 @@ class AccountingController extends Controller
             ->join('nhanvien', '_luong.nhanvien_id', '=', 'nhanvien.id') // Join bảng nhân viên
             ->join('hopdong', 'nhanvien.id', '=', 'hopdong.nhanvien_id') // Join bảng hợp đồng
             ->where('hopdong.LoaiHopDong', 'Nhân viên thời vụ') // Lọc theo loại hợp đồng
-            ->whereYear('_luong.NgayTao', Carbon::parse($month)->year)  // Lọc theo năm
-            ->whereMonth('_luong.NgayTao', Carbon::parse($month)->month) // Lọc theo tháng
+            ->whereYear('_luong.NgayTao', Carbon::parse($request->month)->year)  // Lọc theo năm
+            ->whereMonth('_luong.NgayTao', Carbon::parse($request->month)->month) // Lọc theo tháng
             ->select('_luong.*', 'nhanvien.HoTen', 'hopdong.LoaiHopDong') // Chọn các cột cần thiết
             ->orderByDesc('_luong.TongThuNhap') // Sắp xếp theo tổng thu nhập giảm dần
             ->get();
@@ -62,6 +99,10 @@ class AccountingController extends Controller
 
     public function salaryAdd(Request $request)
     {
+        $month = $request->month;
+        if (isset($request->searchBtn))
+            return redirect()->route('Accounting.salary', ['month' => $month]);
+
         // Tạm thời vô hiệu hóa kiểm tra khóa ngoại
         // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
@@ -86,9 +127,10 @@ class AccountingController extends Controller
             })
             ->get();
         // Lấy tháng hiện tại
-        $currentMonth = Carbon::createFromFormat('Y-m', $request->month)->month;
+        $currentMonth = Carbon::parse($request->month)->month;
 
-        $currentYear = Carbon::createFromFormat('Y-m', $request->month)->year;
+        $currentYear = Carbon::parse($request->month)->year;
+
 
         //Kiểm tra tháng có tồn tại không trong bang _luong
         $checkMonth = DB::table('_luong')
@@ -97,7 +139,7 @@ class AccountingController extends Controller
             ->exists();
 
         if ($checkMonth == 1) {
-            return redirect()->route('Accounting.salary');
+            return redirect()->route('Accounting.salary', ['month' => $month])->with('error', 'Tháng đã tồn tại trong bảng lương');
         } else {
             foreach ($nhanviensThoiVu as $nhanvien) {
                 $soNgayCong = DB::table('chamcong')
@@ -113,9 +155,9 @@ class AccountingController extends Controller
                     'ChucVu' => $nhanvien->chucVu->TenChucVu,
                     'PhongBan' => $nhanvien->phongBan->TenPhongBan,
                     'SoNgayCong' => $soNgayCong,
-                    'TongThuNhap' => $nhanvien->TongSoCong * $nhanvien->hopDong->LuongCoBan,
+                    'TongThuNhap' => $soNgayCong * $nhanvien->hopDong->LuongCoBan,
                     'LuongTheoGio' => $nhanvien->hopDong->LuongCoBan,
-                    'NgayTao' => Carbon::createFromFormat('Y-m', $request->month)->format('Y-m-d'),
+                    'NgayTao' => Carbon::createFromFormat('Y-m-d', $request->month . '-01')->format('Y-m-d'),
                 ]);
             }
             foreach ($nhanviens as $nv) {
@@ -276,7 +318,7 @@ class AccountingController extends Controller
                     'con_lanh' => $conLanh,
                     'tam_ung' => $tamUng,
                     'con_lanh' => $conLanh,
-                    'NgayTao' => Carbon::createFromFormat('Y-m', $request->month)->format('Y-m-d'),
+                    'NgayTao' => Carbon::createFromFormat('Y-m-d', $request->month . '-01')->format('Y-m-d'),
                     'NgayThanhToan' => null,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -286,7 +328,8 @@ class AccountingController extends Controller
                 ]);
             }
         }
-        return redirect()->route('Accounting.salary');
+        $month = Carbon::parse($request->month);
+        return redirect()->route('Accounting.salary', ['month' => $request->month])->with('success', 'Thêm lương thành công tháng ' . $month->format('m/Y'));
     }
 
     public function payment(Request $request)
@@ -298,10 +341,10 @@ class AccountingController extends Controller
         if (isset($request->month)) {
             $currentMonth = Carbon::createFromFormat('Y-m', $request->month)->month;
             $currentYear = Carbon::createFromFormat('Y-m', $request->month)->year;
-            $month = Carbon::createFromFormat('Y-m', $request->month)->format('Y-m');
+            $month = Carbon::createFromFormat('Y-m-d', $request->month . '-01')->format('Y-m-d');
             $checkMonth = DB::table('_luong')
-                ->whereMonth('NgayTao', $currentMonth)
-                ->whereYear('NgayTao', $currentYear)
+                ->whereYear('_luong.NgayTao', Carbon::parse($request->month)->year)  // Lọc theo năm
+                ->whereMonth('_luong.NgayTao', Carbon::parse($request->month)->month)
                 ->exists();
             if ($checkMonth != 1) {
                 return view('Accounting.payment', compact('departments', 'salaries', 'department'));
@@ -336,7 +379,7 @@ class AccountingController extends Controller
 
         if (isset($request->status)) {
 
-            $month = Carbon::createFromFormat('Y-m', $request->month)->format('Y-m');
+            $month = Carbon::createFromFormat('Y-m-d', $request->month . '-01')->format('Y-m-d');
             DB::table('_luong')
                 ->where('PhongBan', $request->department)
                 ->whereYear('_luong.NgayTao', Carbon::parse($month)->year)  // Lọc theo năm

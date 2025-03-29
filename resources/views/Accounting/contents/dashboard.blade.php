@@ -1,5 +1,13 @@
 <div class="col-md-10 p-4 container my-5">
-    <h1 class="text-center mb-4">Hệ Thống Thống Kê Lương</h1>
+    <div class="navbar">
+        <h1 class=" mb-4">Hệ Thống Thống Kê Lương {{request()->get('month')?'Tháng '.\Carbon\Carbon::parse(request('month'))->format('m/Y'):'Tháng 1/2025'}}</h1>
+        <div class="d-flex justify-content-end">
+            <form action="{{route('Accounting.dashboard')}}" method="GET" class="d-flex">
+                <input type="month" name="month" class="form-control me-2" value="{{request()->get('month')}}">
+                <button type="submit" class="btn btn-primary">Lọc</button>
+            </form>
+        </div>
+    </div>
     <input type="hidden" id="HanhChinhAvg" data-HanhChinh="{{($HanhChinhAvg)}}">
     <input type="hidden" id="KeToanAvg" data-KeToan="{{($KeToanAvg)}}">
     <input type="hidden" id="NhanSuAvg" data-NhanSu="{{($NhanSuAvg)}}">

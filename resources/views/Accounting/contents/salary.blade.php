@@ -222,13 +222,27 @@
 
 <body>
     <div class="container-fluid py-4 col-md-10 ">
-        <form class="navbar px-5" action="{{route('Accounting.salary')}}" method="get">
+        @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @elseif (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+
+        @endif
+        <form class="navbar px-5" action="{{route('Accounting.salaryAdd')}}" method="get">
             <h4 class=" mb-4">BẢNG LƯƠNG THÁNG {{ request()->get('month')?\Carbon\Carbon::parse(request('month'))->format('m/Y'): '01/2025' }}
             </h4>
             <div>
                 <input name="month" type="month" class="form-control" value="{{ request()->get('month') }}"
                     placeholder="Nhập tháng" required>
-                <button class="btn btn-primary">Tìm kiếm</button>
+                <button name="searchBtn" class="btn btn-primary" value="search ">Tìm kiếm</button>
+                <button name="createBtn" class="btn btn-success" value="create">Tạo lương</button>
             </div>
         </form>
         <div class="table-responsive">
@@ -393,14 +407,7 @@
                 </tbody>
             </table>
         </div>
-        <form class="" action="{{route('Accounting.salaryAdd')}}" method="get">
 
-            <button class="btn btn-primary">Tạo lương</button>
-
-            <input name="month" type="month" class="" value=""
-                placeholder="Nhập tháng" required>
-
-        </form>
     </div>
 
     <div class="modal fade" id="taxCalculationModal" tabindex="-1" aria-labelledby="salaryModalLabel"
