@@ -37,8 +37,6 @@
         <li class="nav-item">
             <a href="{{route('Accounting.dashboard')}}" class="nav-link">Bảng thống kê lương </a>
         </li>
-        <li class="nav-item">
-            <a href="{{route('Accounting.salary')}}" class="nav-link">Bảng lương chi tiết </a>
-        </li>
+
     </ul>
 </div>
