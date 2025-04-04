@@ -24,7 +24,13 @@
 - Kiểm tra kết nối cơ sở dữ liệu trong file `.env` trước khi chạy lệnh `migrate` và `db:seed`.
 
 ## Các lỗi có thể gặp
-
+- Khi chạy `composer install`:     
+Failed to download doctrine/inflector from dist: The zip extension and unzip/7z commands are both missing, skipping.
+The php.ini used by your command-line PHP is: D:\xampp\php\php.ini
+    Now trying to download from source
+  - Cách giải quyết: 
+    - Mở file php.ini theo đường dẫn báo lỗi
+    - Tìm dòng `;extension=zip` => bỏ `;`
 ## Tài khoản đăng nhập cho các role
 
 - **Giám đốc**:
