@@ -150,7 +150,7 @@
                 @endforeach
                 <!-- Dòng tổng lương -->
                 <tr class="text-center fw-bold bg-danger text-white">
-                    <td colspan="3">Tổng Lương</td>
+                    <td colspan="2">Tổng Lương</td>
                     <td>{{ number_format($totalSalary) }} VNĐ</td>
                     <td class="{{$salaries[0]->TrangThai ==1 ?'text-success':'text-warning'}}">
                         {{$salaries[0]->TrangThai ==1 ?'Đã thanh toán':'Chưa thanh toán'}}

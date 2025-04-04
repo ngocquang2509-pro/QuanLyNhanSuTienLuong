@@ -44,7 +44,7 @@
 <div class="col-md-10 p4">
     <div class="header-section">
         <div class="container">
-            <h1 class="text-center mb-0">Thống Kê Nhân Sự - Lương</h1>
+            <h1 class="text-center mb-0">Thống Kê Nhân Sự</h1>
             <p class="text-center text-muted">
                 Cập nhật ngày: <span id="currentDate"></span>
             </p>
