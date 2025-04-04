@@ -117,7 +117,6 @@
         <table class="table table-bordered" id="salaryTable">
             <thead>
                 <tr class="text-center">
-                    <th>STT</th>
                     <th>Mã NV</th>
                     <th>Họ Tên</th>
                     <th>Thực Lãnh</th>
@@ -140,7 +139,6 @@
                 $totalSalary += $salary->con_lanh;
                 @endphp
                 <tr class="text-center">
-                    <td></td>
                     <td>{{ $salary->id }}</td>
                     <td>{{ $salary->HoTen }}</td>
                     <td>{{ ($salary->con_lanh)!= 0 ? number_format($salary->con_lanh) : number_format($salary-> TongThuNhap) }} VNĐ</td>
