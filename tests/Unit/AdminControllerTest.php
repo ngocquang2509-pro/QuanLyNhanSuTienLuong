@@ -479,6 +479,63 @@ class AdminControllerTest extends TestCase
     }
 
     /**
+     * Test store method with invalid email
+     */
+    public function test_store_invalid_email_returns_error()
+    {
+        $request = Request::create('/admin/store', 'POST', [
+            'name' => 'John Doe',
+            'email' => 'invalid-email', // Invalid email format
+            'password' => 'Password123@',
+            'type' => 'CTO'
+        ]);
+
+        $response = $this->controller->store($request);
+        
+        // Kiểm tra redirect back with error
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertArrayHasKey('email', session('errors')->getBag('default')->getMessages());
+    }
+
+    /**
+     * Test store method with invalid password
+     */
+    public function test_store_invalid_password_returns_error()
+    {
+        $request = Request::create('/admin/store', 'POST', [
+            'name' => 'John Doe',
+            'email' => 'test@example.com',
+            'password' => 'weak', // Too short and missing requirements
+            'type' => 'CTO'
+        ]);
+
+        $response = $this->controller->store($request);
+        
+        // Kiểm tra redirect back with error
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertArrayHasKey('password', session('errors')->getBag('default')->getMessages());
+    }
+
+    /**
+     * Test store method with invalid type
+     */
+    public function test_store_invalid_type_returns_error()
+    {
+        $request = Request::create('/admin/store', 'POST', [
+            'name' => 'John Doe',
+            'email' => 'test@example.com',
+            'password' => 'Password123@',
+            'type' => 'INVALID' // Invalid type value
+        ]);
+
+        $response = $this->controller->store($request);
+        
+        // Kiểm tra redirect back with error
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertArrayHasKey('type', session('errors')->getBag('default')->getMessages());
+    }
+
+    /**
      * Test store method success
      */
     public function test_store_valid_data_creates_user()
