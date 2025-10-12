@@ -91,7 +91,6 @@
     .close:hover {
         background: #e9ecef;
         color: #dc3545;
-        transform: rotate(90deg);
     }
 
     /* Form styles */
@@ -125,6 +124,42 @@
         outline: none;
         border-color: #1565C0;
         box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+    }
+
+    /* Password input group styles */
+    .password-input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .password-input-group input {
+        padding-right: 45px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #6c757d;
+        font-size: 18px;
+        padding: 0;
+        height: 20px;
+        width: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.3s ease;
+    }
+
+    .password-toggle:hover {
+        color: #1565C0;
+    }
+
+    .password-toggle:focus {
+        outline: none;
     }
 
     /* Animations */
@@ -335,6 +370,18 @@
             white-space: nowrap;
         }
     }
+    
+    /* Error message styles */
+    .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    .form-group.has-error input {
+        border-color: #dc3545;
+    }
 </style>
 
 <div class="col-md-10 p-4">
@@ -353,27 +400,44 @@
             </div>
             <form class="modal-form" action="{{route('admin.store')}}" method="post">
                 @csrf
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                     <label>Họ và Tên</label>
-                    <input type="text" name="name" placeholder="Nhập họ và tên" required>
+                    <input type="text" name="name" placeholder="Nhập họ và tên" value="{{ old('name') }}">
+                    @if($errors->has('name'))
+                        <span class="error-message">{{ $errors->first('name') }}</span>
+                    @endif
                 </div>
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                     <label>Email</label>
-                    <input type="email" name="email" placeholder="Nhập email" required>
+                    <input type="text" name="email" placeholder="Nhập email" value="{{ old('email') }}">
+                    @if($errors->has('email'))
+                        <span class="error-message">{{ $errors->first('email') }}</span>
+                    @endif
                 </div>
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
                     <label>Mật khẩu</label>
-                    <input type="text" name="password" placeholder="Nhập mật khẩu" required>
+                    <div class="password-input-group">
+                        <input type="{{ old('password') ? 'text' : 'password' }}" id="password-add" name="password" placeholder="Nhập mật khẩu" value="{{ old('password') }}" data-has-old="{{ old('password') ? 'true' : 'false' }}">
+                        <button type="button" class="password-toggle" onclick="togglePassword('password-add', this)">
+                            <i class="fa {{ old('password') ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                        </button>
+                    </div>
+                    @if($errors->has('password'))
+                        <span class="error-message">{{ $errors->first('password') }}</span>
+                    @endif
                 </div>
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                     <label>Quyền</label>
                     <select class="form-select" id="exampleSelect" name="type">
-                        <option value="0">Chọn quyền</option>
-                        <option value="ADM">Quản trị viên</option>
-                        <option value="HMN">Quản lý nhân sự </option>
-                        <option value="ACC">Quản lý kế toán</option>
-                        <option value="CTO">Giám đốc</option>
+                        <option value="">Chọn quyền</option>
+                        <option value="ADM" {{ old('type') == 'ADM' ? 'selected' : '' }}>Quản trị viên</option>
+                        <option value="HMN" {{ old('type') == 'HMN' ? 'selected' : '' }}>Quản lý nhân sự</option>
+                        <option value="ACC" {{ old('type') == 'ACC' ? 'selected' : '' }}>Quản lý kế toán</option>
+                        <option value="CTO" {{ old('type') == 'CTO' ? 'selected' : '' }}>Giám đốc</option>
                     </select>
+                    @if($errors->has('type'))
+                        <span class="error-message">{{ $errors->first('type') }}</span>
+                    @endif
                 </div>
 
                 <button type="submit" class="submit-btn">Lưu thông tin</button>
@@ -391,26 +455,43 @@
                 @method('PUT')
                 <input type="text" id="edit-id" name="id" hidden>
 
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                     <label>Họ và Tên</label>
-                    <input type="text" name="name" id="edit-name" placeholder="Nhập họ và tên" required>
+                    <input type="text" name="name" id="edit-name" placeholder="Nhập họ và tên" value="{{ old('name') }}">
+                    @if($errors->has('name'))
+                        <span class="error-message">{{ $errors->first('name') }}</span>
+                    @endif
                 </div>
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                     <label>Email</label>
-                    <input type="email" name="email" id="edit-email" placeholder="Nhập email" required>
+                    <input type="email" name="email" id="edit-email" placeholder="Nhập email" value="{{ old('email') }}">
+                    @if($errors->has('email'))
+                        <span class="error-message">{{ $errors->first('email') }}</span>
+                    @endif
                 </div>
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
                     <label>Mật khẩu (Mới)</label>
-                    <input type="text" name="password" placeholder="Nhập mật khẩu">
+                    <div class="password-input-group">
+                        <input type="{{ old('password') ? 'text' : 'password' }}" id="password-edit" name="password" placeholder="Nhập mật khẩu" value="{{ old('password') }}" data-has-old="{{ old('password') ? 'true' : 'false' }}">
+                        <button type="button" class="password-toggle" onclick="togglePassword('password-edit', this)">
+                            <i class="fa {{ old('password') ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                        </button>
+                    </div>
+                    @if($errors->has('password'))
+                        <span class="error-message">{{ $errors->first('password') }}</span>
+                    @endif
                 </div>
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                     <label>Quyền</label>
                     <select id="edit-type" class="form-select" name="type">
-                        <option value="ADM">Quản trị viên</option>
-                        <option value="HMN">Quản lý nhân sự</option>
-                        <option value="ACC">Quản lý Kế toán</option>
-                        <option value="CTO">Giám đốc</option>
+                        <option value="ADM" {{ old('type') == 'ADM' ? 'selected' : '' }}>Quản trị viên</option>
+                        <option value="HMN" {{ old('type') == 'HMN' ? 'selected' : '' }}>Quản lý nhân sự</option>
+                        <option value="ACC" {{ old('type') == 'ACC' ? 'selected' : '' }}>Quản lý Kế toán</option>
+                        <option value="CTO" {{ old('type') == 'CTO' ? 'selected' : '' }}>Giám đốc</option>
                     </select>
+                    @if($errors->has('type'))
+                        <span class="error-message">{{ $errors->first('type') }}</span>
+                    @endif
                 </div>
                 <button type="submit" class="submit-btn">Cập nhật thông tin</button>
             </form>
@@ -490,6 +571,10 @@
 <script>
     function openModal() {
         const modal = document.getElementById("addModal");
+        
+        // Reset form trước khi mở modal
+        resetAddForm();
+        
         modal.style.display = "flex";
         // Trigger reflow
         modal.offsetHeight;
@@ -539,13 +624,87 @@
         modal.classList.add("show");
     }
 
+    // Function để toggle hiển thị/ẩn mật khẩu
+    function togglePassword(inputId, button) {
+        const passwordInput = document.getElementById(inputId);
+        const icon = button.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
 
+    // Function để reset form về trạng thái ban đầu
+    function resetAddForm() {
+        const form = document.querySelector('#addModal form');
+        
+        // Reset tất cả input fields
+        form.reset();
+        
+        // Xóa tất cả error messages
+        const errorMessages = form.querySelectorAll('.error-message');
+        errorMessages.forEach(error => error.remove());
+        
+        // Xóa class has-error khỏi tất cả form-groups
+        const formGroups = form.querySelectorAll('.form-group');
+        formGroups.forEach(group => group.classList.remove('has-error'));
+        
+        // Reset select về option đầu tiên
+        const selectType = form.querySelector('select[name="type"]');
+        if (selectType) {
+            selectType.selectedIndex = 0;
+        }
+        
+        // Reset password input về type="password" và icon về fa-eye
+        const passwordInput = document.getElementById('password-add');
+        const passwordIcon = form.querySelector('.password-toggle i');
+        if (passwordInput && passwordIcon) {
+            passwordInput.type = 'password';
+            passwordInput.setAttribute('data-has-old', 'false');
+            passwordIcon.classList.remove('fa-eye-slash');
+            passwordIcon.classList.add('fa-eye');
+        }
+    }
+
+    // Function để reset edit form
+    function resetEditForm() {
+        const form = document.querySelector('#EditModal form');
+        
+        // Reset tất cả input fields
+        form.reset();
+        
+        // Xóa tất cả error messages
+        const errorMessages = form.querySelectorAll('.error-message');
+        errorMessages.forEach(error => error.remove());
+        
+        // Xóa class has-error khỏi tất cả form-groups
+        const formGroups = form.querySelectorAll('.form-group');
+        formGroups.forEach(group => group.classList.remove('has-error'));
+        
+        // Reset password input về type="password" và icon về fa-eye
+        const passwordInput = document.getElementById('password-edit');
+        const passwordIcon = form.querySelector('.password-toggle i');
+        if (passwordInput && passwordIcon) {
+            passwordInput.type = 'password';
+            passwordInput.setAttribute('data-has-old', 'false');
+            passwordIcon.classList.remove('fa-eye-slash');
+            passwordIcon.classList.add('fa-eye');
+        }
+    }
 
     function closeModal() {
         const modal = document.getElementById("addModal");
         modal.classList.remove("show");
         setTimeout(() => {
             modal.style.display = "none";
+            // Reset form khi đóng modal
+            resetAddForm();
         }, 300);
     }
 
@@ -554,6 +713,8 @@
         modal.classList.remove("show");
         setTimeout(() => {
             modal.style.display = "none";
+            // Reset form khi đóng modal edit
+            resetEditForm();
         }, 300);
     }
 
@@ -568,7 +729,46 @@
     window.onclick = function(event) {
         const modal = document.getElementById("addModal");
         if (event.target == modal) {
-            closeModal();
+            closeModal(); // Sử dụng function closeModal() để reset form
         }
     }
+    
+    // Hiển thị modal nếu có validation errors (không reset form)
+    @if($errors->any())
+        document.addEventListener('DOMContentLoaded', function() {
+            // Kiểm tra URL để xác định modal nào cần hiển thị
+            const currentUrl = window.location.href;
+            
+            if (currentUrl.includes('/dashboardAD') && !currentUrl.includes('/dashboardAD/')) {
+                // URL không có ID → đây là POST request (add)
+                const modal = document.getElementById("addModal");
+                modal.style.display = "flex";
+                modal.offsetHeight;
+                modal.classList.add("show");
+            } else if (currentUrl.includes('/dashboardAD/')) {
+                // URL có ID → đây là PUT request (update)
+                const modal = document.getElementById("EditModal");
+                modal.style.display = "flex";
+                modal.offsetHeight;
+                modal.classList.add("show");
+            }
+        });
+    @endif
+
+    // Xử lý password fields có old value sau khi page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Xử lý password field trong add form
+        const passwordAddInput = document.getElementById('password-add');
+        if (passwordAddInput && passwordAddInput.getAttribute('data-has-old') === 'true') {
+            // Giữ nguyên type="text" để hiển thị giá trị, icon đã được set thành fa-eye-slash
+            // User có thể click để ẩn nếu muốn
+        }
+
+        // Xử lý password field trong edit form  
+        const passwordEditInput = document.getElementById('password-edit');
+        if (passwordEditInput && passwordEditInput.getAttribute('data-has-old') === 'true') {
+            // Giữ nguyên type="text" để hiển thị giá trị, icon đã được set thành fa-eye-slash
+            // User có thể click để ẩn nếu muốn
+        }
+    });
 </script>
